@@ -1,3 +1,4 @@
+
 import com.temboo.core.*;
 import org.json.*;
 //import com.temboo.Library.Instagram.*;
@@ -18,6 +19,7 @@ int instaPosts;
 int noIFollowing;
 int tumblrLikes;
 int tumblrFollowing;
+int noOfBlogs;
 String typing = "";
 String userName = "";
 JSONObject twitterResults;
@@ -34,7 +36,7 @@ com.temboo.Library.Instagram.GetUserInformationResultSet getUserInformationResul
 TembooSession session = new TembooSession("yelly", "myFirstApp", "fb0516146cf34e6691dc7cdc999c35de");
 
 void setup() {
-  size(700, 350);
+  size(700, 600);
   // Run the Show Choreo function
   //runShowChoreo();
 }
@@ -108,20 +110,19 @@ void setTumblrValues() {
   tumblrLikes = details.getInt("likes");
   tumblrFollowing = details.getInt("following");
   JSONArray blogs = details.getJSONArray("blogs");
- // println(blogs);
-  int arrayLength = blogs.size();
+  // println(blogs);
+  noOfBlogs = blogs.size();
   // println(tumblrLikes);
   // println(tumblrFollowing);
   // int arrayLength = blogs.length;
-  for (int i=0; i < arrayLength; i++) {
+  for (int i=0; i < noOfBlogs; i++) {
     int posts = blogs.getJSONObject(i).getInt("posts");
     int followers = blogs.getJSONObject(i).getInt("followers");
     int messages = blogs.getJSONObject(i).getInt("messages");
-    println(posts);
-    println(followers);
-    println(messages);
+    //   println(posts);
+    //   println(followers);
+    //  println(messages);
   }
-
 }
 void setInstagramValues() {
   JSONObject items = instaResults.getJSONObject("data");
@@ -136,9 +137,24 @@ void setInstagramValues() {
 void draw() {
   background(255);
   fill(0);
-  text("Please type in your username. Hit enter when you're done.", 25, 40);
+  text("Please type in your Twitter username. Hit enter when you're done.", 25, 40);
   text(typing, 25, 90);
   text(userName, 25, 130);
+  text("YOUR TWITTER DATA:", 25, 200);
+  text("Favourites: "+noTFollowers, 25, 220);
+  text("Friends: "+noTFriends, 25, 240);
+  text("Tweets: "+noTStatuses, 25, 260);
+  text("Favourites: "+noTFavourites, 25, 280);
+  
+  text("YOUR INSTAGRAM DATA: ", 25, 300);
+  text("Followers: "+noIFollowers, 25, 325);
+  text("Following: "+noIFollowing, 25, 345);
+  text("Posts: "+instaPosts, 25, 370);
+  
+  text("YOUR TUMBLR DATA: ", 25, 400);
+  text("Likes: "+tumblrLikes, 25, 420);
+  text("Following: "+tumblrFollowing, 25, 440);
+  text("Blogs: "+noOfBlogs, 25, 460);
 }
 
 void runInitializeOAuthChoreo() {
@@ -243,7 +259,7 @@ void runGetUserInformationChoreoTumblr() {
   getUserInformationResultsTumblr = getUserInformationChoreoTumblr.run();
   tumblrResults = parseJSONObject(getUserInformationResultsTumblr.getResponse());
   // Print results
-  print(tumblrResults);
+  //  print(tumblrResults);
   // println(getUserInformationResultsTumblr.getResponse());
   setTumblrValues();
 }
