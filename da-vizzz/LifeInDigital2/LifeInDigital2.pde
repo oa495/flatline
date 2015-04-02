@@ -5,6 +5,8 @@ import org.json.*;
 //import com.temboo.Library.Tumblr.User.*;
 //import com.temboo.Library.Tumblr.OAuth.*;
 String name;
+String tumblrName;
+String instaName;
 String iAccessToken;
 String tumblrAccessToken;
 String tumblrTokenSecret;
@@ -56,15 +58,15 @@ TembooSession session = new TembooSession("yelly", "myFirstApp", "fb0516146cf34e
 //int[] instaData;
 //int[] tumblrData;
 //int[] allData;
-int timer;
+Timer timer;
 int screen = 1;
 void setup() {
   size(1200, 800);
+  //fonts
   heading = loadFont("Oswald-Regular-48.vlw");
   para = loadFont("MerriweatherSans-Light-48.vlw");
 
-  // Run the Show Choreo function
-  //runShowChoreo();
+  //images for opening screen 
   instagramLogo = loadImage("instagram10.png");
   tumblrLogo = loadImage("tumblr21.png");
   facebookLogo = loadImage("facebook48.png");
@@ -87,6 +89,7 @@ void setup() {
 void draw() {
   background(255);
   fill(0);
+  //which screen should we be on
   switch(screen) {
   case 1:
     opening();
@@ -94,35 +97,60 @@ void draw() {
     break;
 
   case 2:
+  //screen to type in twitter username
     println("screen 2!");
+    fill(0);
+    textFont(para);
+    textSize(28);
+    text(typing, 25, 90);
+    text(userName, 25, 130);
     //inputData();
     break;
 
   case 3:
     //generateRestingRate();
+    //screen to generate initial resting rate of electrocardiogram based on initial social media values
     println("screen 3!");
-    timer.start();
+    //  timer.start();
     break;
 
   case 4:
     println("screen 4!");
     break;
   }
-  if (timer.isFinished()) {
-    timer.start();
-    //call functions again
-  }
-  int[] twitterData = {
-    noTFollowers, noTFriends, noTStatuses, noTFavourites
-  };
-  int[] instaData = {
-    noIFollowers, noIFollowing, instaPosts
-  };
-  int[] tumblrData = {
-    noOfBlogs, tumblrPosts, tumblrMessages, tumblrFollowers, tumblrFollowing, tumblrLikes
-  };
-  int[] allData = concat(twitterData, instaData);
-  allData = concat(allData, tumblrData);
+  //server is called for new information every 30 minutes
+  /*  if (timer.isFinished()) {
+   timer.start();
+   if (twitter) {
+   showtwitterResults = showChoreo.run();
+   twitterResults = parseJSONObject(showtwitterResults.getResponse());
+   setTwitterValues();
+   }  
+   if (instagram) {
+   getUserInformationResultsInsta = getUserInformationChoreoInsta.run();
+   instaResults = parseJSONObject(getUserInformationResultsInsta.getResponse());
+   setInstagramValues();
+   } 
+   if (tumblr) {
+   getUserInformationResultsTumblr = getUserInformationChoreoTumblr.run();
+   tumblrResults = parseJSONObject(getUserInformationResultsTumblr.getResponse());
+   setTumblrValues();
+   }
+   } */
+
+  //call functions again
+  //puts all the data into an array
+  /* int[] twitterData = {
+   noTFollowers, noTFriends, noTStatuses, noTFavourites
+   };
+   int[] instaData = {
+   noIFollowers, noIFollowing, instaPosts
+   };
+   int[] tumblrData = {
+   noOfBlogs, tumblrPosts, tumblrMessages, tumblrFollowers, tumblrFollowing, tumblrLikes
+   };
+   int[] allData = concat(twitterData, instaData);
+   allData = concat(allData, tumblrData); */
 
   /*  text("YOUR TWITTER DATA:", 25, 200);
    text("Followers: "+noTFollowers, 25, 220);
@@ -161,19 +189,20 @@ void opening() {
   text("Pick your poison(s) and press enter.", 95, height/3);
   strokeWeight(4);
   stroke(255);
+  //just lines under the images to indicate when they've been clicked
   line(width/1.5+15, height/1.7+80, width/1.5+50, height/1.7+80);
   line(width/2.4+15, height/1.7+80, width/2.4+50, height/1.7+80);
   line(width/5, height/1.7+80, width/5+50, height/1.7+80);
   if (twitter == false) {
     if ((mouseX > width/5 && mouseX < width/5+70) && (mouseY > height/1.7 && mouseY < height/1.7+70)) {
-      image(twitterLogo, width/5, height/1.7-20, 64, 64);
+      image(twitterLogo, width/5, height/1.7-20, 64, 64); //image moves up a bit on hover
       /* if (twitter) {
        println("twitter!");
        stroke(189, 225, 199);
        line(width/5, height/1.7+80, width/5+50, height/1.7+80);
        }*/
     } else {
-      image(twitterLogo, width/5, height/1.7, 64, 64);
+      image(twitterLogo, width/5, height/1.7, 64, 64); //else image in regular position
     }
   } else {
     image(twitterLogo, width/5, height/1.7, 64, 64);
@@ -217,11 +246,6 @@ void opening() {
     //  print("insta!");
     line(width/1.5+15, height/1.7+80, width/1.5+50, height/1.7+80);
   }
-  //
-  // textFont(para);
-  //  textSize(28);
-  // text(typing, 25, 90);
-  // text(userName, 25, 130);
 }
 
 
@@ -238,21 +262,21 @@ void opening() {
  x += 20;
  }
  */
-void something() {
-  //if 30 mins has passed since values were first obtained call functions again
-
-  showtwitterResults = showChoreo.run();
-  twitterResults = parseJSONObject(showtwitterResults.getResponse());
-  setTwitterValues();
-  /////
-  getUserInformationResultsInsta = getUserInformationChoreoInsta.run();
-  instaResults = parseJSONObject(getUserInformationResultsInsta.getResponse());
-  setInstagramValues();
-  ///
-  getUserInformationResultsTumblr = getUserInformationChoreoTumblr.run();
-  tumblrResults = parseJSONObject(getUserInformationResultsTumblr.getResponse());
-  setTumblrValues();
-}
+/*void something() {
+ //if 30 mins has passed since values were first obtained call functions again
+ 
+ showtwitterResults = showChoreo.run();
+ twitterResults = parseJSONObject(showtwitterResults.getResponse());
+ setTwitterValues();
+ /////
+ getUserInformationResultsInsta = getUserInformationChoreoInsta.run();
+ instaResults = parseJSONObject(getUserInformationResultsInsta.getResponse());
+ setInstagramValues();
+ ///
+ getUserInformationResultsTumblr = getUserInformationChoreoTumblr.run();
+ tumblrResults = parseJSONObject(getUserInformationResultsTumblr.getResponse());
+ setTumblrValues();
+ } */
 
 void generateRestingRate() {
   // get text from file
@@ -266,6 +290,7 @@ void generateRestingRate() {
 }
 void mouseClicked() {
   print("x!");
+  //determing what the user has clicked, which social media platforms the user uses
   if (screen == 1) {
     if ((mouseX > width/5 && mouseX < width/5+90) && (mouseY > height/1.7 && mouseY < height/1.7+90)) {
       if (twitter == true) {
@@ -290,37 +315,42 @@ void mouseClicked() {
   }
 }
 void keyPressed() {
-  // If the return key is pressed, save the String and clear it
+ // if enter is pressed on screen 1, save the sm images that were clicked and set boolean variables accordingly
   if (screen == 1) {
-    if ((!instagram) && (!twitter) && (!tumblr)) {
-      //what are you even doing here?
-    } else {
-      if (twitter) {
-        screen = 2;
-        //ask for username
+    if (key == '\n' ) {
+      if ((!instagram) && (!twitter) && (!tumblr)) {
+        //what are you even doing here?
       } else {
-        if ((instagram) && (!tumblr)) {
-          runInitializeOAuthChoreoInsta();
-        } else if ((instagram) && (tumblr)) {
-          runInitializeOAuthChoreoInsta();
-          runInitializeOAuthChoreoTumblr();
-        } else if ((tumblr) && (!instagram)) {
-          runInitializeOAuthChoreoTumblr();
+        if (twitter) {
+          screen = 2;
+          //ask for username
+        } else {
+          if ((instagram) && (!tumblr)) {
+            runInitializeOAuthChoreoInsta();
+          } else if ((instagram) && (tumblr)) {
+            runInitializeOAuthChoreoInsta();
+            runInitializeOAuthChoreoTumblr();
+          } else if ((tumblr) && (!instagram)) {
+            runInitializeOAuthChoreoTumblr();
+          }
         }
       }
     }
   } else if (screen == 2) {
+     // If the return key is pressed, save the String and clear it
     if (key == '\n' ) {
       userName = typing;
-      runShowChoreo();
+      runTwitterChoreo(); //get twitter info
       if (instagram) {
-        runInitializeOAuthChoreoInsta();
+        runInitializeOAuthChoreoInsta(); //get insta info
       }
       if (tumblr) {
-        runInitializeOAuthChoreoTumblr();
+        runInitializeOAuthChoreoTumblr(); //get tumblr info
       }
       // A String can be cleared by setting it equal to ""
       typing = "";
+    } else if (key == BACKSPACE && typing.length() > 0) {
+      typing = typing.substring(0, typing.length() - 1); //if backspace
     } else {
       // Otherwise, concatenate the String
       // Each character typed by the user is added to the end of the String variable.
@@ -330,7 +360,7 @@ void keyPressed() {
 }
 
 
-void runShowChoreo() {
+void runTwitterChoreo() {
   // Create the Choreo object using your Temboo session
   showChoreo = new com.temboo.Library.Twitter.Users.Show(session);
 
@@ -348,8 +378,13 @@ void runShowChoreo() {
   showtwitterResults = showChoreo.run();
   // Print twitterResults
   //  println(showtwitterResults.getResponse());
-  twitterResults = parseJSONObject(showtwitterResults.getResponse());
-  setTwitterValues();
+  try {
+    twitterResults = parseJSONObject(showtwitterResults.getResponse());
+    setTwitterValues();
+  }
+  catch(NullPointerException e) {
+    println("Sure that is the right username?");
+  }
 
   //  print(twitterResults);
   // print(name);
@@ -382,6 +417,7 @@ void setTwitterValues() {
 void setTumblrValues() {
   JSONObject items = tumblrResults.getJSONObject("response");
   JSONObject details = items.getJSONObject("user");
+  tumblrName = details.getString("name");
   tumblrLikes = details.getInt("likes");
   tumblrFollowing = details.getInt("following");
   JSONArray blogs = details.getJSONArray("blogs");
@@ -408,6 +444,7 @@ void setInstagramValues() {
   noIFollowers = counts.getInt("followed_by");
   instaPosts = counts.getInt("media");
   noIFollowing = counts.getInt("follows");
+  instaName = items.getString("full_name");
   //  println(noIFollowers);
   // println(instaPosts);
   // println(noIFollowing);
@@ -426,10 +463,11 @@ void runInitializeOAuthChoreoInsta() {
   link(initializeOAuthResultsInsta.getAuthorizationURL());
   //  println(initializeOAuthtwitterResults.getCallbackID());
   callbackInsta = initializeOAuthResultsInsta.getCallbackID();
+  runFinalizeOAuthChoreo(callbackInsta);
 
   //////////////
 }
-runInitializeOAuthChoreoTumblr() {
+void runInitializeOAuthChoreoTumblr() {
 
   com.temboo.Library.Tumblr.OAuth.InitializeOAuth initializeOAuthChoreoTumblr = new com.temboo.Library.Tumblr.OAuth.InitializeOAuth(session);
   initializeOAuthChoreoTumblr.setCredential("Tumblr");
@@ -442,7 +480,6 @@ runInitializeOAuthChoreoTumblr() {
 
   // println(initializeOAuthResultsTumblr.getOAuthTokenSecret());
   tumblrSecretKey = initializeOAuthResultsTumblr.getOAuthTokenSecret();
-  runFinalizeOAuthChoreo(callbackInsta);
   runFinalizeOAuthChoreo(callbackTumblr, tumblrSecretKey);
 }
 void runFinalizeOAuthChoreo(String theCallback) {
@@ -463,8 +500,13 @@ void runFinalizeOAuthChoreo(String theCallback) {
   // Print twitterResults
   // println(finalizeOAuthResults.getResponse());
   // println(finalizeOAuthtwitterResults.getAccessToken());
-  iAccessToken = finalizeOAuthResultsInsta.getAccessToken();
-  runGetUserInformationChoreoInsta();
+  try {
+    iAccessToken = finalizeOAuthResultsInsta.getAccessToken();
+    runGetUserInformationChoreoInsta();
+  }
+  catch(NullPointerException e) {
+    print("you did not give instagram access!");
+  }
   // runGetLikedMediaForInstagramUserChoreo(iAccessToken);
 
   //////////////////
@@ -485,9 +527,14 @@ void runFinalizeOAuthChoreo(String theCallback, String token) {
   // Print results
   // println(finalizeOAuthResults.getAccessTokenSecret());
   //  println(finalizeOAuthResults.getAccessToken());
-  tumblrAccessToken = finalizeOAuthResults.getAccessTokenSecret();
-  tumblrTokenSecret = finalizeOAuthResults.getAccessToken();
-  runGetUserInformationChoreoTumblr();
+  try {
+    tumblrAccessToken = finalizeOAuthResults.getAccessTokenSecret();
+    tumblrTokenSecret = finalizeOAuthResults.getAccessToken();
+    runGetUserInformationChoreoTumblr();
+  }
+  catch(NullPointerException e) {
+    print("you did not give tumblr access!");
+  }
 }
 void runGetUserInformationChoreoInsta() {
   // Create the Choreo object using your Temboo session
