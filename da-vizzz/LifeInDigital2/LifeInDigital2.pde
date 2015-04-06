@@ -45,6 +45,15 @@ PImage instagramLogo;
 boolean twitter = false;
 boolean tumblr = false;
 boolean instagram = false;
+Timer timer;
+boolean timeUp = false;
+boolean first = true;
+//starts up the timer for the first time in draw function
+int screen = 1;
+/*int[] twitterData;
+ int[] instaData;
+ int[] tumblrData;
+ int[] allData;*/
 com.temboo.Library.Twitter.Users.Show showChoreo;
 com.temboo.Library.Instagram.GetUserInformation getUserInformationChoreoInsta;
 com.temboo.Library.Twitter.Users.ShowResultSet showtwitterResults;
@@ -54,24 +63,20 @@ com.temboo.Library.Instagram.GetLikedMediaForUserResultSet getLikedMediaForInsta
 com.temboo.Library.Tumblr.User.GetUserInformation getUserInformationChoreoTumblr;
 // Create a session using your Temboo account application details
 TembooSession session = new TembooSession("yelly", "myFirstApp", "fb0516146cf34e6691dc7cdc999c35de");
-//int[] twitterData;
-//int[] instaData;
-//int[] tumblrData;
-//int[] allData;
-Timer timer;
-int screen = 1;
+
+
 void setup() {
   size(1200, 800);
   //fonts
   heading = loadFont("Oswald-Regular-48.vlw");
   para = loadFont("MerriweatherSans-Light-48.vlw");
-
   //images for opening screen 
   instagramLogo = loadImage("instagram10.png");
   tumblrLogo = loadImage("tumblr21.png");
   facebookLogo = loadImage("facebook48.png");
   twitterLogo = loadImage("twitter46.png");
-  timer = new Timer(1800000);
+  //every 30 mins
+  timer = new Timer(30000);
 }
 
 
@@ -89,6 +94,17 @@ void setup() {
 void draw() {
   background(255);
   fill(0);
+  int[] twitterData = {
+    noTFollowers, noTFriends, noTStatuses, noTFavourites
+  };
+  int[] instaData = {
+    noIFollowers, noIFollowing, instaPosts
+  };
+  int[] tumblrData = {
+    noOfBlogs, tumblrPosts, tumblrMessages, tumblrFollowers, tumblrFollowing, tumblrLikes
+  };
+  int[] allData = concat(twitterData, instaData);
+  allData = concat(allData, tumblrData);
   //which screen should we be on
   switch(screen) {
   case 1:
@@ -97,82 +113,81 @@ void draw() {
     break;
 
   case 2:
-  //screen to type in twitter username
-    println("screen 2!");
+    //screen to type in twitter username
+    //  println("screen 2!");
     fill(0);
     textFont(para);
     textSize(28);
     text(typing, 25, 90);
     text(userName, 25, 130);
-    //inputData();
+    /* text("YOUR TWITTER DATA:", 25, 200);
+     text("Followers: "+noTFollowers, 25, 220);
+     text("Friends: "+noTFriends, 25, 240);
+     text("Tweets: "+noTStatuses, 25, 260);
+     text("Favourites: "+noTFavourites, 25, 280);
+     text("YOUR INSTAGRAM DATA: ", 25, 300);
+     text("Followers: "+noIFollowers, 25, 325);
+     text("Following: "+noIFollowing, 25, 345);
+     text("Posts: "+instaPosts, 25, 370);
+     // text("Likes: "+iLikes, 25, 395);
+     
+     text("YOUR TUMBLR DATA: ", 25, 440);
+     text("Likes: "+tumblrLikes, 25, 460);
+     text("Following: "+tumblrFollowing, 25, 480);
+     text("Blogs: "+noOfBlogs, 25, 500); 
+     text("Posts: "+noOfBlogs, 25, 500); 
+     text("Messages: "+tumblrMessages, 25, 500); 
+     text("Followers: "+tumblrLikes, 25, 500); */
+    /*for (int i = 0; i < twitterData.length; i++) {
+     println(twitterData[i]);
+     }
+     for (int i = 0; i < tumblrData.length; i++) {
+     println(tumblrData[i]);
+     }
+     for (int i = 0; i < instaData.length; i++) {
+     println(instaData[i]);
+     } */
     break;
 
   case 3:
-    //generateRestingRate();
-    //screen to generate initial resting rate of electrocardiogram based on initial social media values
-    println("screen 3!");
-    //  timer.start();
+    // println("screen 3!");
+    for (int i = 0; i < twitterData.length; i++) {
+      println(twitterData[i]);
+    }
+    timer.start();
+    screen = 4;
     break;
+
 
   case 4:
-    println("screen 4!");
-    break;
+    background(0, 255, 0);
+    //  println("screen 4!");
+    if (timer.isFinished()) {
+      timeUp = true;
+      print("timeUp!");
+      background(255, 0, 0);
+      waitScreen();
+      for (int i = 0; i < twitterData.length; i++) {
+        println(twitterData[i]);
+      }
+      timeUp = false;
+      timer.start();
+    } 
+    /* if (blahblah) {
+     break; 
+     }
+     */
   }
   //server is called for new information every 30 minutes
-  /*  if (timer.isFinished()) {
-   timer.start();
-   if (twitter) {
-   showtwitterResults = showChoreo.run();
-   twitterResults = parseJSONObject(showtwitterResults.getResponse());
-   setTwitterValues();
-   }  
-   if (instagram) {
-   getUserInformationResultsInsta = getUserInformationChoreoInsta.run();
-   instaResults = parseJSONObject(getUserInformationResultsInsta.getResponse());
-   setInstagramValues();
-   } 
-   if (tumblr) {
-   getUserInformationResultsTumblr = getUserInformationChoreoTumblr.run();
-   tumblrResults = parseJSONObject(getUserInformationResultsTumblr.getResponse());
-   setTumblrValues();
-   }
-   } */
 
+  /* for (int i = 0; i < tumblrData.length; i++) {
+   println(tumblrData[i]);
+   }
+   for (int i = 0; i < instaData.length; i++) {
+   println(instaData[i]);
+   } */
   //call functions again
   //puts all the data into an array
-  /* int[] twitterData = {
-   noTFollowers, noTFriends, noTStatuses, noTFavourites
-   };
-   int[] instaData = {
-   noIFollowers, noIFollowing, instaPosts
-   };
-   int[] tumblrData = {
-   noOfBlogs, tumblrPosts, tumblrMessages, tumblrFollowers, tumblrFollowing, tumblrLikes
-   };
-   int[] allData = concat(twitterData, instaData);
-   allData = concat(allData, tumblrData); */
-
-  /*  text("YOUR TWITTER DATA:", 25, 200);
-   text("Followers: "+noTFollowers, 25, 220);
-   text("Friends: "+noTFriends, 25, 240);
-   text("Tweets: "+noTStatuses, 25, 260);
-   text("Favourites: "+noTFavourites, 25, 280);
-   text("YOUR INSTAGRAM DATA: ", 25, 300);
-   text("Followers: "+noIFollowers, 25, 325);
-   text("Following: "+noIFollowing, 25, 345);
-   text("Posts: "+instaPosts, 25, 370);
-   // text("Likes: "+iLikes, 25, 395);
-   
-   text("YOUR TUMBLR DATA: ", 25, 440);
-   text("Likes: "+tumblrLikes, 25, 460);
-   text("Following: "+tumblrFollowing, 25, 480);
-   text("Blogs: "+noOfBlogs, 25, 500); 
-   text("Posts: "+noOfBlogs, 25, 500); 
-   text("Messages: "+noOfBlogs, 25, 500); 
-   text("Followers: "+noOfBlogs, 25, 500); 
-   
-   
-   */
 }
 
 void opening() {
@@ -247,49 +262,8 @@ void opening() {
     line(width/1.5+15, height/1.7+80, width/1.5+50, height/1.7+80);
   }
 }
-
-
-/*void displayText(String message) {
- int x = 100; 
- for (int i = 0; i < message.length (); i++) {
- //if the time now minus the time the timer was called is greater than the interval
- String letter = message.substring(0, i); //display the string
- if (millis() - time >= wait) {
- text(letter, x, height/2);
- //reset the timer
- }
- }
- x += 20;
- }
- */
-/*void something() {
- //if 30 mins has passed since values were first obtained call functions again
- 
- showtwitterResults = showChoreo.run();
- twitterResults = parseJSONObject(showtwitterResults.getResponse());
- setTwitterValues();
- /////
- getUserInformationResultsInsta = getUserInformationChoreoInsta.run();
- instaResults = parseJSONObject(getUserInformationResultsInsta.getResponse());
- setInstagramValues();
- ///
- getUserInformationResultsTumblr = getUserInformationChoreoTumblr.run();
- tumblrResults = parseJSONObject(getUserInformationResultsTumblr.getResponse());
- setTumblrValues();
- } */
-
-void generateRestingRate() {
-  // get text from file
-  //by age detemine what resting bpm should be
-  //determine equivalent ekg (normal rate)
-
-  //call server 
-  //if any value has changed do this (update bpm number of changes per 30 minutes some calculation to get bpm
-
-  //else dead heart rate
-}
 void mouseClicked() {
-  print("x!");
+  //print("x!");
   //determing what the user has clicked, which social media platforms the user uses
   if (screen == 1) {
     if ((mouseX > width/5 && mouseX < width/5+90) && (mouseY > height/1.7 && mouseY < height/1.7+90)) {
@@ -315,7 +289,7 @@ void mouseClicked() {
   }
 }
 void keyPressed() {
- // if enter is pressed on screen 1, save the sm images that were clicked and set boolean variables accordingly
+  // if enter is pressed on screen 1, save the sm images that were clicked and set boolean variables accordingly
   if (screen == 1) {
     if (key == '\n' ) {
       if ((!instagram) && (!twitter) && (!tumblr)) {
@@ -333,11 +307,12 @@ void keyPressed() {
           } else if ((tumblr) && (!instagram)) {
             runInitializeOAuthChoreoTumblr();
           }
+          screen = 3;
         }
       }
     }
-  } else if (screen == 2) {
-     // If the return key is pressed, save the String and clear it
+  } else if (screen == 2 && keyPressed) {
+    // If the return key is pressed, save the String and clear it
     if (key == '\n' ) {
       userName = typing;
       runTwitterChoreo(); //get twitter info
@@ -349,6 +324,7 @@ void keyPressed() {
       }
       // A String can be cleared by setting it equal to ""
       typing = "";
+      screen = 3;
     } else if (key == BACKSPACE && typing.length() > 0) {
       typing = typing.substring(0, typing.length() - 1); //if backspace
     } else {
@@ -358,7 +334,28 @@ void keyPressed() {
     }
   }
 }
-
+void waitScreen() {
+  // background(0);
+  if (timeUp) {
+    // print("time is up!");
+    if (twitter) {
+      showtwitterResults = showChoreo.run();
+      twitterResults = parseJSONObject(showtwitterResults.getResponse());
+      setTwitterValues();
+    }  
+    if (instagram) {
+      getUserInformationResultsInsta = getUserInformationChoreoInsta.run();
+      instaResults = parseJSONObject(getUserInformationResultsInsta.getResponse());
+      setInstagramValues();
+    } 
+    if (tumblr) {
+      getUserInformationResultsTumblr = getUserInformationChoreoTumblr.run();
+      tumblrResults = parseJSONObject(getUserInformationResultsTumblr.getResponse());
+      setTumblrValues();
+    }
+    //
+  }
+}
 
 void runTwitterChoreo() {
   // Create the Choreo object using your Temboo session

@@ -11,6 +11,8 @@ class Timer {
   void start() {
     // When the timer starts it stores the current time in milliseconds.
     savedTime = millis(); 
+ //   println("timer started!");
+ //   println(savedTime);
   }
   
   // The function isFinished() returns true if 5,000 ms have passed. 
