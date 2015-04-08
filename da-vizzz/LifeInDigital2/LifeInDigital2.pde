@@ -46,10 +46,18 @@ boolean twitter = false;
 boolean tumblr = false;
 boolean instagram = false;
 Timer timer;
+//main countdown of 12hrs of oollecting data or so
+Countdown countdown;
+boolean countDownOver = false;
+//boolean variable when the main countdown is over
+boolean over;
 boolean timeUp = false;
 boolean first = true;
 //starts up the timer for the first time in draw function
 int screen = 1;
+float seconds;
+float minutes;
+float hours;
 /*int[] twitterData;
  int[] instaData;
  int[] tumblrData;
@@ -77,6 +85,7 @@ void setup() {
   twitterLogo = loadImage("twitter46.png");
   //every 30 mins
   timer = new Timer(30000);
+  countdown = new Countdown(7200000);
 }
 
 
@@ -160,34 +169,37 @@ void draw() {
 
 
   case 4:
-    background(0, 255, 0);
+   // background(0, 255, 0);
+    countDownOver = countdown.startCountdown();
     //  println("screen 4!");
-    if (timer.isFinished()) {
-      timeUp = true;
-      print("timeUp!");
-      background(255, 0, 0);
-      waitScreen();
-      for (int i = 0; i < twitterData.length; i++) {
-        println(twitterData[i]);
+    if (countDownOver == false) {
+      countdown.display();
+      if (timer.isFinished()) {
+        timeUp = true;
+        print("timeUp!");
+        background(255, 0, 0);
+        updateData(); //update data
+        for (int i = 0; i < twitterData.length; i++) {
+          println(twitterData[i]);
+        }
+        /* for (int i = 0; i < tumblrData.length; i++) {
+         println(tumblrData[i]);
+         }
+         for (int i = 0; i < instaData.length; i++) {
+         println(instaData[i]);
+         } */
+        timeUp = false;
+        timer.start();
       }
-      timeUp = false;
-      timer.start();
-    } 
-    /* if (blahblah) {
-     break; 
-     }
-     */
+    } else {
+      print("COUNTDOWN OVER");
+      screen = 5;
+      break;
+    }
+    
+    case 5:
+    generateTracing();
   }
-  //server is called for new information every 30 minutes
-
-  /* for (int i = 0; i < tumblrData.length; i++) {
-   println(tumblrData[i]);
-   }
-   for (int i = 0; i < instaData.length; i++) {
-   println(instaData[i]);
-   } */
-  //call functions again
-  //puts all the data into an array
 }
 
 void opening() {
@@ -334,7 +346,7 @@ void keyPressed() {
     }
   }
 }
-void waitScreen() {
+void updateData() {
   // background(0);
   if (timeUp) {
     // print("time is up!");
@@ -356,7 +368,10 @@ void waitScreen() {
     //
   }
 }
-
+void generateTracing() {
+  background(0, 0, 255);
+  
+}
 void runTwitterChoreo() {
   // Create the Choreo object using your Temboo session
   showChoreo = new com.temboo.Library.Twitter.Users.Show(session);
