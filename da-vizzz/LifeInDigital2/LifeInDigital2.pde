@@ -464,17 +464,18 @@ void generateTracing() {
   allDataChange.add(0);
 
   if (twitter) {
-    int total;
+    int total = 0;
     for (int i = 0; i < td.length; i++) {
       int[] tempArray = int(split(td[i], ','));
       for (int n = 0; n < tempArray.length; n++) {
         //  println(tempArray[n]);
         total += tempArray[n];
-        twitterData.add(total);
         // println("total:" + total);
       }
+      twitterData.add(total);
+      total = 0;
     }
-    for (int i = 0; i < twitterData.size(); i++) {
+    for (int i = 0; i < twitterData.size (); i++) {
       println(twitterData.get(i));
       if (i != twitterData.size()-1) {
         twitterChange.add(twitterData.get(i) - twitterData.get(i+1));
@@ -487,7 +488,7 @@ void generateTracing() {
         maxChangeTwitter = twitterChange.get(i);
       }
     }
-    println("max change:" + maxChangeTwitter);
+    // println("max change:" + maxChangeTwitter);
   }
   if (instagram) {
     int total = 0;
@@ -496,9 +497,10 @@ void generateTracing() {
       for (int n = 0; n < tempArray.length; n++) {
         println(tempArray[n]);
         total += tempArray[n];
-        println("total:" + total);
+        // println("total:" + total);
       }
       instaData.add(total);
+      total = 0;
     }
     for (int i = 0; i < instaData.size (); i++) {
       if (i != instaData.size()) {
@@ -522,6 +524,7 @@ void generateTracing() {
         println("total:" + total);
       }
       tumblrData.add(total);
+      total = 0;
     }
     for (int i = 0; i < tumblrData.size (); i++) {
       if (i != tumblrData.size()) {
