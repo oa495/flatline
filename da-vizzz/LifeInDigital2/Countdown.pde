@@ -43,7 +43,7 @@ class Countdown {
   }
 
   void display() {
-    background(0);
+    background(255);
     textSize(24);
     text(hoursLeft, width/2, 200);
     text(minutesLeft, width/2, 400);

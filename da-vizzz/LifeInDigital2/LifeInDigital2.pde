@@ -1,4 +1,3 @@
-
 import com.temboo.core.*;
 import org.json.*;
 //import com.temboo.Library.Instagram.*;
@@ -42,6 +41,7 @@ PImage facebookLogo;
 PImage twitterLogo;
 PImage tumblrLogo;
 PImage instagramLogo;
+PImage play;
 boolean twitter = false;
 boolean tumblr = false;
 boolean instagram = false;
@@ -71,21 +71,32 @@ com.temboo.Library.Instagram.GetLikedMediaForUserResultSet getLikedMediaForInsta
 com.temboo.Library.Tumblr.User.GetUserInformation getUserInformationChoreoTumblr;
 // Create a session using your Temboo account application details
 TembooSession session = new TembooSession("yelly", "myFirstApp", "fb0516146cf34e6691dc7cdc999c35de");
-
-
+PrintWriter tumblrNumbers;
+PrintWriter twitterNumbers;
+PrintWriter instaNumbers;
+PrintWriter allNumbers;
+int firstTwitterSum;
+int firstInstaSum;
+int firstTumblrSum;
+int firstTotalSum;
 void setup() {
   size(1200, 800);
   //fonts
   heading = loadFont("Oswald-Regular-48.vlw");
   para = loadFont("MerriweatherSans-Light-48.vlw");
   //images for opening screen 
+  play = loadImage("play.png");
   instagramLogo = loadImage("instagram10.png");
   tumblrLogo = loadImage("tumblr21.png");
   facebookLogo = loadImage("facebook48.png");
   twitterLogo = loadImage("twitter46.png");
+  tumblrNumbers = createWriter("tumblr.txt");
+  instaNumbers = createWriter("insta.txt");
+  twitterNumbers = createWriter("twitter.txt");
+  allNumbers = createWriter("all.txt");
   //every 30 mins
   timer = new Timer(30000);
-  countdown = new Countdown(7200000);
+  countdown = new Countdown(120000);
 }
 
 
@@ -101,7 +112,7 @@ void setup() {
  
  **/
 void draw() {
-  background(255);
+  // background(255);
   fill(0);
   int[] twitterData = {
     noTFollowers, noTFriends, noTStatuses, noTFavourites
@@ -115,6 +126,7 @@ void draw() {
   int[] allData = concat(twitterData, instaData);
   allData = concat(allData, tumblrData);
   //which screen should we be on
+
   switch(screen) {
   case 1:
     opening();
@@ -124,6 +136,7 @@ void draw() {
   case 2:
     //screen to type in twitter username
     //  println("screen 2!");
+    background(255);
     fill(0);
     textFont(para);
     textSize(28);
@@ -149,7 +162,7 @@ void draw() {
      text("Followers: "+tumblrLikes, 25, 500); */
     /*for (int i = 0; i < twitterData.length; i++) {
      println(twitterData[i]);
-     }
+     } /*
      for (int i = 0; i < tumblrData.length; i++) {
      println(tumblrData[i]);
      }
@@ -159,30 +172,62 @@ void draw() {
     break;
 
   case 3:
-    // println("screen 3!");
-    for (int i = 0; i < twitterData.length; i++) {
-      println(twitterData[i]);
+    if (twitter) {
+      for (int i = 0; i < twitterData.length; i++) {
+        //    println(twitterData[i]);
+        firstTwitterSum += twitterData[i];
+      } 
+      twitterNumbers.println(twitterData[0] + "," + twitterData[1] + "," + twitterData[2] + "," + twitterData[3]);
+      firstTotalSum += firstTwitterSum;
+      //   println(firstTwitterSum);
+    }
+    if (instagram) {
+      for (int i = 0; i < instaData.length; i++) {
+        //   println(instaData[i]);
+        firstInstaSum += instaData[i];
+      }
+      instaNumbers.println(instaData[0] + "," + instaData[1] + "," + instaData[2]);
+      firstTotalSum += firstInstaSum;
+      //   println(firstInstaSum);
+    }
+
+    if (tumblr) {
+      for (int i = 0; i < tumblrData.length; i++) {
+        //  println(tumblrData[i]);
+        firstTumblrSum += tumblrData[i];
+      }
+      tumblrNumbers.println(tumblrData[0] + "," + tumblrData[1] + "," + tumblrData[2] + "," + tumblrData[3] + "," + tumblrData[4] + "," + tumblrData[5]);
+      firstTotalSum += firstTumblrSum;     
+      //  println(firstTumblrSum);
     }
     timer.start();
     screen = 4;
     break;
 
-
   case 4:
-   // background(0, 255, 0);
+    // background(0, 255, 0);
     countDownOver = countdown.startCountdown();
-    //  println("screen 4!");
+    //println("screen 4!");
     if (countDownOver == false) {
       countdown.display();
       if (timer.isFinished()) {
         timeUp = true;
-        print("timeUp!");
-        background(255, 0, 0);
+        // print("timeUp!");
+        //background(255, 0, 0);
         updateData(); //update data
-        for (int i = 0; i < twitterData.length; i++) {
-          println(twitterData[i]);
+        if (twitter) {
+          twitterNumbers.println(twitterData[0] + "," + twitterData[1] + "," + twitterData[2] + "," + twitterData[3]);
         }
-        /* for (int i = 0; i < tumblrData.length; i++) {
+        if (instagram) {
+          instaNumbers.println(instaData[0] + "," + instaData[1] + "," + instaData[2]);
+        }
+        if (tumblr) {
+          instaNumbers.println(tumblrData[0] + "," + tumblrData[1] + "," + tumblrData[2] + "," + tumblrData[3] + "," + tumblrData[4] + "," + tumblrData[5]);
+        }
+        /* for (int i = 0; i < twitterData.length; i++) {
+         println(twitterData[i]);
+         }
+         for (int i = 0; i < tumblrData.length; i++) {
          println(tumblrData[i]);
          }
          for (int i = 0; i < instaData.length; i++) {
@@ -192,13 +237,31 @@ void draw() {
         timer.start();
       }
     } else {
-      print("COUNTDOWN OVER");
+      //  print("COUNTDOWN OVER");
+      if (twitter) {
+        twitterNumbers.flush();  // Writes the remaining data to the file
+        twitterNumbers.close();
+      }
+      if (instagram) {
+        instaNumbers.flush();  // Writes the remaining data to the file
+        instaNumbers.close();
+      }
+      if (tumblr) {
+        tumblrNumbers.flush();  // Writes the remaining data to the file
+        tumblrNumbers.close();
+      }
       screen = 5;
-      break;
     }
-    
-    case 5:
+    break;
+  case 5:
+    // print("screen 5!");
+    background(243, 116, 88);
+    image(play, width/2, height/2, 128, 128); 
+    break;
+
+  case 6:
     generateTracing();
+    break;
   }
 }
 
@@ -298,6 +361,10 @@ void mouseClicked() {
         instagram = true;
       }
     }
+  } else if (screen == 5) {
+    if ((mouseX > width/2-20 && mouseX < width/2+130) && (mouseY > height/2 && mouseY < height/2+130)) {
+      screen = 6;
+    }
   }
 }
 void keyPressed() {
@@ -368,10 +435,90 @@ void updateData() {
     //
   }
 }
+ArrayList<Integer> twitterData = new ArrayList<Integer>();
+ArrayList<Integer> twitterChange = new ArrayList<Integer>();
+
+ArrayList<Integer> instaData = new ArrayList<Integer>();
+ArrayList<Integer> instaChange = new ArrayList<Integer>();
+
+ArrayList<Integer> tumblrData = new ArrayList<Integer>();
+ArrayList<Integer> tumblrChange = new ArrayList<Integer>();
+
+ArrayList<Integer> allData = new ArrayList<Integer>();
+ArrayList<Integer> allDataChange = new ArrayList<Integer>();
+
 void generateTracing() {
   background(0, 0, 255);
-  
-}
+  String[] td = loadStrings("twitter.txt");
+  String[] tud = loadStrings("tumblr.txt");
+  String[] id = loadStrings("insta.txt");
+  String[] ad = loadStrings("all.txt");
+
+  twitterChange.add(0);
+  tumblrChange.add(0);
+  tumblrChange.add(0);
+  allDataChange.add(0);
+
+  if (twitter) {
+    int total = 0;
+    for (int i = 0; i < td.length; i++) {
+      int[] tempArray = int(split(td[i], ','));
+      for (int n = 0; n < tempArray.length; n++) {
+        println(tempArray[n]);
+        total += tempArray[n];
+        println("total:" + total);
+      }
+      twitterData.add(total);
+    }
+    for (int i = 0; i < twitterData.length; i++) {
+      twitterChange.add(twitterData[i] - twitterData[i+1]);
+    }
+  }
+  if (instagram) {
+    int total = 0;
+    for (int i = 0; i < id.length; i++) {
+      int[] tempArray = int(split(id[i], ','));
+      for (int n = 0; n < tempArray.length; n++) {
+        println(tempArray[n]);
+        total += tempArray[n];
+        println("total:" + total);
+      }
+      instaData.add(total);
+    }
+    for (int i = 0; i < instaData.length; i++) {
+    }
+  }
+  if (tumblr) {
+    int total = 0;
+    for (int i = 0; i < tud.length; i++) {
+      int[] tempArray = int(split(tud[i], ','));
+      for (int n = 0; n < tempArray.length; n++) {
+        println(tempArray[n]);
+        total += tempArray[n];
+        println("total:" + total);
+      }
+      tumblrData.add(total);
+    }
+    for (int i = 0; i < tumblrData.length; i++) {
+    }
+  }
+  //for (int r = 0; r < twitterData.length; r++) {
+  //   println(twitterData[r]);
+  // }
+  /*  for (int i = 0; i < tud.length; i++) {
+   }
+   for (int i = 0; i < id.length; i++) {
+   }
+   for (int i = 0; i < ad.length; i++) {
+   }
+   int[] twitterData = int(split
+   int[] instaData = {
+   };
+   int[] tumblrData = {
+   noOfBlogs, tumblrPosts, tumblrMessages, tumblrFollowers, tumblrFollowing, tumblrLikes
+   };
+   int[] allData = concat(twitterData, instaData); */
+} 
 void runTwitterChoreo() {
   // Create the Choreo object using your Temboo session
   showChoreo = new com.temboo.Library.Twitter.Users.Show(session);
