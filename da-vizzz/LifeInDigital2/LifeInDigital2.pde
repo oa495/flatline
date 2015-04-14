@@ -446,6 +446,10 @@ ArrayList<Integer> tumblrChange = new ArrayList<Integer>();
 
 ArrayList<Integer> allData = new ArrayList<Integer>();
 ArrayList<Integer> allDataChange = new ArrayList<Integer>();
+int maxChangeTwitter;
+int maxChangeTumblr;
+int maxChangeInsta;
+int maxChangeTotal;
 
 void generateTracing() {
   background(0, 0, 255);
@@ -460,19 +464,30 @@ void generateTracing() {
   allDataChange.add(0);
 
   if (twitter) {
-    int total = 0;
+    int total;
     for (int i = 0; i < td.length; i++) {
       int[] tempArray = int(split(td[i], ','));
       for (int n = 0; n < tempArray.length; n++) {
-        println(tempArray[n]);
+        //  println(tempArray[n]);
         total += tempArray[n];
-        println("total:" + total);
+        twitterData.add(total);
+        // println("total:" + total);
       }
-      twitterData.add(total);
     }
-    for (int i = 0; i < twitterData.length; i++) {
-      twitterChange.add(twitterData[i] - twitterData[i+1]);
+    for (int i = 0; i < twitterData.size(); i++) {
+      println(twitterData.get(i));
+      if (i != twitterData.size()-1) {
+        twitterChange.add(twitterData.get(i) - twitterData.get(i+1));
+      }
     }
+    maxChangeTwitter = twitterChange.get(0);
+    for ( int i = 1; i < twitterChange.size (); i++) {
+      println(twitterChange.get(i));
+      if ( twitterChange.get(i) > maxChangeTwitter) {
+        maxChangeTwitter = twitterChange.get(i);
+      }
+    }
+    println("max change:" + maxChangeTwitter);
   }
   if (instagram) {
     int total = 0;
@@ -485,7 +500,16 @@ void generateTracing() {
       }
       instaData.add(total);
     }
-    for (int i = 0; i < instaData.length; i++) {
+    for (int i = 0; i < instaData.size (); i++) {
+      if (i != instaData.size()) {
+        instaChange.add(instaData.get(i) - instaData.get(i+1));
+      }
+    }
+    maxChangeInsta = instaChange.get(0);
+    for ( int i = 1; i < instaChange.size (); i++) {
+      if ( instaChange.get(i) > maxChangeInsta) {
+        maxChangeInsta = instaChange.get(i);
+      }
     }
   }
   if (tumblr) {
@@ -499,9 +523,22 @@ void generateTracing() {
       }
       tumblrData.add(total);
     }
-    for (int i = 0; i < tumblrData.length; i++) {
+    for (int i = 0; i < tumblrData.size (); i++) {
+      if (i != tumblrData.size()) {
+        tumblrChange.add(tumblrData.get(i) - tumblrData.get(i+1));
+      }
+    }
+    maxChangeTumblr = tumblrChange.get(0);
+    for ( int i = 1; i < tumblrChange.size (); i++) {
+      if ( tumblrChange.get(i) > maxChangeTumblr) {
+        maxChangeTumblr = tumblrChange.get(i);
+      }
     }
   }
+
+
+
+
   //for (int r = 0; r < twitterData.length; r++) {
   //   println(twitterData[r]);
   // }
