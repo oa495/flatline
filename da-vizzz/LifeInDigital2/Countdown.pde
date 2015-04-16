@@ -12,18 +12,22 @@ class Countdown {
   boolean done = false;
 
   Countdown(int totalTime) {
+    totalTime = totalTime;
     frameRate(1);
     this.timeDif = int(totalTime*0.001);
     daysLeft = floor(timeDif/60/60/24);
     hoursLeft = floor((timeDif - (daysLeft*60*60*24))/60/60);
     minutesLeft = floor((timeDif - (daysLeft*60*60*24) - (hoursLeft*60*60))/60);
     secondsLeft = floor((timeDif - (days*60*60*24) - (hoursLeft*60*60)) - (minutesLeft*60));
-    println(daysLeft);
-    println(hoursLeft);
-    println(minutesLeft);
-    println(secondsLeft);
+ //   println(daysLeft);
+//    println(hoursLeft);
+//    println(minutesLeft);
+ //   println(secondsLeft);
   }
-
+  
+  int returnTime() {
+    return timeDif;
+  }
   // Starting the timer
   boolean startCountdown() {
     if (secondsLeft == 0 && minutesLeft == 0 && hoursLeft == 0) {
@@ -41,7 +45,7 @@ class Countdown {
     }
     return done;
   }
-
+  
   void display() {
     background(255);
     textSize(24);

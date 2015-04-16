@@ -14,7 +14,9 @@ class Timer {
  //   println("timer started!");
  //   println(savedTime);
   }
-  
+  int returnTime() {
+    return totalTime; 
+  }
   // The function isFinished() returns true if 5,000 ms have passed. 
   // The work of the timer is farmed out to this method.
   boolean isFinished() { 

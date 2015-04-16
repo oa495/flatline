@@ -177,7 +177,7 @@ void draw() {
         //    println(twitterData[i]);
         firstTwitterSum += twitterData[i];
       } 
-      twitterNumbers.println(twitterData[0] + "," + twitterData[1] + "," + twitterData[2] + "," + twitterData[3]);
+      //  twitterNumbers.println(twitterData[0] + "," + twitterData[1] + "," + twitterData[2] + "," + twitterData[3]);
       firstTotalSum += firstTwitterSum;
       //   println(firstTwitterSum);
     }
@@ -260,8 +260,12 @@ void draw() {
     break;
 
   case 6:
-    generateTracing();
+    generateData();
+    screen = 7;
     break;
+
+  case 7:
+    generateTracing();
   }
 }
 
@@ -436,32 +440,38 @@ void updateData() {
   }
 }
 ArrayList<Integer> twitterData = new ArrayList<Integer>();
+
 ArrayList<Integer> twitterChange = new ArrayList<Integer>();
-
+/*
 ArrayList<Integer> instaData = new ArrayList<Integer>();
-ArrayList<Integer> instaChange = new ArrayList<Integer>();
-
-ArrayList<Integer> tumblrData = new ArrayList<Integer>();
-ArrayList<Integer> tumblrChange = new ArrayList<Integer>();
-
-ArrayList<Integer> allData = new ArrayList<Integer>();
-ArrayList<Integer> allDataChange = new ArrayList<Integer>();
+ 
+ ArrayList<Integer> instaChange = new ArrayList<Integer>();
+ 
+ ArrayList<Integer> tumblrData = new ArrayList<Integer>();
+ 
+ ArrayList<Integer> tumblrChange = new ArrayList<Integer>();
+ 
+ ArrayList<Integer> allData = new ArrayList<Integer>();
+ ArrayList<Integer> allDataChange = new ArrayList<Integer>(); */
 int maxChangeTwitter;
-int maxChangeTumblr;
-int maxChangeInsta;
-int maxChangeTotal;
+//int maxChangeTumblr;
+//int maxChangeInsta;
+//int maxChangeTotal;
 
-void generateTracing() {
+void generateData() {
   background(0, 0, 255);
   String[] td = loadStrings("twitter.txt");
-  String[] tud = loadStrings("tumblr.txt");
-  String[] id = loadStrings("insta.txt");
-  String[] ad = loadStrings("all.txt");
-
+  //String[] tud = loadStrings("tumblr.txt");
+  //String[] id = loadStrings("insta.txt");
+  // String[] ad = loadStrings("all.txt");
+  twitterData.add(firstTwitterSum);
+  //instaData.add(firstInstaSum);
+  //tumblrData.add(firstTumblrSum);
+  //allData.add(firstTotalSum);
   twitterChange.add(0);
-  tumblrChange.add(0);
-  tumblrChange.add(0);
-  allDataChange.add(0);
+  //tumblrChange.add(0);
+  //instaChange.add(0);
+  // allDataChange.add(0);
 
   if (twitter) {
     int total = 0;
@@ -470,95 +480,138 @@ void generateTracing() {
       for (int n = 0; n < tempArray.length; n++) {
         //  println(tempArray[n]);
         total += tempArray[n];
-        // println("total:" + total);
+        println("total:" + total);
       }
       twitterData.add(total);
       total = 0;
     }
+    // println(twitterData.size());
     for (int i = 0; i < twitterData.size (); i++) {
-      println(twitterData.get(i));
+       println(twitterData.get(i));
       if (i != twitterData.size()-1) {
-        twitterChange.add(twitterData.get(i) - twitterData.get(i+1));
+        twitterChange.add(twitterData.get(i+1) - twitterData.get(i));
       }
     }
+    // println(twitterChange.size());
     maxChangeTwitter = twitterChange.get(0);
     for ( int i = 1; i < twitterChange.size (); i++) {
-      println(twitterChange.get(i));
+      println("twitterChange:" + twitterChange.get(i));
       if ( twitterChange.get(i) > maxChangeTwitter) {
         maxChangeTwitter = twitterChange.get(i);
       }
     }
-    // println("max change:" + maxChangeTwitter);
-  }
-  if (instagram) {
-    int total = 0;
-    for (int i = 0; i < id.length; i++) {
-      int[] tempArray = int(split(id[i], ','));
-      for (int n = 0; n < tempArray.length; n++) {
-        println(tempArray[n]);
-        total += tempArray[n];
-        // println("total:" + total);
-      }
-      instaData.add(total);
-      total = 0;
+    println("max change:" + maxChangeTwitter);
+  } 
+  /*  if (instagram) {
+   int total = 0;
+   for (int i = 0; i < id.length; i++) {
+   int[] tempArray = int(split(id[i], ','));
+   for (int n = 0; n < tempArray.length; n++) {
+   println(tempArray[n]);
+   total += tempArray[n];
+   // println("total:" + total);
+   }
+   instaData.add(total);
+   total = 0;
+   }
+   for (int i = 0; i < instaData.size (); i++) {
+   if (i != instaData.size()) {
+   instaChange.add(instaData.get(i) - instaData.get(i+1));
+   }
+   }
+   maxChangeInsta = instaChange.get(0);
+   for ( int i = 1; i < instaChange.size (); i++) {
+   if ( instaChange.get(i) > maxChangeInsta) {
+   maxChangeInsta = instaChange.get(i);
+   }
+   }
+   }
+   if (tumblr) {
+   int total = 0;
+   for (int i = 0; i < tud.length; i++) {
+   int[] tempArray = int(split(tud[i], ','));
+   for (int n = 0; n < tempArray.length; n++) {
+   println(tempArray[n]);
+   total += tempArray[n];
+   println("total:" + total);
+   }
+   tumblrData.add(total);
+   total = 0;
+   }
+   for (int i = 0; i < tumblrData.size (); i++) {
+   if (i != tumblrData.size()) {
+   tumblrChange.add(tumblrData.get(i) - tumblrData.get(i+1));
+   }
+   }
+   maxChangeTumblr = tumblrChange.get(0);
+   for ( int i = 1; i < tumblrChange.size (); i++) {
+   if ( tumblrChange.get(i) > maxChangeTumblr) {
+   maxChangeTumblr = tumblrChange.get(i);
+   }
+   }
+   } */
+} 
+
+int timerTotalTime;
+int countdownTotalTime;
+int intervals;
+float[] divide = {
+  4, 2, 4/3, 1
+};
+ArrayList<Integer> timeChange = new ArrayList<Integer>();
+ArrayList<Integer> timeChange2 = new ArrayList<Integer>();
+ArrayList<PVector> coordinates = new ArrayList<PVector>();
+ArrayList<Integer> twitterChange2 = new ArrayList<Integer>();
+void generateTracing() {
+  timeChange.add(30);
+  timeChange.add(60);
+  timeChange.add(90);
+  timeChange.add(120);
+  timerTotalTime = timer.returnTime();
+  countdownTotalTime = countdown.returnTime();
+  intervals = countdownTotalTime/timerTotalTime;
+  if (twitter) {
+    coordinates.add(new PVector(0, 0));
+    //  println(twitterChange.size());
+    //  println(divide.length);
+    for (int i = 0; i < twitterChange.size (); i++) {
+      twitterChange2.add(int(map(twitterChange.get(i), 0, maxChangeTwitter+200, 0, height))); 
+      timeChange2.add(int(map(timeChange.get(i), 0, 120, 0, width-100)));
     }
-    for (int i = 0; i < instaData.size (); i++) {
-      if (i != instaData.size()) {
-        instaChange.add(instaData.get(i) - instaData.get(i+1));
-      }
+    for (int i = 0; i < twitterChange.size (); i++) {
+      coordinates.add(new PVector(timeChange2.get(i), twitterChange2.get(i)));
     }
-    maxChangeInsta = instaChange.get(0);
-    for ( int i = 1; i < instaChange.size (); i++) {
-      if ( instaChange.get(i) > maxChangeInsta) {
-        maxChangeInsta = instaChange.get(i);
-      }
-    }
+    drawLine(coordinates);
   }
   if (tumblr) {
-    int total = 0;
-    for (int i = 0; i < tud.length; i++) {
-      int[] tempArray = int(split(tud[i], ','));
-      for (int n = 0; n < tempArray.length; n++) {
-        println(tempArray[n]);
-        total += tempArray[n];
-        println("total:" + total);
-      }
-      tumblrData.add(total);
-      total = 0;
-    }
-    for (int i = 0; i < tumblrData.size (); i++) {
-      if (i != tumblrData.size()) {
-        tumblrChange.add(tumblrData.get(i) - tumblrData.get(i+1));
-      }
-    }
-    maxChangeTumblr = tumblrChange.get(0);
-    for ( int i = 1; i < tumblrChange.size (); i++) {
-      if ( tumblrChange.get(i) > maxChangeTumblr) {
-        maxChangeTumblr = tumblrChange.get(i);
-      }
-    }
   }
+  if (instagram) {
+  }
+}
 
+void drawLine(ArrayList PTS) {
+  // some colours
+  frameRate(1);
+  background(255);
+  stroke(250, 15, 146);
+  noFill();
 
+  // start drawing
+  beginShape();
 
-
-  //for (int r = 0; r < twitterData.length; r++) {
-  //   println(twitterData[r]);
-  // }
-  /*  for (int i = 0; i < tud.length; i++) {
-   }
-   for (int i = 0; i < id.length; i++) {
-   }
-   for (int i = 0; i < ad.length; i++) {
-   }
-   int[] twitterData = int(split
-   int[] instaData = {
-   };
-   int[] tumblrData = {
-   noOfBlogs, tumblrPosts, tumblrMessages, tumblrFollowers, tumblrFollowing, tumblrLikes
-   };
-   int[] allData = concat(twitterData, instaData); */
+  // Loop through list
+  for (int i = 0; i < PTS.size (); i++) {
+    // get a object
+    PVector currPosition = (PVector) PTS.get(i);
+    // pass this position to the beginShape() using vertex()
+    vertex(currPosition.x, currPosition.y);
+  }
+  println("shape drawn!");
+  // stop drawing
+  endShape();
 } 
+
+
 void runTwitterChoreo() {
   // Create the Choreo object using your Temboo session
   showChoreo = new com.temboo.Library.Twitter.Users.Show(session);
