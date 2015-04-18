@@ -19,12 +19,12 @@ class Countdown {
     hoursLeft = floor((timeDif - (daysLeft*60*60*24))/60/60);
     minutesLeft = floor((timeDif - (daysLeft*60*60*24) - (hoursLeft*60*60))/60);
     secondsLeft = floor((timeDif - (days*60*60*24) - (hoursLeft*60*60)) - (minutesLeft*60));
- //   println(daysLeft);
-//    println(hoursLeft);
-//    println(minutesLeft);
- //   println(secondsLeft);
+    //   println(daysLeft);
+    //    println(hoursLeft);
+    //    println(minutesLeft);
+    //   println(secondsLeft);
   }
-  
+
   int returnTime() {
     return timeDif;
   }
@@ -45,13 +45,15 @@ class Countdown {
     }
     return done;
   }
-  
+
   void display() {
-    background(255);
-    textSize(24);
-    text(hoursLeft, width/2, 200);
-    text(minutesLeft, width/2, 400);
-    text(secondsLeft, width/2, 600);
+    fill(255);
+    background(243, 116, 88); 
+    textSize(90);
+    textAlign(LEFT);
+    text(hoursLeft, 250, height/2);
+    text(minutesLeft, 550, height/2);
+    text(secondsLeft, 850, height/2);
   }
 }
 

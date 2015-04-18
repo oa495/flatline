@@ -79,15 +79,13 @@ int firstTwitterSum;
 int firstInstaSum;
 int firstTumblrSum;
 int firstTotalSum;
-PImage i_pointer;
 void setup() {
   size(1200, 800);
   //fonts
   heading = loadFont("Oswald-Regular-48.vlw");
   para = loadFont("MerriweatherSans-Light-48.vlw");
-  //images for  screen 
+  //images for opening screen 
   play = loadImage("play.png");
-  i_pointer = loadImage("point.png");
   instagramLogo = loadImage("instagram10.png");
   tumblrLogo = loadImage("tumblr21.png");
   facebookLogo = loadImage("facebook48.png");
@@ -138,20 +136,12 @@ void draw() {
   case 2:
     //screen to type in twitter username
     //  println("screen 2!");
-    background(243, 116, 88);
-    fill(255);
-    stroke(255);
-    line(200, height/2, width/2+300, height/2);
-    textFont(heading);
-    textSize(14);
-    text("TYPE IN YOUR TWITTER USERNAME.", 200, height/2+40);
+    background(255);
+    fill(0);
     textFont(para);
-    textSize(40);
-    // image(i_pointer, mouseX, mouseY, 60, 79);
-    // if ((mouseX >= 195 && mouseX <= width/2+300) && (mouseY == height/2)) {
-    text(typing, 200, height/2-15);
-    text(userName, 200, height/2-15);
-    //  }
+    textSize(28);
+    text(typing, 25, 90);
+    text(userName, 25, 130);
     /* text("YOUR TWITTER DATA:", 25, 200);
      text("Followers: "+noTFollowers, 25, 220);
      text("Friends: "+noTFriends, 25, 240);
@@ -182,7 +172,7 @@ void draw() {
     break;
 
   case 3:
-    if (twitter) {
+   /*if (twitter) {
       for (int i = 0; i < twitterData.length; i++) {
         //    println(twitterData[i]);
         firstTwitterSum += twitterData[i];
@@ -210,8 +200,7 @@ void draw() {
       firstTotalSum += firstTumblrSum;     
       //  println(firstTumblrSum);
     }
-    timer.start(); 
-
+    timer.start(); */
     screen = 4;
     break;
 
@@ -266,9 +255,8 @@ void draw() {
     break;
   case 5:
     // print("screen 5!");
-    imageMode(CENTER);
-    background(243, 116, 88); 
-    image(play, width/2, height/2, 128, 128);
+    background(243, 116, 88);
+    image(play, width/2, height/2, 128, 128); 
     break;
 
   case 6:
@@ -295,84 +283,82 @@ void opening() {
   text("Pick your poison(s) and press enter.", 95, height/3);
   strokeWeight(4);
   stroke(255);
-  imageMode(CENTER);
   //just lines under the images to indicate when they've been clicked
-  line(200, height/1.7+50, 300, height/1.7+50);
-  line(500, height/1.7+50, 600, height/1.7+50);
-  line(800, height/1.7+50, 900, height/1.7+50);
+  line(width/1.5+15, height/1.7+80, width/1.5+50, height/1.7+80);
+  line(width/2.4+15, height/1.7+80, width/2.4+50, height/1.7+80);
+  line(width/5, height/1.7+80, width/5+50, height/1.7+80);
   if (twitter == false) {
-    if ((mouseX > 250 && mouseX < 350) && (mouseY > height/1.7-40 && mouseY < height/1.7+70)) {
-      image(twitterLogo, 250, height/1.7-10, 64, 64); //image moves up a bit on hover
-      println("twitter!");
+    if ((mouseX > width/5 && mouseX < width/5+70) && (mouseY > height/1.7 && mouseY < height/1.7+70)) {
+      image(twitterLogo, width/5, height/1.7-20, 64, 64); //image moves up a bit on hover
       /* if (twitter) {
+       println("twitter!");
        stroke(189, 225, 199);
        line(width/5, height/1.7+80, width/5+50, height/1.7+80);
        }*/
     } else {
-      image(twitterLogo, 250, height/1.7, 64, 64); //else image in regular position
+      image(twitterLogo, width/5, height/1.7, 64, 64); //else image in regular position
     }
   } else {
-    image(twitterLogo, 250, height/1.7, 64, 64);
+    image(twitterLogo, width/5, height/1.7, 64, 64);
     stroke(189, 225, 199);
-    line(200, height/1.7+50, 300, height/1.7+50);
+    line(width/5, height/1.7+80, width/5+50, height/1.7+80);
   }
   if (tumblr == false) {
-    if ((mouseX > 500 && mouseX < 650) && (mouseY > height/1.7-40 && mouseY < height/1.7+70)) {
-      image(tumblrLogo, 550, height/1.7-10, 64, 64);
+    if ((mouseX > width/2.4 && mouseX < width/2.4+70) && (mouseY > height/1.7 && mouseY < height/1.7+70)) {
+      image(tumblrLogo, width/2.4, height/1.7-20, 64, 64);
       /*if (tumblr) {
        println("tumblr!");
        stroke(189, 225, 199);
        line(width/2.4+15, height/1.7+80, width/2.4+50, height/1.7+80);
        }*/
     } else { 
-      image(tumblrLogo, 550, height/1.7, 64, 64);
+      image(tumblrLogo, width/2.4, height/1.7, 64, 64);
     }
   } else {
     stroke(189, 225, 199);
-    image(tumblrLogo, 550, height/1.7, 64, 64);
+    image(tumblrLogo, width/2.4, height/1.7, 64, 64);
     //   print("tumblr!");
-    line(500, height/1.7+50, 600, height/1.7+50);
+    line(width/2.4+15, height/1.7+80, width/2.4+50, height/1.7+80);
   }
   if (instagram == false) {
-    if ((mouseX > 800 && mouseX < 950) && (mouseY > height/1.7-40 && mouseY < height/1.7+70)) {
-      image(instagramLogo, 850, height/1.7-10, 64, 64);
+    if ((mouseX > width/1.5 && mouseX < width/1.5+70) && (mouseY > height/1.7 && mouseY < height/1.7+70)) {
+      image(instagramLogo, width/1.5, height/1.7-20, 64, 64);
+      line(width/1.5+15, height/1.7+80, width/1.5+50, height/1.7+80);
       /*if (instagram) {
        println("insta!");
        stroke(189, 225, 199);
        line(width/1.5+15, height/1.7+80, width/1.5+50, height/1.7+80);
        } */
     } else {
-      image(instagramLogo, 850, height/1.7, 64, 64);
+      image(instagramLogo, width/1.5, height/1.7, 64, 64);
       stroke(255);
+      line(width/1.5+15, height/1.7+80, width/1.5+50, height/1.7+80);
     }
   } else {
-    image(instagramLogo, 850, height/1.7, 64, 64);
+    image(instagramLogo, width/1.5, height/1.7, 64, 64);
     stroke(189, 225, 199);
     //  print("insta!");
-    line(800, height/1.7+50, 900, height/1.7+50);
+    line(width/1.5+15, height/1.7+80, width/1.5+50, height/1.7+80);
   }
 }
 void mouseClicked() {
   //print("x!");
   //determing what the user has clicked, which social media platforms the user uses
   if (screen == 1) {
-    if ((mouseX > 200 && mouseX < 300) && (mouseY > height/1.7-40 && mouseY < height/1.7+90)) {
-      print(twitter);
+    if ((mouseX > width/5 && mouseX < width/5+90) && (mouseY > height/1.7 && mouseY < height/1.7+90)) {
       if (twitter == true) {
         twitter = false;
       } else {
         //    print("twitter!");
         twitter = true;
       }
-    } else if ((mouseX > 500 && mouseX < 600) && (mouseY > height/1.7-40 && mouseY < height/1.7+90)) {
-      print(tumblr);
+    } else if ((mouseX > width/2.4 && mouseX < width/2.4+90) && (mouseY > height/1.7 && mouseY < height/1.7+90)) {
       if (tumblr == true) {
         tumblr = false;
       } else {
         tumblr = true;
       }
-    } else if ((mouseX > 800 && mouseX < 900) && (mouseY > height/1.7-40 && mouseY < height/1.7+90)) {
-      print(instagram);
+    } else if ((mouseX > width/1.5 && mouseX < width/1.5+90) && (mouseY > height/1.7 && mouseY < height/1.7+90)) {
       if (instagram == true) {
         instagram = false;
       } else {
@@ -380,8 +366,7 @@ void mouseClicked() {
       }
     }
   } else if (screen == 5) {
-    if ((mouseX > width/2-50 && mouseX < width/2+130) && (mouseY > height/2-40 && mouseY < height/2+130)) {
-      print("x");
+    if ((mouseX > width/2-20 && mouseX < width/2+130) && (mouseY > height/2 && mouseY < height/2+130)) {
       screen = 6;
     }
   }
@@ -457,36 +442,36 @@ void updateData() {
 ArrayList<Integer> twitterData = new ArrayList<Integer>();
 
 ArrayList<Integer> twitterChange = new ArrayList<Integer>();
-
+/*
 ArrayList<Integer> instaData = new ArrayList<Integer>();
-
-ArrayList<Integer> instaChange = new ArrayList<Integer>();
-
-ArrayList<Integer> tumblrData = new ArrayList<Integer>();
-
-ArrayList<Integer> tumblrChange = new ArrayList<Integer>();
-
-ArrayList<Integer> allData = new ArrayList<Integer>();
-ArrayList<Integer> allDataChange = new ArrayList<Integer>(); 
+ 
+ ArrayList<Integer> instaChange = new ArrayList<Integer>();
+ 
+ ArrayList<Integer> tumblrData = new ArrayList<Integer>();
+ 
+ ArrayList<Integer> tumblrChange = new ArrayList<Integer>();
+ 
+ ArrayList<Integer> allData = new ArrayList<Integer>();
+ ArrayList<Integer> allDataChange = new ArrayList<Integer>(); */
 int maxChangeTwitter;
-int maxChangeTumblr;
-int maxChangeInsta;
-int maxChangeTotal;
+//int maxChangeTumblr;
+//int maxChangeInsta;
+//int maxChangeTotal;
 
 void generateData() {
   background(0, 0, 255);
   String[] td = loadStrings("twitter.txt");
-  String[] tud = loadStrings("tumblr.txt");
-  String[] id = loadStrings("insta.txt");
-  String[] ad = loadStrings("all.txt");
+  //String[] tud = loadStrings("tumblr.txt");
+  //String[] id = loadStrings("insta.txt");
+  // String[] ad = loadStrings("all.txt");
   twitterData.add(firstTwitterSum);
-  instaData.add(firstInstaSum);
-  tumblrData.add(firstTumblrSum);
-  allData.add(firstTotalSum);
+  //instaData.add(firstInstaSum);
+  //tumblrData.add(firstTumblrSum);
+  //allData.add(firstTotalSum);
   twitterChange.add(0);
-  tumblrChange.add(0);
-  instaChange.add(0);
-  allDataChange.add(0);
+  //tumblrChange.add(0);
+  //instaChange.add(0);
+  // allDataChange.add(0);
 
   if (twitter) {
     int total = 0;
@@ -502,7 +487,7 @@ void generateData() {
     }
     // println(twitterData.size());
     for (int i = 0; i < twitterData.size (); i++) {
-      println(twitterData.get(i));
+       println(twitterData.get(i));
       if (i != twitterData.size()-1) {
         twitterChange.add(twitterData.get(i+1) - twitterData.get(i));
       }
@@ -517,54 +502,54 @@ void generateData() {
     }
     println("max change:" + maxChangeTwitter);
   } 
-  if (instagram) {
-    int total = 0;
-    for (int i = 0; i < id.length; i++) {
-      int[] tempArray = int(split(id[i], ','));
-      for (int n = 0; n < tempArray.length; n++) {
-        println(tempArray[n]);
-        total += tempArray[n];
-        // println("total:" + total);
-      }
-      instaData.add(total);
-      total = 0;
-    }
-    for (int i = 0; i < instaData.size (); i++) {
-      if (i != instaData.size()) {
-        instaChange.add(instaData.get(i) - instaData.get(i+1));
-      }
-    }
-    maxChangeInsta = instaChange.get(0);
-    for ( int i = 1; i < instaChange.size (); i++) {
-      if ( instaChange.get(i) > maxChangeInsta) {
-        maxChangeInsta = instaChange.get(i);
-      }
-    }
-  }
-  if (tumblr) {
-    int total = 0;
-    for (int i = 0; i < tud.length; i++) {
-      int[] tempArray = int(split(tud[i], ','));
-      for (int n = 0; n < tempArray.length; n++) {
-        println(tempArray[n]);
-        total += tempArray[n];
-        println("total:" + total);
-      }
-      tumblrData.add(total);
-      total = 0;
-    }
-    for (int i = 0; i < tumblrData.size (); i++) {
-      if (i != tumblrData.size()) {
-        tumblrChange.add(tumblrData.get(i) - tumblrData.get(i+1));
-      }
-    }
-    maxChangeTumblr = tumblrChange.get(0);
-    for ( int i = 1; i < tumblrChange.size (); i++) {
-      if ( tumblrChange.get(i) > maxChangeTumblr) {
-        maxChangeTumblr = tumblrChange.get(i);
-      }
-    }
-  }
+  /*  if (instagram) {
+   int total = 0;
+   for (int i = 0; i < id.length; i++) {
+   int[] tempArray = int(split(id[i], ','));
+   for (int n = 0; n < tempArray.length; n++) {
+   println(tempArray[n]);
+   total += tempArray[n];
+   // println("total:" + total);
+   }
+   instaData.add(total);
+   total = 0;
+   }
+   for (int i = 0; i < instaData.size (); i++) {
+   if (i != instaData.size()) {
+   instaChange.add(instaData.get(i) - instaData.get(i+1));
+   }
+   }
+   maxChangeInsta = instaChange.get(0);
+   for ( int i = 1; i < instaChange.size (); i++) {
+   if ( instaChange.get(i) > maxChangeInsta) {
+   maxChangeInsta = instaChange.get(i);
+   }
+   }
+   }
+   if (tumblr) {
+   int total = 0;
+   for (int i = 0; i < tud.length; i++) {
+   int[] tempArray = int(split(tud[i], ','));
+   for (int n = 0; n < tempArray.length; n++) {
+   println(tempArray[n]);
+   total += tempArray[n];
+   println("total:" + total);
+   }
+   tumblrData.add(total);
+   total = 0;
+   }
+   for (int i = 0; i < tumblrData.size (); i++) {
+   if (i != tumblrData.size()) {
+   tumblrChange.add(tumblrData.get(i) - tumblrData.get(i+1));
+   }
+   }
+   maxChangeTumblr = tumblrChange.get(0);
+   for ( int i = 1; i < tumblrChange.size (); i++) {
+   if ( tumblrChange.get(i) > maxChangeTumblr) {
+   maxChangeTumblr = tumblrChange.get(i);
+   }
+   }
+   } */
 } 
 
 int timerTotalTime;
@@ -606,6 +591,7 @@ void generateTracing() {
 
 void drawLine(ArrayList PTS) {
   // some colours
+  frameRate(1);
   background(255);
   stroke(250, 15, 146);
   noFill();
@@ -848,5 +834,94 @@ void runGetUserInformationChoreoTumblr() {
   //  print(tumblrResults);
   // println(getUserInformationResultsTumblr.getResponse());
   setTumblrValues();
+}
+
+class Countdown {
+  int totalTime;
+  int days;
+  int seconds;
+  int hours;
+  int minutes;
+  int secondsLeft;
+  int minutesLeft;
+  int hoursLeft;
+  int daysLeft;
+  int timeDif;
+  boolean done = false;
+
+  Countdown(int totalTime) {
+    totalTime = totalTime;
+    frameRate(1);
+    this.timeDif = int(totalTime*0.001);
+    daysLeft = floor(timeDif/60/60/24);
+    hoursLeft = floor((timeDif - (daysLeft*60*60*24))/60/60);
+    minutesLeft = floor((timeDif - (daysLeft*60*60*24) - (hoursLeft*60*60))/60);
+    secondsLeft = floor((timeDif - (days*60*60*24) - (hoursLeft*60*60)) - (minutesLeft*60));
+ //   println(daysLeft);
+//    println(hoursLeft);
+//    println(minutesLeft);
+ //   println(secondsLeft);
+  }
+  
+  int returnTime() {
+    return timeDif;
+  }
+  // Starting the timer
+  boolean startCountdown() {
+    if (secondsLeft == 0 && minutesLeft == 0 && hoursLeft == 0) {
+      done = true;
+    } else {
+      secondsLeft--;
+      if (secondsLeft < 0) {
+        minutesLeft--;
+        secondsLeft = 59;
+      }
+      if (minutesLeft < 0) {
+        hoursLeft--;
+        minutesLeft = 59;
+      }
+    }
+    return done;
+  }
+  
+  void display() {
+    background(255);
+    textSize(24);
+    text(hoursLeft, width/2, 200);
+    text(minutesLeft, width/2, 400);
+    text(secondsLeft, width/2, 600);
+  }
+}
+
+class Timer {
+ 
+  int savedTime; // When Timer started
+  int totalTime; // How long Timer should last
+  
+  Timer(int tempTotalTime) {
+    totalTime = tempTotalTime;
+  }
+  
+  // Starting the timer
+  void start() {
+    // When the timer starts it stores the current time in milliseconds.
+    savedTime = millis(); 
+ //   println("timer started!");
+ //   println(savedTime);
+  }
+  int returnTime() {
+    return totalTime; 
+  }
+  // The function isFinished() returns true if 5,000 ms have passed. 
+  // The work of the timer is farmed out to this method.
+  boolean isFinished() { 
+    // Check how much time has passed
+    int passedTime = millis()- savedTime;
+    if (passedTime > totalTime) {
+      return true;
+    } else {
+      return false;
+    }
+  }
 }
 
