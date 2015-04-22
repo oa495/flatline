@@ -38,11 +38,9 @@ int wait = 1000;
 PFont heading;
 PFont para;
 PImage facebookLogo;
-
 PImage twitterLogo;
 PImage tumblrLogo;
 PImage instagramLogo;
-
 PImage play;
 boolean twitter = false;
 boolean tumblr = false;
@@ -93,19 +91,21 @@ int[] allDataChange = new int[1000];
 
 /*
 ArrayList<Integer> twitterData =  new ArrayList<Integer>();
- ArrayList<Integer> twitterChange =  new ArrayList<Integer>();
- ArrayList<Integer>instaData =  new ArrayList<Integer>();
- ArrayList<Integer> instaChange =  new ArrayList<Integer>();
- ArrayList<Integer> tumblrData = new ArrayList<Integer>();
- ArrayList<Integer> tumblrChange = new ArrayList<Integer>();
- ArrayList<Integer> allData =  new ArrayList<Integer>();
- ArrayList<Integer> allDataChange = new ArrayList<Integer>();
- */
+ArrayList<Integer> twitterChange =  new ArrayList<Integer>();
+ArrayList<Integer>instaData =  new ArrayList<Integer>();
+ArrayList<Integer> instaChange =  new ArrayList<Integer>();
+ArrayList<Integer> tumblrData = new ArrayList<Integer>();
+ArrayList<Integer> tumblrChange = new ArrayList<Integer>();
+ArrayList<Integer> allData =  new ArrayList<Integer>();
+ArrayList<Integer> allDataChange = new ArrayList<Integer>();
+*/
 
-int totalChangeTwitter;
-int totalChangeTumblr;
-int totalChangeInsta;
-int totalChange;
+
+
+int maxChangeTwitter;
+int maxChangeTumblr;
+int maxChangeInsta;
+int maxChangeTotal;
 
 int firstTwitterSum;
 int firstTumblrSum;
@@ -114,8 +114,6 @@ int firstTotalSum;
 PGraphics thegraph;
 int videoScale = 10;
 int cols, rows;
-boolean crossed = false;
-String choice;
 
 void setup() {
   size(1200, 800);
@@ -124,6 +122,10 @@ void setup() {
   rows = height/videoScale;
   //fonts
   background(255);
+  twitterBeat = new Beat();
+  tumblrBeat = new Beat();
+  instaBeat = new Beat();
+  allSMBeat = new Beat();
   heading = loadFont("Oswald-Regular-48.vlw");
   para = loadFont("MerriweatherSans-Light-48.vlw");
   //images for  screen 
@@ -139,10 +141,6 @@ void setup() {
   //every 30 mins
   timer = new Timer(10000);
   countdown = new Countdown(60000);
-  twitterBeat = new Beat();
-  tumblrBeat = new Beat();
-  instaBeat = new Beat();
-  allSMBeat = new Beat();
 }
 
 
@@ -216,26 +214,26 @@ void draw() {
      text("Followers: "+tumblrLikes, 25, 500); */
     /*for (int i = 0; i < twitterData.length; i++) {
      println(twitterData[i]);
-     } 
+     } /*
      for (int i = 0; i < tumblrData.length; i++) {
      println(tumblrData[i]);
      }
      for (int i = 0; i < instaData.length; i++) {
      println(instaData[i]);
      } */
-    break; 
+    break;
 
   case 3:
-    if (twitter && !instagram && !tumblr) {
+    if (twitter) {
       for (int i = 0; i < twitterData.length; i++) {
         //    println(twitterData[i]);
         firstTwitterSum += twitterData[i];
       } 
-      twitterNumbers.println(twitterData[0] + "," + twitterData[1] + "," + twitterData[2] + "," + twitterData[3]);
-      // firstTotalSum += firstTwitterSum;
+      //  twitterNumbers.println(twitterData[0] + "," + twitterData[1] + "," + twitterData[2] + "," + twitterData[3]);
+      firstTotalSum += firstTwitterSum;
       //   println(firstTwitterSum);
-    } 
-    if (instagram && !tumblr && !twitter) {
+    }
+    if (instagram) {
       for (int i = 0; i < instaData.length; i++) {
         //   println(instaData[i]);
         firstInstaSum += instaData[i];
@@ -243,8 +241,9 @@ void draw() {
       instaNumbers.println(instaData[0] + "," + instaData[1] + "," + instaData[2]);
       firstTotalSum += firstInstaSum;
       //   println(firstInstaSum);
-    } 
-    if (tumblr && !twitter && !instagram) {
+    }
+
+    if (tumblr) {
       for (int i = 0; i < tumblrData.length; i++) {
         //  println(tumblrData[i]);
         firstTumblrSum += tumblrData[i];
@@ -252,7 +251,7 @@ void draw() {
       tumblrNumbers.println(tumblrData[0] + "," + tumblrData[1] + "," + tumblrData[2] + "," + tumblrData[3] + "," + tumblrData[4] + "," + tumblrData[5]);
       firstTotalSum += firstTumblrSum;     
       //  println(firstTumblrSum);
-    } 
+    }
     timer.start(); 
 
     screen = 4;
@@ -279,11 +278,11 @@ void draw() {
         if (tumblr) {
           instaNumbers.println(tumblrData[0] + "," + tumblrData[1] + "," + tumblrData[2] + "," + tumblrData[3] + "," + tumblrData[4] + "," + tumblrData[5]);
         }
-        /*  for (int i = 0; i < twitterData.length; i++) {
-         // println(twitterData[i]);
+        /* for (int i = 0; i < twitterData.length; i++) {
+         println(twitterData[i]);
          }
          for (int i = 0; i < tumblrData.length; i++) {
-         //println(tumblrData[i]);
+         println(tumblrData[i]);
          }
          for (int i = 0; i < instaData.length; i++) {
          println(instaData[i]);
@@ -321,110 +320,32 @@ void draw() {
     screen = 7;
     break;
 
-  case 7: 
+  case 7:
     for (int i = 0; i < cols; i++) {
       // Begin loop for rows
       for (int j = 0; j < rows; j++) {
         // Scaling up to draw a rectangle at (x,y)
         int x = i*videoScale;
         int y = j*videoScale;
-        fill(109, 197, 170);
-        stroke(255);
+        fill(255);
+        stroke(109, 197, 170);
+        // For every column and row, a rectangle is drawn at an (x,y) location scaled and sized by videoScale.
         strokeWeight(0.5);
         rect(x, y, videoScale, videoScale);
       }
+      //
     }
-    text(name, 50, 80);
-    if (twitter) {
-      twitterBeat.setValues(name, totalChange, twitterData);
-      twitterBeat.displaySide();
-      crossed = twitterBeat.wrap();
+    if (twitter && !tumblr && !instagram) {
       twitterBeat.display();
+    } else if (instagram && !twitter && !tumblr) {
+      instaBeat.display();
+    } else if (tumblr && !twitter && !instagram) {
+      tumblrBeat.display();
+    } else if (twitter && instagram && !tumblr) {
+    } else if (twitter && tumblr && !instagram) {
+    } else if (instagram && tumblr && !twitter) {
+    } else if (instagram && tumblr && twitter) {
     }
-    /* if (instagram) {
-     instaBeat.setValues(name, totalChange, instaData);
-     if ((!twitter && !tumblr) || ()) {
-     crossed = instaBeat.wrap();
-     instaBeat.displaySide();
-     instaBeat.display();
-     }
-     } else if {
-     tumblrBeat.setValues(name, totalChange, tumblrData);
-     if ((!twitter && !instagram) ||()) {
-     crossed = tumblrBeat.wrap();
-     instaBeat.displaySide();
-     tumblrBeat.display();
-     }
-     }*/
-    //screen = 8;
-    break;
-
-  case 8:
-    /* if (twitter) {
-     twitterBeat.displaySide();
-     crossed = twitterBeat.wrap();
-     if (crossed) {
-     for (int i = 0; i < cols; i++) {
-     // Begin loop for rows
-     for (int j = 0; j < rows; j++) {
-     // Scaling up to draw a rectangle at (x,y)
-     int x = i*videoScale;
-     int y = j*videoScale;
-     fill(109, 197, 170);
-     stroke(255);
-     strokeWeight(0.5);
-     rect(x, y, videoScale, videoScale);
-     crossed = false;
-     }
-     }
-     }
-     twitterBeat.display();
-     } 
-    /*if (instagram) {
-     instaBeat.setValues(name, totalChange, instaData);
-     if ((!twitter && !tumblr) || ()) {
-     crossed = instaBeat.wrap();
-     if (crossed) {
-     for (int i = 0; i < cols; i++) {
-     // Begin loop for rows
-     for (int j = 0; j < rows; j++) {
-     // Scaling up to draw a rectangle at (x,y)
-     int x = i*videoScale;
-     int y = j*videoScale;
-     fill(109, 197, 170);
-     stroke(255);
-     strokeWeight(0.5);
-     rect(x, y, videoScale, videoScale);
-     crossed = false;
-     }
-     }
-     }
-     instaBeat.displaySide();
-     instaBeat.display();
-     }
-     } else if {
-     tumblrBeat.setValues(name, totalChange, tumblrData);
-     if ((!twitter && !instagram) ||()) {
-     crossed = tumblrBeat.wrap();
-     if (crossed) {
-     for (int i = 0; i < cols; i++) {
-     // Begin loop for rows
-     for (int j = 0; j < rows; j++) {
-     // Scaling up to draw a rectangle at (x,y)
-     int x = i*videoScale;
-     int y = j*videoScale;
-     fill(109, 197, 170);
-     stroke(255);
-     strokeWeight(0.5);
-     rect(x, y, videoScale, videoScale);
-     crossed = false;
-     }
-     }
-     }
-     instaBeat.displaySide();
-     tumblrBeat.display();
-     }
-     }*/
   }
 }
 
@@ -451,10 +372,10 @@ void opening() {
     if ((mouseX > 250 && mouseX < 350) && (mouseY > height/1.7-40 && mouseY < height/1.7+70)) {
       image(twitterLogo, 250, height/1.7-10, 64, 64); //image moves up a bit on hover
       // println("twitter!");
-      if (twitter) {
-        stroke(189, 225, 199);
-        line(width/5, height/1.7+80, width/5+50, height/1.7+80);
-      }
+      /* if (twitter) {
+       stroke(189, 225, 199);
+       line(width/5, height/1.7+80, width/5+50, height/1.7+80);
+       }*/
     } else {
       image(twitterLogo, 250, height/1.7, 64, 64); //else image in regular position
     }
@@ -466,11 +387,11 @@ void opening() {
   if (tumblr == false) {
     if ((mouseX > 500 && mouseX < 650) && (mouseY > height/1.7-40 && mouseY < height/1.7+70)) {
       image(tumblrLogo, 550, height/1.7-10, 64, 64);
-      if (tumblr) {
-        // println("tumblr!");
-        stroke(189, 225, 199);
-        line(width/2.4+15, height/1.7+80, width/2.4+50, height/1.7+80);
-      }
+      /*if (tumblr) {
+       println("tumblr!");
+       stroke(189, 225, 199);
+       line(width/2.4+15, height/1.7+80, width/2.4+50, height/1.7+80);
+       }*/
     } else { 
       image(tumblrLogo, 550, height/1.7, 64, 64);
     }
@@ -483,11 +404,11 @@ void opening() {
   if (instagram == false) {
     if ((mouseX > 800 && mouseX < 950) && (mouseY > height/1.7-40 && mouseY < height/1.7+70)) {
       image(instagramLogo, 850, height/1.7-10, 64, 64);
-      if (instagram) {
-        // println("insta!");
-        stroke(189, 225, 199);
-        line(width/1.5+15, height/1.7+80, width/1.5+50, height/1.7+80);
-      }
+      /*if (instagram) {
+       println("insta!");
+       stroke(189, 225, 199);
+       line(width/1.5+15, height/1.7+80, width/1.5+50, height/1.7+80);
+       } */
     } else {
       image(instagramLogo, 850, height/1.7, 64, 64);
       stroke(255);
@@ -512,7 +433,7 @@ void mouseClicked() {
         twitter = true;
       }
     } else if ((mouseX > 500 && mouseX < 600) && (mouseY > height/1.7-40 && mouseY < height/1.7+90)) {
-      //  print(tumblr);
+      print(tumblr);
       if (tumblr == true) {
         tumblr = false;
       } else {
@@ -530,14 +451,6 @@ void mouseClicked() {
     if ((mouseX > width/2-50 && mouseX < width/2+130) && (mouseY > height/2-40 && mouseY < height/2+130)) {
       // print("x");
       screen = 6;
-    }
-  } else if (screen == 7) {
-    if ((mouseX > width-300 && mouseX < width) && (mouseY > 200 && mouseY < 400)) {
-      choice = "twitter";
-    } else if ((mouseX > width-300 && mouseX < width) && (mouseY > 400 && mouseY < 600) ) {
-      choice = "tumblr";
-    } else if ((mouseX > width-300 && mouseX < width) && (mouseY > 600 && mouseY < 800) ) {
-      choice = "instagram";
     }
   }
 }
@@ -626,22 +539,24 @@ void generateData() {
         total += tempArray[n];
         //  println("total:" + total);
       }
-      twitterData[i] = total;
-      // twitterData.add(total);
+      // twitterData[i] = total;
+      twitterData.add(total);
       total = 0;
     }
-    // println("size of data:" + twitterData.length);
-    for (int i = 0; i < td.length; i++) {
-      // println("data" + twitterData[i]);
-      if (i < td.length-1) {
-        twitterChange[i] = (twitterData[i+1] - twitterData[i]);
+    println("size of data:" + twitterData.());
+    for (int i = 0; i < twitterData.size (); i++) {
+      println("data" + twitterData.get(i));
+      if (i != twitterData.size()-1) {
+        twitterChange.add(twitterData.get(i+1) - twitterData.get(i));
       }
     }
-    //println(twitterChange.size());
-    //maxChangeTwitter = twitterChange.get(0);
-    for ( int i = 0; i < td.length; i++) {
-      //println("twitterChange:" + twitterChange[i]);
-      totalChangeTwitter += twitterChange[i];
+    // println(twitterChange.size());
+    maxChangeTwitter = twitterChange.get(0);
+    for ( int i = 0; i < twitterChange.size (); i++) {
+      println("twitterChange:" + twitterChange.get(i));
+      if ( twitterChange.get(i) > maxChangeTwitter) {
+        maxChangeTwitter = twitterChange.get(i);
+      }
     }
     //  println("max change:" + maxChangeTwitter);
     // print("once!");
@@ -657,20 +572,21 @@ void generateData() {
         total += tempArray[n];
         // println("total:" + total);
       }
-      instaData[i] = total;
-      //instaData.add(total);
+      //  instaData[i] = total;
+      instaData.add(total);
       total = 0;
     }
-    for (int i = 0; i < id.length; i++) {
-      if (i < id.length-1) {
-        instaChange[i] = (instaData[i+1] - instaData[i]);
-        // instaChange.add(instaData.get(i+1) - instaData.get(i));
+    for (int i = 0; i < instaData.size (); i++) {
+      if (i != instaData.size()) {
+        //instaChange[i] = (instaData[i+1] - instaData[i]);
+        instaChange.add(instaData.get(i+1) - instaData.get(i));
       }
     }
-    // maxChangeInsta = instaChange.get(0);
-    for ( int i = 0; i < id.length; i++) {
-      // maxChangeInsta = instaChange.get(i);
-      totalChangeInsta += instaChange[i];
+    maxChangeInsta = instaChange.get(0);
+    for ( int i = 0; i < instaChange.size (); i++) {
+      if ( instaChange.size() > maxChangeInsta) {
+        maxChangeInsta = instaChange.get(i);
+      }
     }
     instaBeat.instantiate(instaChange);
   }
@@ -683,25 +599,25 @@ void generateData() {
         total += tempArray[n];
         //  println("total:" + total);
       }
-      tumblrData[i] = total;
-      // tumblrData.add(total);
+      //tumblrData[i] = total;
+      tumblrData.add(total);
       total = 0;
     }
-    for (int i = 0; i < tud.length; i++) {
-      if (i < tud.length-1) {
+    for (int i = 0; i < tumblrData.size (); i++) {
+      if (i != tumblrData.size()) {
         // tumblrChange[i] = (tumblrData[i+1] - tumblrData[i]);
-        tumblrChange[i] = (tumblrData[i+1] - tumblrData[i]);
-        //  tumblrChange.add(tumblrData.get(i+1) - tumblrData.get(i));
+        tumblrChange.add(tumblrData.get(i+1) - tumblrData.get(i));
       }
     }
-    // maxChangeTumblr = tumblrChange.get(0);
-    for ( int i = 0; i < tud.length; i++) {
-      // maxChangeTumblr = tumblrChange.get(i);
-      totalChangeTumblr += tumblrChange[i];
+    // maxChangeTumblr = tumblrChange[0];
+    maxChangeTumblr = tumblrChange.get(0);
+    for ( int i = 0; i < tumblrChange.size (); i++) {
+      if ( tumblrChange.get(i) > maxChangeTumblr) {
+        maxChangeTumblr = tumblrChange.get(i);
+      }
     }
     tumblrBeat.instantiate(tumblrChange);
   }
-  totalChange = totalChangeTumblr + totalChangeInsta + totalChangeTwitter;
 } 
 
 
@@ -896,7 +812,6 @@ void runGetUserInformationChoreoInsta() {
   instaResults = parseJSONObject(getUserInformationResultsInsta.getResponse());
   setInstagramValues();
 }
-
 /*void runGetLikedMediaForInstagramUserChoreo(String accessToken) {
  // Create the Choreo object using your Temboo session
  com.temboo.Library.Instagram.GetLikedMediaForUser getLikedMediaForInstaChoreo = new com.temboo.Library.Instagram.GetLikedMediaForUser(session);
@@ -912,7 +827,6 @@ void runGetUserInformationChoreoInsta() {
  //println(getLikedMediaForInstaResults.getResponse());
  
  } */
-
 void runGetUserInformationChoreoTumblr() {
   getUserInformationChoreoTumblr = new com.temboo.Library.Tumblr.User.GetUserInformation(session);
 

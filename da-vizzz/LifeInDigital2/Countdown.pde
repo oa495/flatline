@@ -13,7 +13,7 @@ class Countdown {
 
   Countdown(int totalTime) {
     totalTime = totalTime;
-    frameRate(1);
+    
     this.timeDif = int(totalTime*0.001);
     daysLeft = floor(timeDif/60/60/24);
     hoursLeft = floor((timeDif - (daysLeft*60*60*24))/60/60);

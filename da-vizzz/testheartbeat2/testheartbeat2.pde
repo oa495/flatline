@@ -53,8 +53,8 @@ void setup()
   for(int i = 0;i<totalblips;i++)
   {
      int pick = int(random(0, theblips.length-1));
-    theblips[pick] = 100; 
-    theblips[pick+1] = -100; 
+  //  theblips[pick] = 100; 
+  //  theblips[pick+1] = -100; 
     //theblips[pick+2] = 50; 
     //theblips[pick+3] = -50; 
   }
@@ -79,7 +79,7 @@ void draw()
   {
      thegraph.line(xpos, thegraph.height/2 - theblips[blippos], xpos-linefactor, thegraph.height/2 - theblips[blippos-1]); 
   }
-  thegraph.ellipse(xpos, thegraph.height/2 - theblips[blippos], 4, 4);
+  //thegraph.ellipse(xpos, thegraph.height/2 - theblips[blippos], 4, 4);
 
   thegraph.endDraw();
   
