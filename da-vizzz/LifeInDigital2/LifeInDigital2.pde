@@ -3,6 +3,7 @@ import org.json.*;
 //import com.temboo.Library.Instagram.*;
 //import com.temboo.Library.Tumblr.User.*;
 //import com.temboo.Library.Tumblr.OAuth.*;
+String twitterName;
 String name;
 String tumblrName;
 String instaName;
@@ -44,6 +45,8 @@ PImage tumblrLogo;
 PImage instagramLogo;
 
 PImage play;
+PImage play2;
+PImage playOnHover;
 boolean twitter = false;
 boolean tumblr = false;
 boolean instagram = false;
@@ -128,6 +131,8 @@ void setup() {
   para = loadFont("MerriweatherSans-Light-48.vlw");
   //images for  screen 
   play = loadImage("play.png");
+  playOnHover = loadImage("play2.png");
+  play2 = loadImage("playH.png");
   instagramLogo = loadImage("instagram10.png");
   tumblrLogo = loadImage("tumblr21.png");
   facebookLogo = loadImage("facebook48.png");
@@ -313,7 +318,11 @@ void draw() {
     // print("screen 5!");
     imageMode(CENTER);
     background(243, 116, 88); 
-    image(play, width/2, height/2, 128, 128);
+    if ((mouseX > width/2-50 && mouseX < width/2+100) && (mouseY > height/2-50 && mouseY < height/2+130)) {
+      image(play2, width/2, height/2);
+    } else {
+      image(play, width/2, height/2);
+    }
     break;
 
   case 6:
@@ -334,33 +343,52 @@ void draw() {
         rect(x, y, videoScale, videoScale);
       }
     }
-    text(name, 50, 80);
+    textSize(20);
+    fill(255);
+    if (twitterName.equals("")) {
+      name = twitterName;
+    } else {
+      if (instaName.equals("")) {
+        name = instaName;
+      } else {
+        name = tumblrName;
+      }
+    }
+
+    text(name, 30, 50);
     if (twitter) {
-      twitterBeat.setValues(name, totalChange, twitterData);
+      twitterBeat.setValues(twitterName, totalChange, twitterData);
+
       twitterBeat.displaySide();
+      twitterBeat.displayControls();
       crossed = twitterBeat.wrap();
       twitterBeat.display();
     }
-    /* if (instagram) {
-     instaBeat.setValues(name, totalChange, instaData);
-     if ((!twitter && !tumblr) || ()) {
-     crossed = instaBeat.wrap();
-     instaBeat.displaySide();
-     instaBeat.display();
-     }
-     } else if {
-     tumblrBeat.setValues(name, totalChange, tumblrData);
-     if ((!twitter && !instagram) ||()) {
-     crossed = tumblrBeat.wrap();
-     instaBeat.displaySide();
-     tumblrBeat.display();
-     }
-     }*/
+    if (instagram) {
+      instaBeat.setValues(instaName, totalChange, instaData);
+      if ((!twitter && !tumblr) || (choice == "instagram")) {
+        print(choice);
+        crossed = instaBeat.wrap();
+        instaBeat.displaySide();
+        instaBeat.displayControls();
+        instaBeat.display();
+      }
+    } 
+    if (tumblr) {
+      tumblrBeat.setValues(tumblrName, totalChange, tumblrData);
+      if ((!twitter && !instagram) ||(choice == "tumblr")) {
+        print(choice);
+        crossed = tumblrBeat.wrap();
+        tumblrBeat.displaySide();
+        tumblrBeat.displayControls();
+        tumblrBeat.display();
+      }
+    }
     //screen = 8;
     break;
 
-  case 8:
-    /* if (twitter) {
+    /*case 8:
+     if (twitter) {
      twitterBeat.displaySide();
      crossed = twitterBeat.wrap();
      if (crossed) {
@@ -380,7 +408,7 @@ void draw() {
      }
      twitterBeat.display();
      } 
-    /*if (instagram) {
+     if (instagram) {
      instaBeat.setValues(name, totalChange, instaData);
      if ((!twitter && !tumblr) || ()) {
      crossed = instaBeat.wrap();
@@ -423,6 +451,7 @@ void draw() {
      }
      instaBeat.displaySide();
      tumblrBeat.display();
+     }
      }
      }*/
   }
@@ -534,10 +563,13 @@ void mouseClicked() {
   } else if (screen == 7) {
     if ((mouseX > width-300 && mouseX < width) && (mouseY > 200 && mouseY < 400)) {
       choice = "twitter";
+      // println(choice);
     } else if ((mouseX > width-300 && mouseX < width) && (mouseY > 400 && mouseY < 600) ) {
       choice = "tumblr";
+      // println(choice);
     } else if ((mouseX > width-300 && mouseX < width) && (mouseY > 600 && mouseY < 800) ) {
       choice = "instagram";
+      // println(choice);
     }
   }
 }
@@ -742,7 +774,7 @@ void runTwitterChoreo() {
 }
 
 void setTwitterValues() {
-  name = twitterResults.getString("name");
+  twitterName = twitterResults.getString("name");
   location = twitterResults.getString("location");
   description = twitterResults.getString("description");
   noTFollowers = twitterResults.getInt("followers_count");
@@ -786,10 +818,10 @@ void setInstagramValues() {
   // iLikes = data.size();
   JSONObject items = instaResults.getJSONObject("data");
   JSONObject counts = items.getJSONObject("counts");
+  instaName = items.getString("full_name");
   noIFollowers = counts.getInt("followed_by");
   instaPosts = counts.getInt("media");
   noIFollowing = counts.getInt("follows");
-  instaName = items.getString("full_name");
   //  println(noIFollowers);
   // println(instaPosts);
   // println(noIFollowing);
