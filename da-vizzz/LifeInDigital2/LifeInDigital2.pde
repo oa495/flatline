@@ -3,10 +3,10 @@ import org.json.*;
 //import com.temboo.Library.Instagram.*;
 //import com.temboo.Library.Tumblr.User.*;
 //import com.temboo.Library.Tumblr.OAuth.*;
-String twitterName;
+String twitterName = "";
 String name;
-String tumblrName;
-String instaName;
+String tumblrName = "";
+String instaName = "";
 String iAccessToken;
 String tumblrAccessToken;
 String tumblrTokenSecret;
@@ -44,7 +44,7 @@ PImage twitterLogo;
 PImage tumblrLogo;
 PImage instagramLogo;
 
-PImage play;
+PImage playI;
 PImage play2;
 PImage playOnHover;
 boolean twitter = false;
@@ -130,7 +130,7 @@ void setup() {
   heading = loadFont("Oswald-Regular-48.vlw");
   para = loadFont("MerriweatherSans-Light-48.vlw");
   //images for  screen 
-  play = loadImage("play.png");
+  playI = loadImage("play.png");
   playOnHover = loadImage("play2.png");
   play2 = loadImage("playH.png");
   instagramLogo = loadImage("instagram10.png");
@@ -321,7 +321,7 @@ void draw() {
     if ((mouseX > width/2-50 && mouseX < width/2+100) && (mouseY > height/2-50 && mouseY < height/2+130)) {
       image(play2, width/2, height/2);
     } else {
-      image(play, width/2, height/2);
+      image(playI, width/2, height/2);
     }
     break;
 
@@ -345,21 +345,25 @@ void draw() {
     }
     textSize(20);
     fill(255);
-    if (twitterName.equals("")) {
-      name = twitterName;
-    } else {
-      if (instaName.equals("")) {
-        name = instaName;
-      } else {
+    // println("twitter:" + twitterName);
+    if (("").equals(twitterName)) {
+      //print("x");
+      if (("").equals(instaName)) {
         name = tumblrName;
+      } else {
+        name = instaName;
       }
+    } else {
+      name = twitterName;
     }
-
-    text(name, 30, 50);
+    // println("insta" + instaName);
+    // println("tumblr" + tumblrName);
+    // println("twitter" + twitterName);
+    //  print(name);
+    // text(name, 30, 50);
     if (twitter) {
       twitterBeat.setValues(twitterName, totalChange, twitterData);
-
-      twitterBeat.displaySide();
+      twitterBeat.displaySide("Twitter");
       twitterBeat.displayControls();
       crossed = twitterBeat.wrap();
       twitterBeat.display();
@@ -367,9 +371,9 @@ void draw() {
     if (instagram) {
       instaBeat.setValues(instaName, totalChange, instaData);
       if ((!twitter && !tumblr) || (choice == "instagram")) {
-        print(choice);
+        // print(choice);
         crossed = instaBeat.wrap();
-        instaBeat.displaySide();
+        instaBeat.displaySide("Instagram");
         instaBeat.displayControls();
         instaBeat.display();
       }
@@ -377,9 +381,9 @@ void draw() {
     if (tumblr) {
       tumblrBeat.setValues(tumblrName, totalChange, tumblrData);
       if ((!twitter && !instagram) ||(choice == "tumblr")) {
-        print(choice);
+        //  print(choice);
         crossed = tumblrBeat.wrap();
-        tumblrBeat.displaySide();
+        tumblrBeat.displaySide("Tumblr");
         tumblrBeat.displayControls();
         tumblrBeat.display();
       }
@@ -570,6 +574,15 @@ void mouseClicked() {
     } else if ((mouseX > width-300 && mouseX < width) && (mouseY > 600 && mouseY < 800) ) {
       choice = "instagram";
       // println(choice);
+    }
+    if (twitter) {
+      twitterBeat.mouseEvent();
+    }
+    if (instagram) {
+      instaBeat.mouseEvent();
+    }
+    if (tumblr) {
+      tumblrBeat.mouseEvent();
     }
   }
 }

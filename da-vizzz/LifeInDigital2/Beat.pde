@@ -1,11 +1,11 @@
 class Beat {
   PImage heart;
-  PImage pause;
-  PImage forward;
-  PImage backward;
-  PImage pauseOnHover;
-  PImage forwardOnHover;
-  PImage backwardOnHover;
+  PImage pauseI;
+  PImage addI;
+  PImage subtractI;
+  PImage pauseOnHoverI;
+  PImage addOnHoverI;
+  PImage subtractOnHoverI;
   PGraphics thegraph;
   PGraphics controls;
   PGraphics sidebar;
@@ -17,24 +17,28 @@ class Beat {
   boolean crossed = false;
   String userName;
   int totalChange;
-  int[] theData = new int[4];
   int picked;
   boolean twitter;
   boolean tumblr; 
   boolean instagram;
+  boolean subtract;
+  boolean add;
+  boolean pause;
+  boolean play; 
+  //int[] theData;
 
   Beat() {
     heart = loadImage("like80.png");
-    forward = loadImage("forward.png");
-    backward = loadImage("back.png");
-    pause = loadImage("pause.png");
-    forwardOnHover = loadImage("forward2.png");
-    backwardOnHover = loadImage("back2.png");
-    pauseOnHover = loadImage("pause2.png");
+    addI = loadImage("add.png");
+    subtractI = loadImage("subtract.png");
+    pauseI = loadImage("pause.png");
+    addOnHoverI = loadImage("add2.png");
+    subtractOnHoverI = loadImage("subtract2.png");
+    pauseOnHoverI = loadImage("pause2.png");
     thegraph = createGraphics(width-300, 400);
     thegraph.beginDraw();
     thegraph.endDraw();
-    controls = createGraphics(500, 150);
+    controls = createGraphics(400, 150);
     controls.beginDraw();
     controls.endDraw();
     sidebar = createGraphics(300, height);
@@ -51,38 +55,101 @@ class Beat {
   void setValues(String name, int totalC, int[] data) {
     userName = name;
     totalChange = totalC;
+    int[] theData = new int[data.length];
     arrayCopy(data, theData);
   }
-
+  void mouseEvent() {
+    print("clicked!");
+    controls.beginDraw();
+    if ((mouseX > (width/2-420)+100 && mouseX < (width/2-420)+132) && (mouseY > height-200+75 && mouseY < (height-200)+107)) {
+      if (!subtract) {
+        println("subtracts!");
+        controls.image(subtractOnHoverI, 100, 75, 32, 32);
+        subtract = true;
+        play = false;
+        add = false;
+        pause = false;
+      } else {
+        subtract = false;
+        controls.image(subtractI, 100, 75, 32, 32);
+      }
+    } 
+    if ((mouseX > (width/2-420)+200  && mouseX < (width/2-420)+232) && (mouseY > height-200+75 && mouseY < (height-200)+107)) {
+      if (!pause) {
+        // println("play!");
+        play = true;
+        pause = false;
+        controls.clear();
+        controls.image(pauseI, 200, 75, 32, 32);
+        add = false;
+        subtract = false;
+      } else {
+        pause = true;
+        play = false;
+        xposOnP = xpos;
+        // blipposOnP = blippos;
+        controls.clear();
+        controls.image(playI, 200, 75, 32, 32);
+      }
+    }
+    if ((mouseX > (width/2-420)+300 && mouseX < (width/2-420)+332) && (mouseY > height-200+75 && mouseY < (height-200)+107)) {
+      if (!add) {
+        //  println("adds!");
+        if (play) {
+          linefactor+=2;
+          controls.image(addOnHoverI, 300, 75, 32, 32);
+          play = true;
+          pause = false;
+          add = true;
+          subtract = false;
+        }
+      } else {
+        add = false;
+        controls.image(addI, 300, 75, 32, 32);
+      }
+    }
+    controls.endDraw();
+  }
   void displayControls() {
     controls.beginDraw();
     if ((mouseX > (width/2-420)+100 && mouseX < (width/2-420)+132) && (mouseY > height-200+75 && mouseY < (height-200)+107)) {
-      controls.image(backwardOnHover, 100, 75, 32, 32);
-    } else {
-      controls.image(backward, 100, 75, 32, 32);
+      controls.image(subtractOnHoverI, 100, 75, 32, 32);
+    } else if (!subtract) {
+      controls.image(subtractI, 100, 75, 32, 32);
     } 
-    if ((mouseX > (width/2-420)+200  && mouseX < (width/2-420)+232) && (mouseY > height-200+75 && mouseY < (height-200)+107)) {
+    if ((mouseX > (width/2-420)+200  && mouseX < (width/2-420)+232) && (mouseY > height-200+75 && mouseY < (height-200)+107) && (!play)) {
       controls.image(playOnHover, 200, 75, 32, 32);
-    } else {
-      controls.image(play, 200, 75, 32, 32);
+    } else if (!play) {
+      controls.image(playI, 200, 75, 32, 32);
     }
+    /* if ((mouseX > (width/2-420)+300 && mouseX < (width/2-420)+332) && (mouseY > height-200+75 && mouseY < (height-200)+107)) {
+     controls.image(pauseOnHoverI, 300, 75, 32, 32);
+     } else if (!pause)  {
+     controls.image(pauseI, 300, 75, 32, 32);
+     }  */
     if ((mouseX > (width/2-420)+300 && mouseX < (width/2-420)+332) && (mouseY > height-200+75 && mouseY < (height-200)+107)) {
-      controls.image(pauseOnHover, 300, 75, 32, 32);
-    } else {
-      controls.image(pause, 300, 75, 32, 32);
-    }  
-    if ((mouseX > (width/2-420)+400 && mouseX < (width/2-420)+432) && (mouseY > height-200+75 && mouseY < (height-200)+107)) {
-      controls.image(forwardOnHover, 400, 75, 32, 32);
-    } else {
-      controls.image(forward, 400, 75, 32, 32);
+      controls.image(addOnHoverI, 300, 75, 32, 32);
+    } else if (!add) {
+      controls.image(addI, 300, 75, 32, 32);
     }
     controls.endDraw();
     image(controls, width/2-420, height-200);
   }
 
-  void displaySide() {
+  void displaySide(String socialM) {
     sidebar.beginDraw();
     sidebar.background(109, 197, 170);
+
+    if (socialM.equals("Twitter")) {
+      sidebar.fill(243, 116, 88);
+      sidebar.rect(0, 200, width, 200);
+    } else if (socialM.equals("Tumblr")) {
+      sidebar.fill(243, 116, 88);
+      sidebar.rect(0, 400, width, 200);
+    } else if (socialM.equals("Instagram")) {
+      sidebar.fill(243, 116, 88);
+      sidebar.rect(0, 600, width, 200);
+    }
     if ((mouseX > width-300 && mouseX < width) && (mouseY > 200 && mouseY < 400)) {
       sidebar.fill(243, 116, 88);
       sidebar.rect(0, 200, width, 200);
@@ -118,20 +185,34 @@ class Beat {
     thegraph.stroke(255);
     thegraph.strokeWeight(5);
     // thegraph.fill(255, 0, 0);
-    if (blippos>0&&xpos>0)
-    {
-      thegraph.line(xpos, thegraph.height/2 - theblips[blippos], xpos-linefactor, thegraph.height/2 - theblips[blippos-1]);
+    if (play) {
+      if (blippos>0&&xpos>0 && (!pause))
+      {
+        thegraph.line(xpos, thegraph.height/2 - theblips[blippos], xpos-linefactor, thegraph.height/2 - theblips[blippos-1]);
+      }
+      // thegraph.ellipse(xpos, thegraph.height/2 - theblips[blippos], 4, 4);
+
+      thegraph.endDraw();
+
+      blippos++;
+      if (blippos>theblips.length-1) blippos=0;
+      imageMode(CORNER);
+      image(thegraph, 0, 400);
+
+      xpos = xpos + linefactor;
+    } else {
+      if (blipposOnP>0&&xpos>0)
+      {
+        //   println("display1");
+        thegraph.line(xpos, thegraph.height/2 + theblips[blippos], xposOnP, thegraph.height/2 + theblips[blippos-1]);
+      }
+      //  thegraph.ellipse(xpos, thegraph.height/2 - theblips[blippos], 4, 4);
+
+      thegraph.endDraw();
+
+      blippos++;
+      image(thegraph, 0, 400);
     }
-    // thegraph.ellipse(xpos, thegraph.height/2 - theblips[blippos], 4, 4);
-
-    thegraph.endDraw();
-
-    blippos++;
-    if (blippos>theblips.length-1) blippos=0;
-    imageMode(CORNER);
-    image(thegraph, 0, 400);
-
-    xpos = xpos + linefactor;
   }
   boolean wrap() {
     if (xpos>=thegraph.width) {
