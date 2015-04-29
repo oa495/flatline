@@ -1,3 +1,6 @@
+import ddf.minim.*;
+Minim minim;
+AudioPlayer ekg;
 import com.temboo.core.*;
 import org.json.*;
 //import com.temboo.Library.Instagram.*;
@@ -22,9 +25,9 @@ int noIFollowing;
 int tumblrLikes;
 int tumblrFollowing;
 int noOfBlogs;
-int tumblrFollowers = 0;
-int tumblrMessages = 0;
-int tumblrPosts = 0;
+int tumblrFollowers;
+int tumblrMessages;
+int tumblrPosts;
 String typing = "";
 String userName = "";
 JSONObject twitterResults;
@@ -50,6 +53,11 @@ PImage playOnHover;
 boolean twitter = false;
 boolean tumblr = false;
 boolean instagram = false;
+
+boolean instaChosen = false;
+boolean twitterChosen = true;
+boolean tumblrChosen = false;
+
 Timer timer;
 //main countdown of 12hrs of oollecting data or so
 Countdown countdown;
@@ -91,8 +99,6 @@ int[] instaData = new int[1000];
 int[] instaChange = new int[1000];
 int[] tumblrData = new int[1000];
 int[] tumblrChange = new int[1000];
-int[] allData = new int[1000];
-int[] allDataChange = new int[1000];
 
 /*
 ArrayList<Integer> twitterData =  new ArrayList<Integer>();
@@ -117,10 +123,14 @@ int firstTotalSum;
 PGraphics thegraph;
 int videoScale = 10;
 int cols, rows;
-boolean crossed = false;
-String choice;
-
+//boolean crossed = false;
+String choice = "";
+color a;
+color b;
+color c;
 void setup() {
+  minim = new Minim(this);
+  ekg = minim.loadFile("ecg.wav");
   size(1200, 800);
   frameRate(60);
   cols = width/videoScale;
@@ -144,10 +154,12 @@ void setup() {
   //every 30 mins
   timer = new Timer(10000);
   countdown = new Countdown(60000);
+  // a = color(123, 23, 45);
+  // b = color(255, 67, 8);
+  // c = color(43, 220, 5);
   twitterBeat = new Beat();
   tumblrBeat = new Beat();
   instaBeat = new Beat();
-  allSMBeat = new Beat();
 }
 
 
@@ -258,7 +270,7 @@ void draw() {
       firstTotalSum += firstTumblrSum;     
       //  println(firstTumblrSum);
     } 
-    timer.start(); 
+    //  timer.start(); 
 
     screen = 4;
     break;
@@ -274,7 +286,7 @@ void draw() {
         timeUp = true;
         // print("timeUp!");
         //background(255, 0, 0);
-        updateData(); //update data
+        // updateData(); //update data
         if (twitter) {
           twitterNumbers.println(twitterData[0] + "," + twitterData[1] + "," + twitterData[2] + "," + twitterData[3]);
         }
@@ -282,7 +294,7 @@ void draw() {
           instaNumbers.println(instaData[0] + "," + instaData[1] + "," + instaData[2]);
         }
         if (tumblr) {
-          instaNumbers.println(tumblrData[0] + "," + tumblrData[1] + "," + tumblrData[2] + "," + tumblrData[3] + "," + tumblrData[4] + "," + tumblrData[5]);
+          tumblrNumbers.println(tumblrData[0] + "," + tumblrData[1] + "," + tumblrData[2] + "," + tumblrData[3] + "," + tumblrData[4] + "," + tumblrData[5]);
         }
         /*  for (int i = 0; i < twitterData.length; i++) {
          // println(twitterData[i]);
@@ -309,10 +321,11 @@ void draw() {
       if (tumblr) {
         tumblrNumbers.flush();  // Writes the remaining data to the file
         tumblrNumbers.close();
-      }
-      frameRate(60);
+      } 
+      frameRate(60); 
       screen = 5;
-    }
+    } 
+
     break;
   case 5:
     // print("screen 5!");
@@ -327,6 +340,7 @@ void draw() {
 
   case 6:
     generateData();
+    imageMode(CORNER);
     screen = 7;
     break;
 
@@ -363,31 +377,65 @@ void draw() {
     // text(name, 30, 50);
     if (twitter) {
       twitterBeat.setValues(twitterName, totalChange, twitterData);
-      twitterBeat.displaySide("Twitter");
-      twitterBeat.displayControls();
-      crossed = twitterBeat.wrap();
-      twitterBeat.display();
-    }
+      if (choice.equals("twitter") || (twitterChosen)) {
+        twitterBeat.displaySide("Twitter");
+        twitterBeat.displayControls();
+        twitterBeat.display();
+        twitterBeat.playSound();
+        instaBeat.pause();
+        tumblrBeat.pause();
+        instaChosen = false;
+        tumblrChosen = false;
+      } else if (choice.equals("twitter") && (!twitterChosen)) {
+        println("twitterChosen");
+        instaChosen = false;
+        tumblrChosen = false;
+        twitterChosen = true;
+      }
+    } 
     if (instagram) {
       instaBeat.setValues(instaName, totalChange, instaData);
-      if ((!twitter && !tumblr) || (choice == "instagram")) {
+      if ((!twitter && !tumblr) || (choice.equals("instagram"))) {
         // print(choice);
-        crossed = instaBeat.wrap();
+        if (choice.equals("instagram") && (instaChosen)) {
+          twitterChosen = false;
+          tumblrChosen = false;
+          instaChosen = true;
+        } else if (choice.equals("instagram") && (!instaChosen)) {
+          println("instaChosen");
+          twitterChosen = false;
+          tumblrChosen = false;
+        }
         instaBeat.displaySide("Instagram");
         instaBeat.displayControls();
         instaBeat.display();
+        instaBeat.playSound();
+        twitterBeat.pause();
+        tumblrBeat.pause();
       }
     } 
     if (tumblr) {
       tumblrBeat.setValues(tumblrName, totalChange, tumblrData);
-      if ((!twitter && !instagram) ||(choice == "tumblr")) {
+      if ((!twitter && !instagram) ||(choice.equals("tumblr"))) {
         //  print(choice);
-        crossed = tumblrBeat.wrap();
+        if (choice.equals("tumblr") && (tumblrChosen)) {
+          twitterChosen = false;
+          instaChosen = false;
+          tumblrChosen = true;
+        } else if (choice.equals("tumblr") && (!tumblrChosen)) {
+          println("tumblrChosen");
+          twitterChosen = false;
+          instaChosen = false;
+        }
         tumblrBeat.displaySide("Tumblr");
         tumblrBeat.displayControls();
         tumblrBeat.display();
+        tumblrBeat.playSound();
+        twitterBeat.pause();
+        instaBeat.pause();
       }
     }
+
     //screen = 8;
     break;
 
@@ -567,7 +615,7 @@ void mouseClicked() {
   } else if (screen == 7) {
     if ((mouseX > width-300 && mouseX < width) && (mouseY > 200 && mouseY < 400)) {
       choice = "twitter";
-      // println(choice);
+      println(choice);
     } else if ((mouseX > width-300 && mouseX < width) && (mouseY > 400 && mouseY < 600) ) {
       choice = "tumblr";
       // println(choice);
@@ -803,7 +851,9 @@ void setTwitterValues() {
   //  println(noTFavourites);
 }
 
-
+int posts;
+int followers;
+int messages;
 void setTumblrValues() {
   JSONObject items = tumblrResults.getJSONObject("response");
   JSONObject details = items.getJSONObject("user");
@@ -816,14 +866,21 @@ void setTumblrValues() {
   // println(tumblrLikes);
   // println(tumblrFollowing);
   // int arrayLength = blogs.length;
+
   for (int i=0; i < noOfBlogs; i++) {
-    tumblrPosts += blogs.getJSONObject(i).getInt("posts");
-    tumblrFollowers += blogs.getJSONObject(i).getInt("followers");
-    tumblrMessages += blogs.getJSONObject(i).getInt("messages");
+    posts += blogs.getJSONObject(i).getInt("posts");
+    followers += blogs.getJSONObject(i).getInt("followers");
+    messages += blogs.getJSONObject(i).getInt("messages");
     //   println(posts);
     //   println(followers);
     //  println(messages);
   }
+  tumblrPosts = posts;
+  tumblrFollowers = followers;
+  tumblrMessages = messages;
+  posts = 0;
+  followers = 0;
+  messages = 0;
 }
 void setInstagramValues() {
   // JSONArray data = instaLikes.getJSONArray("images");

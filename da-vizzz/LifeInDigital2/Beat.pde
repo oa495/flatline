@@ -2,6 +2,8 @@ class Beat {
   PImage heart;
   PImage pauseI;
   PImage addI;
+  PImage restart;
+  PImage restartOnHover;
   PImage subtractI;
   PImage pauseOnHoverI;
   PImage addOnHoverI;
@@ -21,26 +23,32 @@ class Beat {
   boolean twitter;
   boolean tumblr; 
   boolean instagram;
-  boolean subtract;
-  boolean add;
-  boolean pause;
-  boolean play; 
+  boolean subtract = false;
+  boolean add = false;
+  boolean pause = false;
+  boolean play = false; 
+  int xposOnP;
+  int blipposOnP;
+  String current = "";
+  //  color strokeC;
   //int[] theData;
 
   Beat() {
     heart = loadImage("like80.png");
+    restart = loadImage("restart.png");
+    restartOnHover = loadImage("restart2.png");
     addI = loadImage("add.png");
     subtractI = loadImage("subtract.png");
     pauseI = loadImage("pause.png");
     addOnHoverI = loadImage("add2.png");
     subtractOnHoverI = loadImage("subtract2.png");
     pauseOnHoverI = loadImage("pause2.png");
+    controls = createGraphics(500, 150);
+    controls.beginDraw();
+    controls.endDraw();
     thegraph = createGraphics(width-300, 400);
     thegraph.beginDraw();
     thegraph.endDraw();
-    controls = createGraphics(400, 150);
-    controls.beginDraw();
-    controls.endDraw();
     sidebar = createGraphics(300, height);
     sidebar.beginDraw();
     sidebar.background(109, 197, 170);
@@ -51,7 +59,23 @@ class Beat {
     //  for (int i=0; i <SMChange.length; i++) {
     //  theblips.add(SMChange.get(i));
   }
-
+  void pause() {
+    controls.beginDraw();
+    controls.clear();
+    controls.endDraw();
+    this.play = false;
+    this.pause = true;
+  }
+  void playSound() {
+    /* if (this.play && !this.pause) {
+     if (ekg.isPlaying()) {
+     } else {
+     //  ekg.pause();
+     ekg.rewind();
+     ekg.play();
+     }
+     }*/
+  }
   void setValues(String name, int totalC, int[] data) {
     userName = name;
     totalChange = totalC;
@@ -59,34 +83,39 @@ class Beat {
     arrayCopy(data, theData);
   }
   void mouseEvent() {
-    print("clicked!");
-    controls.beginDraw();
+    //  print("clicked!");
+    this.controls.beginDraw();
     if ((mouseX > (width/2-420)+100 && mouseX < (width/2-420)+132) && (mouseY > height-200+75 && mouseY < (height-200)+107)) {
       if (!subtract) {
-        println("subtracts!");
-        controls.image(subtractOnHoverI, 100, 75, 32, 32);
-        subtract = true;
-        play = false;
-        add = false;
-        pause = false;
+        if (play) {
+          //  println("backwards!");
+          if (this.linefactor > 2) {
+            this.linefactor-=1;
+          }
+          controls.image(subtractI, 100, 75, 32, 32);
+          this.subtract = true;
+          this.add = false;
+          this.pause = false;
+        }
       } else {
-        subtract = false;
+        this.subtract = false;
         controls.image(subtractI, 100, 75, 32, 32);
       }
-    } 
+      controls.image(subtractI, 100, 75, 32, 32);
+    }
     if ((mouseX > (width/2-420)+200  && mouseX < (width/2-420)+232) && (mouseY > height-200+75 && mouseY < (height-200)+107)) {
-      if (!pause) {
+      if (!play) {
         // println("play!");
-        play = true;
-        pause = false;
+        this.play = true;
+        this.pause = false;
         controls.clear();
         controls.image(pauseI, 200, 75, 32, 32);
-        add = false;
-        subtract = false;
+        this.add = false;
+        this.subtract = false;
       } else {
-        pause = true;
-        play = false;
-        xposOnP = xpos;
+        this.pause = true;
+        this.play = false;
+        this.xposOnP = xpos;
         // blipposOnP = blippos;
         controls.clear();
         controls.image(playI, 200, 75, 32, 32);
@@ -96,25 +125,35 @@ class Beat {
       if (!add) {
         //  println("adds!");
         if (play) {
-          linefactor+=2;
-          controls.image(addOnHoverI, 300, 75, 32, 32);
-          play = true;
-          pause = false;
-          add = true;
-          subtract = false;
+          this.linefactor+=2;
+          controls.image(addI, 300, 75, 32, 32);
+          this.pause = false;
+          this.add = true;
+          this.subtract = false;
         }
       } else {
-        add = false;
+        this.add = false;
         controls.image(addI, 300, 75, 32, 32);
       }
+      // controls.image(addI, 300, 75, 32, 32);
     }
-    controls.endDraw();
+    if ((mouseX > (width/2-420)+400 && mouseX < (width/2-420)+432) && (mouseY > height-200+75 && mouseY < (height-200)+107)) {
+      this.controls.clear();
+      this.thegraph.clear();
+      play = false;
+      this.pause = true;
+      this.add = false;
+      this.subtract = false;
+      this.xpos = 0;
+      this.blippos = 0;
+    }
+    this.controls.endDraw();
   }
   void displayControls() {
     controls.beginDraw();
     if ((mouseX > (width/2-420)+100 && mouseX < (width/2-420)+132) && (mouseY > height-200+75 && mouseY < (height-200)+107)) {
       controls.image(subtractOnHoverI, 100, 75, 32, 32);
-    } else if (!subtract) {
+    } else {
       controls.image(subtractI, 100, 75, 32, 32);
     } 
     if ((mouseX > (width/2-420)+200  && mouseX < (width/2-420)+232) && (mouseY > height-200+75 && mouseY < (height-200)+107) && (!play)) {
@@ -129,24 +168,29 @@ class Beat {
      }  */
     if ((mouseX > (width/2-420)+300 && mouseX < (width/2-420)+332) && (mouseY > height-200+75 && mouseY < (height-200)+107)) {
       controls.image(addOnHoverI, 300, 75, 32, 32);
-    } else if (!add) {
+    } else {
       controls.image(addI, 300, 75, 32, 32);
+    }
+    if ((mouseX > (width/2-420)+400 && mouseX < (width/2-420)+432) && (mouseY > height-200+75 && mouseY < (height-200)+107)) {
+      controls.image(restartOnHover, 400, 75, 32, 32);
+    } else {
+      controls.image(restart, 400, 75, 32, 32);
     }
     controls.endDraw();
     image(controls, width/2-420, height-200);
   }
 
   void displaySide(String socialM) {
+    current = socialM;
     sidebar.beginDraw();
     sidebar.background(109, 197, 170);
-
-    if (socialM.equals("Twitter")) {
+    if (current.equals("Twitter")) {
       sidebar.fill(243, 116, 88);
       sidebar.rect(0, 200, width, 200);
-    } else if (socialM.equals("Tumblr")) {
+    } else if (current.equals("Tumblr")) {
       sidebar.fill(243, 116, 88);
       sidebar.rect(0, 400, width, 200);
-    } else if (socialM.equals("Instagram")) {
+    } else if (current.equals("Instagram")) {
       sidebar.fill(243, 116, 88);
       sidebar.rect(0, 600, width, 200);
     }
@@ -177,17 +221,23 @@ class Beat {
     sidebar.endDraw();
     image(sidebar, width-300, 0);
   }
-
+  /*  void erase() {
+   thegraph.beginDraw();
+   thegraph.clear();
+   thegraph.endDraw();
+   }*/
   void display() {
     // background(255);
     thegraph.beginDraw();
     //  this.thegraph.clear();
     thegraph.stroke(255);
     thegraph.strokeWeight(5);
-    // thegraph.fill(255, 0, 0);
+    thegraph.fill(255, 0, 0);
     if (play) {
-      if (blippos>0&&xpos>0 && (!pause))
+      // print("it's playing");
+      if (blippos>0&&xpos>0)
       {
+        //  print("it's playing");
         thegraph.line(xpos, thegraph.height/2 - theblips[blippos], xpos-linefactor, thegraph.height/2 - theblips[blippos-1]);
       }
       // thegraph.ellipse(xpos, thegraph.height/2 - theblips[blippos], 4, 4);
@@ -196,12 +246,18 @@ class Beat {
 
       blippos++;
       if (blippos>theblips.length-1) blippos=0;
-      imageMode(CORNER);
+      //imageMode(CORNER);
       image(thegraph, 0, 400);
-
       xpos = xpos + linefactor;
+      if (xpos>=thegraph.width) {
+        thegraph.beginDraw();
+        // thegraph.background(255);
+        thegraph.clear();
+        thegraph.endDraw();
+        xpos=0;
+      }
     } else {
-      if (blipposOnP>0&&xpos>0)
+      if (blippos>0&&xpos>0)
       {
         //   println("display1");
         thegraph.line(xpos, thegraph.height/2 + theblips[blippos], xposOnP, thegraph.height/2 + theblips[blippos-1]);
@@ -214,18 +270,18 @@ class Beat {
       image(thegraph, 0, 400);
     }
   }
-  boolean wrap() {
-    if (xpos>=thegraph.width) {
-      crossed = true;
-      thegraph.beginDraw();
-      // thegraph.background(255);
-      thegraph.clear();
-      thegraph.endDraw();
-      xpos=0;
-    } else {
-      crossed = false;
-    }
-    return crossed;
-  }
+  /* boolean wrap() {
+   if (xpos>=thegraph.width) {
+   crossed = true;
+   thegraph.beginDraw();
+   // thegraph.background(255);
+   thegraph.clear();
+   thegraph.endDraw();
+   xpos=0;
+   } else {
+   crossed = false;
+   }
+   return crossed;
+   }*/
 }
 
