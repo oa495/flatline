@@ -121,7 +121,7 @@ int firstTumblrSum;
 int firstInstaSum;
 int firstTotalSum;
 PGraphics thegraph;
-int videoScale = 10;
+int videoScale = 8;
 int cols, rows;
 //boolean crossed = false;
 String choice = "";
@@ -286,7 +286,7 @@ void draw() {
         timeUp = true;
         // print("timeUp!");
         //background(255, 0, 0);
-        // updateData(); //update data
+        updateData(); //update data
         if (twitter) {
           twitterNumbers.println(twitterData[0] + "," + twitterData[1] + "," + twitterData[2] + "," + twitterData[3]);
         }
@@ -339,7 +339,7 @@ void draw() {
     break;
 
   case 6:
-    generateData();
+    //generateData();
     imageMode(CORNER);
     screen = 7;
     break;
@@ -374,13 +374,14 @@ void draw() {
     // println("tumblr" + tumblrName);
     // println("twitter" + twitterName);
     //  print(name);
-    // text(name, 30, 50);
+    text(name, 30, 50);
     if (twitter) {
       twitterBeat.setValues(twitterName, totalChange, twitterData);
       if (choice.equals("twitter") || (twitterChosen)) {
         twitterBeat.displaySide("Twitter");
         twitterBeat.displayControls();
         twitterBeat.display();
+        twitterBeat.onHover();
         twitterBeat.playSound();
         instaBeat.pause();
         tumblrBeat.pause();
@@ -409,6 +410,7 @@ void draw() {
         instaBeat.displaySide("Instagram");
         instaBeat.displayControls();
         instaBeat.display();
+        instaBeat.onHover();
         instaBeat.playSound();
         twitterBeat.pause();
         tumblrBeat.pause();
@@ -430,6 +432,7 @@ void draw() {
         tumblrBeat.displaySide("Tumblr");
         tumblrBeat.displayControls();
         tumblrBeat.display();
+        tumblrBeat.onHover();
         tumblrBeat.playSound();
         twitterBeat.pause();
         instaBeat.pause();
@@ -459,6 +462,7 @@ void draw() {
      }
      }
      twitterBeat.display();
+     twitterBeat.onHover();
      } 
      if (instagram) {
      instaBeat.setValues(name, totalChange, instaData);
@@ -481,6 +485,7 @@ void draw() {
      }
      instaBeat.displaySide();
      instaBeat.display();
+     instaBeat.onHover();
      }
      } else if {
      tumblrBeat.setValues(name, totalChange, tumblrData);
@@ -503,6 +508,7 @@ void draw() {
      }
      instaBeat.displaySide();
      tumblrBeat.display();
+     tumblrBeat.onHover();
      }
      }
      }*/

@@ -2,6 +2,7 @@ class Beat {
   PImage heart;
   PImage pauseI;
   PImage addI;
+  PImage square;
   PImage restart;
   PImage restartOnHover;
   PImage subtractI;
@@ -39,6 +40,7 @@ class Beat {
     restartOnHover = loadImage("restart2.png");
     addI = loadImage("add.png");
     subtractI = loadImage("subtract.png");
+    square = loadImage("square.png");
     pauseI = loadImage("pause.png");
     addOnHoverI = loadImage("add2.png");
     subtractOnHoverI = loadImage("subtract2.png");
@@ -56,8 +58,9 @@ class Beat {
   }
   void instantiate(int[] SMChange) {
     arrayCopy(SMChange, theblips);
-    //  for (int i=0; i <SMChange.length; i++) {
-    //  theblips.add(SMChange.get(i));
+    for (int i=0; i <theblips.length; i++) {
+      //println(theblips[i]);
+    }
   }
   void pause() {
     controls.beginDraw();
@@ -66,15 +69,36 @@ class Beat {
     this.play = false;
     this.pause = true;
   }
+  void onHover() {
+    //print("this function is being called");
+    if (pause) {
+      if ((mouseX > 0 && mouseX < width-300) && (mouseY >= height/2+75 && mouseY <= height/2+220)) {
+        println("here");
+        for (int i = 0; i < theblips.length; i++) {
+          if (theblips[i] > 10) {
+            if ((mouseY == (575 + theblips[i])) || (mouseY <= (575 + theblips[i] + 20)) || (mouseY >= (575 + theblips[i] - 20))) {
+              print("x");
+              stroke(0);
+              text(theblips[i], mouseX, mouseY);
+              image(square, mouseX, mouseY, 32, 32);
+            }
+          }
+        }
+      }
+    }
+  }
   void playSound() {
-    /* if (this.play && !this.pause) {
-     if (ekg.isPlaying()) {
-     } else {
-     //  ekg.pause();
-     ekg.rewind();
-     ekg.play();
-     }
-     }*/
+    if (this.play) {
+      if (ekg.isPlaying()) {
+      } else {
+        //  ekg.pause();
+        //ekg.rewind();
+        ekg.loop();
+      }
+    }
+    if (this.pause) {
+      ekg.pause();
+    }
   }
   void setValues(String name, int totalC, int[] data) {
     userName = name;
@@ -211,7 +235,7 @@ class Beat {
     sidebar.line(0, 600, width, 600);
     sidebar.textSize(60);
     sidebar.fill(255);
-    sidebar.text(totalChange, 160, 115);
+    sidebar.text(totalChange, 150, 115);
     sidebar.textSize(25);
     sidebar.text("bpm", 160, 145);
     sidebar.image(heart, 50, 70, 64, 64);
@@ -227,6 +251,7 @@ class Beat {
    thegraph.endDraw();
    }*/
   void display() {
+
     // background(255);
     thegraph.beginDraw();
     //  this.thegraph.clear();
@@ -237,7 +262,7 @@ class Beat {
       // print("it's playing");
       if (blippos>0&&xpos>0)
       {
-        //  print("it's playing");
+        println(blippos + ":" + theblips[blippos]);
         thegraph.line(xpos, thegraph.height/2 - theblips[blippos], xpos-linefactor, thegraph.height/2 - theblips[blippos-1]);
       }
       // thegraph.ellipse(xpos, thegraph.height/2 - theblips[blippos], 4, 4);
@@ -247,7 +272,7 @@ class Beat {
       blippos++;
       if (blippos>theblips.length-1) blippos=0;
       //imageMode(CORNER);
-      image(thegraph, 0, 400);
+      image(thegraph, 0, 375);
       xpos = xpos + linefactor;
       if (xpos>=thegraph.width) {
         thegraph.beginDraw();
@@ -256,7 +281,8 @@ class Beat {
         thegraph.endDraw();
         xpos=0;
       }
-    } else {
+    } else if (pause) {
+
       if (blippos>0&&xpos>0)
       {
         //   println("display1");
@@ -266,8 +292,8 @@ class Beat {
 
       thegraph.endDraw();
 
-      blippos++;
-      image(thegraph, 0, 400);
+      blipposOnP++;
+      image(thegraph, 0, 375);
     }
   }
   /* boolean wrap() {
