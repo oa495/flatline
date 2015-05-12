@@ -296,18 +296,5 @@ class Beat {
       image(thegraph, 0, 375);
     }
   }
-  /* boolean wrap() {
-   if (xpos>=thegraph.width) {
-   crossed = true;
-   thegraph.beginDraw();
-   // thegraph.background(255);
-   thegraph.clear();
-   thegraph.endDraw();
-   xpos=0;
-   } else {
-   crossed = false;
-   }
-   return crossed;
-   }*/
 }
 

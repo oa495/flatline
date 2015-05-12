@@ -339,7 +339,7 @@ void draw() {
     break;
 
   case 6:
-    //generateData();
+    generateData();
     imageMode(CORNER);
     screen = 7;
     break;
