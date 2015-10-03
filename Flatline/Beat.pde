@@ -227,7 +227,7 @@ class Beat {
       blippos++;
       if (blippos>theblips.length-1) blippos=0;
       //imageMode(CORNER);
-      image(thegraph, 0, 375);
+      image(thegraph, 0, 250);
       xpos = xpos + linefactor;
       if (xpos>=thegraph.width) {
         thegraph.beginDraw();
@@ -248,7 +248,7 @@ class Beat {
       thegraph.endDraw();
 
       blipposOnP++;
-      image(thegraph, 0, 375);
+      image(thegraph, 0, 250);
     }
   }
 }

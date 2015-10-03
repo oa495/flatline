@@ -97,7 +97,8 @@ int totalChangeTwitter;
 int totalChangeTumblr;
 int totalChangeInsta;
 int totalChange;
-
+int ms;
+int theMinutes;
 int firstTwitterSum;
 int firstTumblrSum;
 int firstInstaSum;
@@ -112,7 +113,7 @@ color c;
 void setup() {
   minim = new Minim(this);
   ekg = minim.loadFile("ecg.wav");
-  size(1300, 800);
+  size(1200, 800);
   frameRate(60);
   cols = width/videoScale;
   rows = height/videoScale;
@@ -132,8 +133,10 @@ void setup() {
   instaNumbers = createWriter("insta.txt");
   twitterNumbers = createWriter("twitter.txt");
   allNumbers = createWriter("all.txt");
-  timer = new Timer(10000);
-  countdown = new Countdown(60000);
+  timer = new Timer(5000);
+  ms = 5400000;
+  countdown = new Countdown(ms);
+  theMinutes = (ms/1000)/60;
   twitterBeat = new Beat();
   tumblrBeat = new Beat();
   instaBeat = new Beat();
