@@ -1,0 +1,23 @@
+{
+  "name": "flatline",
+  "version": "1.0.0",
+  "description": "Visualisation of your social media presence",
+  "main": "server.js",
+  "dependencies": {
+    "express": "^4.13.3",
+    "express-handlebars": "^2.0.1",
+    "fb": "^0.7.3",
+    "instagram": "^0.0.4",
+    "request": "^2.65.0",
+    "socket.io": "^1.3.7",
+    "tumblr": "^0.4.1",
+    "twitter": "^1.2.5"
+  },
+  "devDependencies": {},
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "start": "node server.js"
+  },
+  "author": "Omayeli Arenyeka",
+  "license": "ISC"
+}

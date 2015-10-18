@@ -134,7 +134,7 @@ void setup() {
   twitterNumbers = createWriter("twitter.txt");
   allNumbers = createWriter("all.txt");
   timer = new Timer(5000);
-  ms = 5400000;
+  ms = 900000;
   countdown = new Countdown(ms);
   theMinutes = (ms/1000)/60;
   twitterBeat = new Beat();
