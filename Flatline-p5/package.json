@@ -8,6 +8,7 @@
     "express-handlebars": "^2.0.1",
     "fb": "^0.7.3",
     "instagram": "^0.0.4",
+    "path": "^0.12.7",
     "request": "^2.65.0",
     "socket.io": "^1.3.7",
     "tumblr": "^0.4.1",

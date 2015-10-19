@@ -1,7 +1,7 @@
 
-// 
+/*
 // TWITTER STUFF
-//
+*/
 
 var Twitter = require('twitter');
  
@@ -14,74 +14,39 @@ var client = new Twitter({
 
 var thetweet;
 
-//
-// HTTP Portion
-//
+/** SERVER **/
 
-// the grand scheme of things
-var http = require('http');
-var httpServer = http.createServer(dothestuff);
+var express = require('express');
+var app = express();
+var path = require('path');
+var publicPath = path.resolve(__dirname, "public");
+app.use(express.static(publicPath));
 
-// port mojo
-httpServer.listen(5000);
-console.log("SERVER RUNNING!!!!");
+var handlebars = require('express-handlebars').create({'defaultLayout':'main'});
 
-//
-// HTTP Portion - this deals with HTTP requests from everyone's browsers
-//
+var server = require('http').Server(app);
+var io = require('socket.io')(server);
+// register express.engine as a function...
 
-var fs = require('fs'); // Using the filesystem module
-var path = require('path'); // Use the path module
+app.engine('handlebars', handlebars.engine);
 
-// this responds to browsers:
-function dothestuff(request, response) {
-    console.log('request starting...');
+// set handlebars as default view engine
+app.set('view engine', 'handlebars');
+app.set('port', process.env.PORT || 5000);
 
-	var filePath = __dirname + request.url;
-		console.log("has url:" + request.url);
-	if (request.url == "/") {
-		filePath = __dirname + "/index.html";
-		console.log("providing default: " + filePath);
-	}
-	var extname = path.extname(filePath);
-	var contentType = 'text/html';
-	switch (extname) {
-		case '.js':
-			contentType = 'text/javascript';
-			break;
-		case '.css':
-			contentType = 'text/css';
-			break;
-	}
-	
-	fs.exists(filePath, function(exists) {
-	
-		if (exists) {
-			fs.readFile(filePath, function(error, content) {
-				if (error) {
-					response.writeHead(500);
-					response.end();
-				}
-				else {
-					response.writeHead(200, { 'Content-Type': contentType });
-					response.end(content, 'utf-8');
-				}
-			});
-		}
-		else {
-			response.writeHead(404);
-			response.end();
-		}
-	});
-}
-
-//
-// SOCKET STUFF - this responds to websocket data from the raspberry pi
-//
+app.get('/', function(req, res, next) {
+  res.render('index');
+});
+app.get('/index', function(req, res, next) {
+  res.render('index');
+});
+app.get('/about', function(req, res, next) {
+  res.render('about');
+});
 
 var thecount = 0;
-
-var io = require('socket.io').listen(httpServer);
+server.listen(app.get('port'));
+console.log("THE SERVER IS RUNNING");
 
 io.sockets.on('connection', 
 	function (socket) {
