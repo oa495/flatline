@@ -1,4 +1,34 @@
+var user_name = "";
+var description = "";
+var location = "";
+var twitterData = {
+	noFollowers: 0,
+	noFriends: 0,
+	noStatuses: 0,
+	noFavourites: 0
+};
 
+var tumblrData = {
+	likes: 0,
+	following: 0, 
+	noOfBlogs: 0,
+	followers: 0,
+	messages: 0,
+	posts: 0
+};
+
+var instaData = {
+	posts: 0,
+	followers: 0
+};
+
+var instaChangesInData;
+var twitterChangesInData;
+var tumblrChangesInData;
+
+var interval = 1000;
+var countDownOver = false;
+var timeUp = false;
 /*
 // TWITTER STUFF
 */
@@ -42,6 +72,12 @@ app.get('/index', function(req, res, next) {
 });
 app.get('/about', function(req, res, next) {
   res.render('about');
+});
+app.get('/settings', function(req, res, next) {
+  res.render('settings');
+});
+app.get('/visualize', function(req, res, next) {
+  res.render('visualize');
 });
 
 var thecount = 0;
