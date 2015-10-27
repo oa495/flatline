@@ -1,21 +1,23 @@
-var twitterSelected = false;
-var tumblrSelected = false;
-var instaSelected = false;
-var fbSelected = false;
+var socket = io();
+var socialMediaSelected = {};
 
-$("#twitter" ).click(function() {
- 	twitterSelected = true;
- 	console.log(1);
+$(document).ready(function() {
+	$("#twitter" ).click(function() {
+	 	socialMediaSelected["twitterSelected"] = true;
+	});
+	$("#tumblr" ).click(function() {
+	 	socialMediaSelected["tumblrSelected"] = true;
+	});
+	$("#insta" ).click(function() {
+	 	socialMediaSelected["instaSelected"] = true;
+	});
+	$("#fb" ).click(function() {
+	 	socialMediaSelected["fbSelected"] = true;
+	});
+	//emit what social media platforms were selected
+	$('#submit-selections').click(function() {
+		console.log('here');
+		socket.emit('sm-selections', socialMediaSelected);
+	});
 });
-$("#tumblr" ).click(function() {
- 	tumblrSelected = true;
- 	console.log(2);
-});
-$("#insta" ).click(function() {
- 	instaSelected = true;
- 	console.log(3);
-});
-$("#fb" ).click(function() {
- 	fbSelected = true;
- 	console.log(4);
-});
+

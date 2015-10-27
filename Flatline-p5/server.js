@@ -1,3 +1,4 @@
+
 var user_name = "";
 var description = "";
 var location = "";
@@ -35,12 +36,36 @@ var timeUp = false;
 
 var Twitter = require('twitter');
  
-var client = new Twitter({
-  consumer_key: 'z6daOE1NzepjygPGCs4ozcgM0',
-  consumer_secret: 'jA2ZDt5rh9z7rnfS2SNbqvbl5Pb3mNXyT7mBA808agKu5ljUmm',
-  access_token_key: '178016800-Y9TzTcZNqxxK5KudrzlpOC41QpaGavWyO072WTb1',
-  access_token_secret: 'mRFzYEfxk3u4uAYmPHGeDRKB7EoDejYbpAFJ0GnIGzxjr'
+var twitClient = new Twitter({
+  consumer_key: 'gRuqrh6UFPQGj3J7TJAoTLzrE',
+  consumer_secret: 'vTfUPkTldN6d6cJSdUTWo269Pxxth39tk7HUWcdW2MyyNIeMO4',
+  access_token_key: '178016800-DsnsXUlnglo1DRnPVSiUKwVHtg8eOFc7wq79eZhv',
+  access_token_secret: '4dsvgLCQXQ6LNTlWzpOfJppxCraKzUXe4iEaKjwGRgCiV'
 });
+
+/** TUMBLR STUFF **/
+var tumlr = require('tumblr');
+
+var tumblrClient = {
+  consumer_key: '711YLRai4CmlGhtUZIa2vLmGbAYVdnxOKkaT0Cp4MbgfeG5lqX',
+  consumer_secret: 'xb9nqFCIJyJpL3OnkEP2M3B4QI4rOy41Cx9pHGC0MU3G5wJVGi',
+  token: 'OAuth Access Token',
+  token_secret: 'OAuth Access Token Secret'
+};
+
+var insta = require('instagram-node').instagram();
+/** INSTAGRAM STUFF **/
+
+
+
+/** FACEBOOK STUFF **/
+
+
+
+
+
+
+
 
 var thetweet;
 
@@ -78,6 +103,12 @@ app.get('/settings', function(req, res, next) {
 });
 app.get('/visualize', function(req, res, next) {
   res.render('visualize');
+});
+
+io.on('connection', function(socket){
+  socket.on('sm-selections', function(sm_selected){
+    console.log('message: ' + JSON.stringify(sm_selected));
+  });
 });
 
 var thecount = 0;
