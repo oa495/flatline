@@ -53,14 +53,15 @@ var tumblrClient = {
   token_secret: 'OAuth Access Token Secret'
 };
 
-var insta = require('instagram-node').instagram();
 /** INSTAGRAM STUFF **/
+var insta = require('instagram-node').instagram();
 
-
+api.use({
+  client_id: b8ea3dcb540743fc9d1b92110261002e,
+  client_secret: 6696c3641a554af88bcf0a61657094f5
+});
 
 /** FACEBOOK STUFF **/
-
-
 
 
 
