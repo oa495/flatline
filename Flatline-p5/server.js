@@ -63,13 +63,6 @@ api.use({
 
 /** FACEBOOK STUFF **/
 
-
-
-
-
-
-var thetweet;
-
 /** SERVER **/
 
 var express = require('express');
@@ -106,16 +99,38 @@ app.get('/visualize', function(req, res, next) {
   res.render('visualize');
 });
 
-io.on('connection', function(socket){
-  socket.on('sm-selections', function(sm_selected){
-    console.log('message: ' + JSON.stringify(sm_selected));
-  });
-});
-
-var thecount = 0;
 server.listen(app.get('port'));
 console.log("THE SERVER IS RUNNING");
 
+
+io.on('connection', function(socket){
+  socket.on('sm-selections', function(sm_selected){
+   		if (sm_selected["twitter-selected"]){
+   			getTwitterData();
+   		}
+   		if (sm_selected["tumblr-selected"]) {
+   			getTumblrData();
+   		}
+   		if (sm_selected["insta-selected"]) {
+   			getInstagramData();
+   		}
+  });
+});
+
+function getInstagramData() {
+
+
+}
+function getTwitterData() {
+
+}
+
+function getTumblrData() {
+
+}
+
+
+/*
 io.sockets.on('connection', 
 	function (socket) {
 	
@@ -139,9 +154,7 @@ io.sockets.on('connection',
 		});
 	}
 );
-
-
-
+*/
 function checkTwitter()
 {
 client.get('statuses/user_timeline', {screen_name: 'RLukeDuBois'}, 
