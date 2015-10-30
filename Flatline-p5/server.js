@@ -1,5 +1,6 @@
 
-var user_name = "";
+var name = "";
+var twitterUsername = "";
 var description = "";
 var location = "";
 var twitterData = {
@@ -44,7 +45,7 @@ var twitClient = new Twitter({
 });
 
 /** TUMBLR STUFF **/
-var tumlr = require('tumblr');
+var tumblr = require('tumblr');
 
 var tumblrClient = {
   consumer_key: '711YLRai4CmlGhtUZIa2vLmGbAYVdnxOKkaT0Cp4MbgfeG5lqX',
@@ -56,9 +57,9 @@ var tumblrClient = {
 /** INSTAGRAM STUFF **/
 var insta = require('instagram-node').instagram();
 
-api.use({
-  client_id: b8ea3dcb540743fc9d1b92110261002e,
-  client_secret: 6696c3641a554af88bcf0a61657094f5
+insta.use({
+  client_id: 'b8ea3dcb540743fc9d1b92110261002e',
+  client_secret: '6696c3641a554af88bcf0a61657094f5'
 });
 
 /** FACEBOOK STUFF **/
@@ -105,13 +106,15 @@ console.log("THE SERVER IS RUNNING");
 
 io.on('connection', function(socket){
   socket.on('sm-selections', function(sm_selected){
-   		if (sm_selected["twitter-selected"]){
+  	console.log(1);
+   		if (sm_selected["twitterSelected"]){
+   			twitterUsername = sm_selected["twitterUsername"];
    			getTwitterData();
    		}
-   		if (sm_selected["tumblr-selected"]) {
+   		if (sm_selected["tumblrSelected"]) {
    			getTumblrData();
    		}
-   		if (sm_selected["insta-selected"]) {
+   		if (sm_selected["instaSelected"]) {
    			getInstagramData();
    		}
   });
@@ -122,7 +125,19 @@ function getInstagramData() {
 
 }
 function getTwitterData() {
-
+	twitClient.get('users/show', {screen_name: twitterUsername}, 
+		function(error, twitterResults){
+		  if(error) throw error;
+		  if (!name) {
+		  	  name = twitterResults.name;
+		  }
+		  location = twitterResults.location;
+		  description = twitterResults.description;
+		  twitterData[noFollowers] = twitterResults.followers_count;
+		  twitterData[noFriends] = twitterResults.friends_count;
+		  twitterData[noStatuses] = twitterResults.statuses_count;
+		  twitterData[noFavourites] = twitterResults.favourites_count;
+	});
 }
 
 function getTumblrData() {
@@ -157,18 +172,7 @@ io.sockets.on('connection',
 */
 function checkTwitter()
 {
-client.get('statuses/user_timeline', {screen_name: 'RLukeDuBois'}, 
-	function(error, tweets, response){
-	  if(error) throw error;
-	  var thechoice = Math.floor(Math.random()*tweets.length);
-	  thetweet = tweets[thechoice].text;
-	  console.log("in checktwitter(): " + thetweet);
 
-//  for(var i = 0;i<tweets.length;i++)
-//  {
-//  	console.log(i + " : " + tweets[i].text);
-//  }
-});
 
 
 }

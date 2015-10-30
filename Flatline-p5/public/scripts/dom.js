@@ -3,16 +3,45 @@ var socialMediaSelected = {};
 
 $(document).ready(function() {
 	$("#twitter" ).click(function() {
-	 	socialMediaSelected["twitterSelected"] = true;
+		if (socialMediaSelected["twitterSelected"]) {
+			socialMediaSelected["twitterSelected"] = false;
+			$( ".twitUsername" ).hide();
+		}
+		else {
+	 		socialMediaSelected["twitterSelected"] = true;
+	 		$( ".twitUsername" ).show();
+	 	}
 	});
 	$("#tumblr" ).click(function() {
-	 	socialMediaSelected["tumblrSelected"] = true;
+		if (socialMediaSelected["tumblrSelected"]) {
+			socialMediaSelected["tumblrSelected"] = false;
+		}
+		else {
+			socialMediaSelected["tumblrSelected"] = true;
+		}
 	});
 	$("#insta" ).click(function() {
-	 	socialMediaSelected["instaSelected"] = true;
+		if (socialMediaSelected["instaSelected"]) {
+			socialMediaSelected["instaSelected"] = false;
+		}
+		else {
+			socialMediaSelected["instaSelected"] = true;
+		}
 	});
 	$("#fb" ).click(function() {
-	 	socialMediaSelected["fbSelected"] = true;
+		if (socialMediaSelected["fbSelected"]) {
+			socialMediaSelected["fbSelected"] = false;
+		}
+		else {
+			socialMediaSelected["fbSelected"] = true;
+		}
+	});
+	$( ".twitUsername" ).submit(function(event) {
+		event.preventDefault();
+		if (socialMediaSelected["twitterSelected"]) {
+			console.log("yes twitter");
+			socialMediaSelected["twitterUsername"] = $("input:first").val();
+		}
 	});
 	//emit what social media platforms were selected
 	$('#submit-selections').click(function() {
