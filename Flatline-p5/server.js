@@ -3,6 +3,8 @@ var name = "";
 var twitterUsername = "";
 var description = "";
 var location = "";
+var allInstaData = {};
+var allTumblrData = {};
 var twitterData = {
 	noFollowers: 0,
 	noFriends: 0,
@@ -21,7 +23,8 @@ var tumblrData = {
 
 var instaData = {
 	posts: 0,
-	followers: 0
+	followers: 0,
+	following: 0
 };
 
 var instaChangesInData;
@@ -34,9 +37,16 @@ var timeUp = false;
 /*
 // TWITTER STUFF
 */
-
+var express = require('express');
+var passport = require('passport');
+var logger = require('morgan');
+var InstagramStrategy = require('passport-instagram').Strategy;
+//var TumblrStrategy = require('passport-tumblr').Strategy;
 var Twitter = require('twitter');
- 
+
+
+var app = express();
+
 var twitClient = new Twitter({
   consumer_key: 'gRuqrh6UFPQGj3J7TJAoTLzrE',
   consumer_secret: 'vTfUPkTldN6d6cJSdUTWo269Pxxth39tk7HUWcdW2MyyNIeMO4',
@@ -45,33 +55,61 @@ var twitClient = new Twitter({
 });
 
 /** TUMBLR STUFF **/
-var tumblr = require('tumblr');
-
-var tumblrClient = {
-  consumer_key: '711YLRai4CmlGhtUZIa2vLmGbAYVdnxOKkaT0Cp4MbgfeG5lqX',
-  consumer_secret: 'xb9nqFCIJyJpL3OnkEP2M3B4QI4rOy41Cx9pHGC0MU3G5wJVGi',
-  token: 'OAuth Access Token',
-  token_secret: 'OAuth Access Token Secret'
-};
+/*
+passport.use(new TumblrStrategy({
+    consumerKey: '711YLRai4CmlGhtUZIa2vLmGbAYVdnxOKkaT0Cp4MbgfeG5lqX',
+    consumerSecret: 'xb9nqFCIJyJpL3OnkEP2M3B4QI4rOy41Cx9pHGC0MU3G5wJVGi',
+    callbackURL: "http://localhost:5000/auth/tumblr/callback"
+  },
+  function(token, tokenSecret, profile, done) {
+    process.nextTick(function () {
+      allTumblrData = profile;
+      // To keep the example simple, the user's Instagram profile is returned to
+      // represent the logged-in user.  In a typical application, you would want
+      // to associate the Instagram account with a user record in your database,
+      // and return that user instead.
+      return done(null, profile);
+    });
+  }
+)); */
 
 /** INSTAGRAM STUFF **/
-var insta = require('instagram-node').instagram();
 
-insta.use({
-  client_id: 'b8ea3dcb540743fc9d1b92110261002e',
-  client_secret: '6696c3641a554af88bcf0a61657094f5'
-});
-
+passport.use(new InstagramStrategy({
+    clientID: 'b8ea3dcb540743fc9d1b92110261002e',
+    clientSecret: '6696c3641a554af88bcf0a61657094f5',
+    callbackURL: "http://localhost:5000/auth/instagram/callback"
+  },
+function(accessToken, refreshToken, profile, done) {
+     process.nextTick(function () {
+      allInstaData = profile["_raw"];
+      // To keep the example simple, the user's Instagram profile is returned to
+      // represent the logged-in user.  In a typical application, you would want
+      // to associate the Instagram account with a user record in your database,
+      // and return that user instead.
+      return done(null, profile);
+    });
+  }
+));
 /** FACEBOOK STUFF **/
 
 /** SERVER **/
 
-var express = require('express');
-var app = express();
 var path = require('path');
 var publicPath = path.resolve(__dirname, "public");
 app.use(express.static(publicPath));
+app.use(passport.initialize());
+app.use(passport.session());
 
+passport.serializeUser(function(user, done) {
+  done(null, user.id);
+});
+
+passport.deserializeUser(function(user, done) {
+  done(null, user);
+});
+
+app.use(logger('dev'));
 var handlebars = require('express-handlebars').create({'defaultLayout':'main'});
 
 var server = require('http').Server(app);
@@ -99,6 +137,34 @@ app.get('/settings', function(req, res, next) {
 app.get('/visualize', function(req, res, next) {
   res.render('visualize');
 });
+app.get('/auth/instagram',
+	passport.authenticate('instagram'),
+	function(req, res){
+	// The request will be redirected to Instagram for authentication, so this
+	// function will not be called.
+});
+
+// GET /auth/instagram/callback
+//   Use passport.authenticate() as route middleware to authenticate the
+//   request.  If authentication fails, the user will be redirected back to the
+//   login page.  Otherwise, the primary route function function will be called,
+//   which, in this example, will redirect the user to the home page.
+app.get('/auth/instagram/callback', 
+	passport.authenticate('instagram', { failureRedirect: '/settings' }),
+	function(req, res) {
+	res.redirect('/settings');
+});
+/*
+app.get('/auth/tumblr',
+  passport.authenticate('tumblr'));
+
+app.get('/auth/tumblr/callback', 
+  passport.authenticate('tumblr', { failureRedirect: '/settings' }),
+  function(req, res) {
+    // Successful authentication, redirect home.
+    res.redirect('/settings');
+  });
+*/
 
 server.listen(app.get('port'));
 console.log("THE SERVER IS RUNNING");
@@ -121,8 +187,10 @@ io.on('connection', function(socket){
 });
 
 function getInstagramData() {
-
-
+       //instaData.posts = profile["_raw"].counts.media;
+      //instaData.followers = profile["_raw"].counts.followed_by;
+      //instaData.following = profile["_raw"].counts.follows;
+      //console.log(instaData.posts, instaData.followers, instaData.following)
 }
 function getTwitterData() {
 	twitClient.get('users/show', {screen_name: twitterUsername}, 
