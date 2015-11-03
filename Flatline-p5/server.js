@@ -6,10 +6,10 @@ var location = "";
 var allInstaData = {};
 var allTumblrData = {};
 var twitterData = {
-	noFollowers: 0,
-	noFriends: 0,
-	noStatuses: 0,
-	noFavourites: 0
+	noFollowers: [],
+	noFriends: [],
+	noStatuses: [],
+	noFavourites: []
 };
 
 var tumblrData = {
@@ -192,20 +192,48 @@ function getInstagramData() {
       //instaData.following = profile["_raw"].counts.follows;
       //console.log(instaData.posts, instaData.followers, instaData.following)
 }
+
 function getTwitterData() {
-	twitClient.get('users/show', {screen_name: twitterUsername}, 
-		function(error, twitterResults){
-		  if(error) throw error;
-		  if (!name) {
-		  	  name = twitterResults.name;
-		  }
-		  location = twitterResults.location;
-		  description = twitterResults.description;
-		  twitterData[noFollowers] = twitterResults.followers_count;
-		  twitterData[noFriends] = twitterResults.friends_count;
-		  twitterData[noStatuses] = twitterResults.statuses_count;
-		  twitterData[noFavourites] = twitterResults.favourites_count;
-	});
+  console.log("START TWITTER CHECKING~!!!!")
+  // clear everything
+  twitterData.noFollowers = [];
+  twitterData.noFriends = [];
+  twitterData.noStatuses = [];
+  twitterData.noFavourites = [];
+
+
+  var twitint = setInterval(pollTwitter, 5000);
+  setTimeout(function(_t) {
+    clearInterval(_t);
+    console.log("DONE TWITTER CHECKING~!!!!");
+    console.log("followers " + twitterData["noFollowers"]);
+    console.log("friends: " + twitterData["noFriends"]);
+    console.log("stat: " + twitterData["noStatuses"]);
+    console.log("fav: " + twitterData["noFavourites"]);
+    //
+    // do your emit stuff here!!!
+    //
+
+  }, 60000, twitint);
+  pollTwitter();
+}
+
+function pollTwitter() {
+    twitClient.get('users/show', {screen_name: twitterUsername}, 
+    function(error, twitterResults){
+      if(error) throw error;
+      if (!name) {
+          name = twitterResults.name;
+      }
+      location = twitterResults.location;
+      description = twitterResults.description;
+      console.log("CHECKING TWITTER~!!!!!");
+      twitterData["noFollowers"].push(twitterResults.followers_count);
+      twitterData["noFriends"].push(twitterResults.friends_count);
+      twitterData["noStatuses"].push(twitterResults.statuses_count);
+      twitterData["noFavourites"].push(twitterResults.favourites_count);
+  });
+
 }
 
 function getTumblrData() {
