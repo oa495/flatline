@@ -29,7 +29,11 @@ div h1, div h2, div p {
 
 footer {
   height: 50px; }
-  footer a {
+  footer .social-media img {
+    float: left;
+    position: relative;
+    padding: 10px; }
+  footer nav a {
     padding: 15px;
     float: right;
     text-transform: uppercase;
