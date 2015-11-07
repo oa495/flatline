@@ -25,7 +25,8 @@ h2 {
   text-transform: uppercase; }
 
 div h1, div h2, div p {
-  margin-left: 50px; }
+  margin-left: 5%;
+  margin-right: 5%; }
 
 footer {
   height: 50px; }
