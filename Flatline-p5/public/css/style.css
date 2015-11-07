@@ -1,0 +1,29 @@
+html,
+body,
+ul {
+  margin: 0;
+  padding: 0; }
+
+a {
+  text-decoration: none; }
+
+body {
+  font-family: "Merriweather Sans", sans-serif; }
+
+h1, h2 {
+  font-family: "Oswald", sans-serif;
+  color: white;
+  text-transform: uppercase; }
+
+.container, .about-p, .first-p, .settings-p {
+  width: 100%;
+  height: 100vh;
+  overflow: hidden; }
+
+.about-p {
+  background-color: #f37458; }
+
+.first-p, .settings-p {
+  background-color: #6dc5aa; }
+
+/*# sourceMappingURL=style.css.map */

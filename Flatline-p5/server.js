@@ -191,11 +191,10 @@ function getInstagramData() {
        instaData.posts = profile["_raw"].counts.media;
        instaData.followers = profile["_raw"].counts.followed_by;
        instaData.following = profile["_raw"].counts.follows;
-       console.log(instaData.posts, instaData.followers, instaData.following)
+       console.log(instaData.posts, instaData.followers, instaData.following);
 }
 
 function getTwitterData() {
-<<<<<<< HEAD
   //initialize to 0 
 	twitClient.get('users/show', {screen_name: twitterUsername}, 
 		function(error, twitterResults){
@@ -211,7 +210,7 @@ function getTwitterData() {
 		  twitterData["noStatuses"] = twitterResults.statuses_count;
 		  twitterData["noFavourites"] = twitterResults.favourites_count;
 	});
-=======
+
   console.log("START TWITTER CHECKING~!!!!")
   // clear everything
   twitterData.noFollowers = [];
@@ -251,8 +250,6 @@ function pollTwitter() {
       twitterData["noStatuses"].push(twitterResults.statuses_count);
       twitterData["noFavourites"].push(twitterResults.favourites_count);
   });
-
->>>>>>> 5775e44c1f6009cb27dda7c38b7e73debe016f38
 }
 
 function getTumblrData() {
