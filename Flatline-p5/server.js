@@ -83,6 +83,7 @@ passport.use(new InstagramStrategy({
 function(accessToken, refreshToken, profile, done) {
      process.nextTick(function () {
       allInstaData = profile["_raw"];
+      console.log(allInstaData);
       // To keep the example simple, the user's Instagram profile is returned to
       // represent the logged-in user.  In a typical application, you would want
       // to associate the Instagram account with a user record in your database,
@@ -187,12 +188,13 @@ io.on('connection', function(socket){
 });
 
 function getInstagramData() {
-       //instaData.posts = profile["_raw"].counts.media;
-      //instaData.followers = profile["_raw"].counts.followed_by;
-      //instaData.following = profile["_raw"].counts.follows;
-      //console.log(instaData.posts, instaData.followers, instaData.following)
+       instaData.posts = profile["_raw"].counts.media;
+       instaData.followers = profile["_raw"].counts.followed_by;
+       instaData.following = profile["_raw"].counts.follows;
+       console.log(instaData.posts, instaData.followers, instaData.following)
 }
 function getTwitterData() {
+  //initialize to 0 
 	twitClient.get('users/show', {screen_name: twitterUsername}, 
 		function(error, twitterResults){
 		  if(error) throw error;
@@ -201,10 +203,11 @@ function getTwitterData() {
 		  }
 		  location = twitterResults.location;
 		  description = twitterResults.description;
-		  twitterData[noFollowers] = twitterResults.followers_count;
-		  twitterData[noFriends] = twitterResults.friends_count;
-		  twitterData[noStatuses] = twitterResults.statuses_count;
-		  twitterData[noFavourites] = twitterResults.favourites_count;
+      console.log(twitterResults);
+		  twitterData["noFollowers"] = twitterResults.followers_count;
+		  twitterData["noFriends"] = twitterResults.friends_count;
+		  twitterData["noStatuses"] = twitterResults.statuses_count;
+		  twitterData["noFavourites"] = twitterResults.favourites_count;
 	});
 }
 
