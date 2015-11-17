@@ -1,10 +1,10 @@
 
 var name = "";
 var twitterUsername = "";
+var instagramUsername;
 var description = "";
 var location = "";
-var allInstaData = {};
-var allTumblrData = {};
+
 var twitterData = {
 	noFollowers: [],
 	noFriends: [],
@@ -13,18 +13,18 @@ var twitterData = {
 };
 
 var tumblrData = {
-	likes: 0,
-	following: 0, 
-	noOfBlogs: 0,
-	followers: 0,
-	messages: 0,
-	posts: 0
+	likes: [],
+	following: [], 
+	noOfBlogs: [],
+	followers: [],
+	messages: [],
+	posts: []
 };
 
 var instaData = {
-	posts: 0,
-	followers: 0,
-	following: 0
+	posts: [],
+	followers: [],
+	following: []
 };
 
 var instaChangesInData;
@@ -39,10 +39,15 @@ var timeUp = false;
 */
 var express = require('express');
 var passport = require('passport');
+var bodyParser = require('body-parser');
 var logger = require('morgan');
-var InstagramStrategy = require('passport-instagram').Strategy;
+//var InstagramStrategy = require('passport-instagram').Strategy;
 //var TumblrStrategy = require('passport-tumblr').Strategy;
 var Twitter = require('twitter');
+var ig = require('instagram-node-lib');
+
+ig.set('client_id', 'b8ea3dcb540743fc9d1b92110261002e');
+ig.set('client_secret', '6696c3641a554af88bcf0a61657094f5');
 
 
 var app = express();
@@ -74,7 +79,7 @@ passport.use(new TumblrStrategy({
 )); */
 
 /** INSTAGRAM STUFF **/
-
+/*
 passport.use(new InstagramStrategy({
     clientID: 'b8ea3dcb540743fc9d1b92110261002e',
     clientSecret: '6696c3641a554af88bcf0a61657094f5',
@@ -91,7 +96,7 @@ function(accessToken, refreshToken, profile, done) {
       return done(null, profile);
     });
   }
-));
+));*/
 /** FACEBOOK STUFF **/
 
 /** SERVER **/
@@ -110,6 +115,8 @@ passport.deserializeUser(function(user, done) {
   done(null, user);
 });
 
+app.use(bodyParser.json());
+app.use(bodyParser.urlencoded({ extended: false }));
 app.use(logger('dev'));
 var handlebars = require('express-handlebars').create({'defaultLayout':'main'});
 
@@ -126,18 +133,41 @@ app.set('port', process.env.PORT || 5000);
 app.get('/', function(req, res, next) {
   res.render('index');
 });
+
 app.get('/index', function(req, res, next) {
   res.render('index');
 });
+
+app.get('/start', function(req, res, next) {
+  res.render('start');
+});
+
+app.post('/start', function(req, res, next) {
+  console.log(req.body.time);
+  //getTwitterData();
+ // getIG();
+});
+
 app.get('/about', function(req, res, next) {
   res.render('about');
 });
+
 app.get('/settings', function(req, res, next) {
   res.render('settings');
 });
+
+app.post('/settings', function(req, res, next) {
+  console.log(req.body);
+  twitterUsername = req.body.twitterUsername;
+  instagramUsername = req.body.instagramUsername;
+  res.redirect('/start');
+});
+
 app.get('/visualize', function(req, res, next) {
   res.render('visualize');
 });
+
+/*
 app.get('/auth/instagram',
 	passport.authenticate('instagram'),
 	function(req, res){
@@ -155,7 +185,7 @@ app.get('/auth/instagram/callback',
 	function(req, res) {
 	res.redirect('/settings');
 });
-/*
+
 app.get('/auth/tumblr',
   passport.authenticate('tumblr'));
 
@@ -170,47 +200,59 @@ app.get('/auth/tumblr/callback',
 server.listen(app.get('port'));
 console.log("THE SERVER IS RUNNING");
 
-
-io.on('connection', function(socket){
-  socket.on('sm-selections', function(sm_selected){
-  	console.log(1);
-   		if (sm_selected["twitterSelected"]){
-   			twitterUsername = sm_selected["twitterUsername"];
-   			getTwitterData();
-   		}
-   		if (sm_selected["tumblrSelected"]) {
-   			getTumblrData();
-   		}
-   		if (sm_selected["instaSelected"]) {
-   			getInstagramData();
-   		}
+function getIG()
+{
+  var match = -1;
+  ig.users.search({
+    q: utf8.encode(instagramUsername), // term to search
+    complete: function(data, pagination){
+      for(var i =  0;i<data.length;i++)
+      {
+        if(usertosearch==data[i].username)
+        {
+          console.log('MATCHED!!!: ' + data[i].id)
+          match = data[i].id;
+          break;
+        }
+      }
+      if(match>-1) getIGinfo(match);
+    }
   });
-});
+}
 
-function getInstagramData() {
-       instaData.posts = profile["_raw"].counts.media;
-       instaData.followers = profile["_raw"].counts.followed_by;
-       instaData.following = profile["_raw"].counts.follows;
-       console.log(instaData.posts, instaData.followers, instaData.following);
+function getIGinfo(_m)
+{
+  instaData.posts = [];
+  instaData.followers = [];
+  instaData.following = [];
+
+  var instaTimer = setInterval(pollInstagram, 5000);
+  setTimeout(function(_i) {
+    clearInterval(_i);
+    console.log("DONE TWITTER CHECKING~!!!!");
+    console.log("followers " + instaData["followers"]);
+    console.log("following: " + instaData["following"]);
+    console.log("posts: " + instaData["posts"]);
+    io.emit('instaData', instaData);
+  }, 60000, instaTimer);
+
+  pollTwitter();
+}
+
+function pollInstagram() {
+  ig.users.info({
+    user_id: _m, // term to search
+    complete: function(instaData, pagination){
+      console.log("CHECKING INSTA~!!!!!");
+      instaData["noFollowers"].push(instaData.count["followed_by"]);
+      instaData["noFriends"].push(instaData.count["follows"]);
+      instaData["noStatuses"].push(instaData.count["media"]);
+     }
+  });
 }
 
 function getTwitterData() {
   //initialize to 0 
-	twitClient.get('users/show', {screen_name: twitterUsername}, 
-		function(error, twitterResults){
-		  if(error) throw error;
-		  if (!name) {
-		  	  name = twitterResults.name;
-		  }
-		  location = twitterResults.location;
-		  description = twitterResults.description;
-      console.log(twitterResults);
-		  twitterData["noFollowers"] = twitterResults.followers_count;
-		  twitterData["noFriends"] = twitterResults.friends_count;
-		  twitterData["noStatuses"] = twitterResults.statuses_count;
-		  twitterData["noFavourites"] = twitterResults.favourites_count;
-	});
-
   console.log("START TWITTER CHECKING~!!!!")
   // clear everything
   twitterData.noFollowers = [];
@@ -219,7 +261,8 @@ function getTwitterData() {
   twitterData.noFavourites = [];
 
 
-  var twitint = setInterval(pollTwitter, 5000);
+  var twitTimer = setInterval(pollTwitter, 5000);
+
   setTimeout(function(_t) {
     clearInterval(_t);
     console.log("DONE TWITTER CHECKING~!!!!");
@@ -227,11 +270,9 @@ function getTwitterData() {
     console.log("friends: " + twitterData["noFriends"]);
     console.log("stat: " + twitterData["noStatuses"]);
     console.log("fav: " + twitterData["noFavourites"]);
-    //
-    // do your emit stuff here!!!
-    //
+    io.emit('twitterData', twitterData);
+  }, 60000, twitTimer);
 
-  }, 60000, twitint);
   pollTwitter();
 }
 
@@ -252,9 +293,6 @@ function pollTwitter() {
   });
 }
 
-function getTumblrData() {
-
-}
 
 
 /*
@@ -282,12 +320,7 @@ io.sockets.on('connection',
 	}
 );
 */
-function checkTwitter()
-{
 
-
-
-}
 
 
 

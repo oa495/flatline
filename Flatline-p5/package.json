@@ -4,10 +4,12 @@
   "description": "Visualisation of your social media presence",
   "main": "server.js",
   "dependencies": {
+    "body-parser": "^1.14.1",
     "express": "^4.13.3",
     "express-handlebars": "^2.0.1",
     "fb": "^0.7.3",
     "instagram": "^0.0.4",
+    "instagram-node-lib": "^0.1.1",
     "morgan": "^1.6.1",
     "passport": "^0.2.2",
     "passport-tumblr": "^0.1.2",

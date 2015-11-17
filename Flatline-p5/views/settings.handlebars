@@ -1,52 +1,52 @@
 <script type="text/javascript" src="/scripts/dom.js"></script>
 <div class="settings-p">
-	<section class="twitter-sec">
-		<h3>Twitter</h3>
-		<form class="twitter">
+	<form method="POST" action="settings">
+		<section class="twitter-sec">
+			<h3>Twitter</h3>
 			Is your account private? 
-			<label>
-			 <input type="radio" name="group1"/> Yes
-			</label>
-			<label>
-			 <input type="radio" name="group1"/>No
-			</label>
+			<div class="radio-buttons">
+				<label>
+				 <input type="radio" name="group1" value="Yes"/> Yes
+				</label>
+				<label>
+				 <input type="radio" name="group1" value="No"/>No
+				</label>
+			</div>
 			<br>
 			Username: <input type="text" name="twitterUsername"/>
-			<input type="submit" value="Submit">
-		</form>
-	</section>
-	<section class="insta-sec">
-		<h3>Instagram</h3>
-		<form class="insta">
+			<img width="36px" class="right-arrow" src="/img/right.svg">
+		</section>
+		<section class="insta-sec">
+			<h3>Instagram</h3>
 			Is your account private? 
-			<label>
-			 <input type="radio" name="group1"/> Yes
-			</label>
-			<label>
-			 <input type="radio" name="group1"/>No
-			</label>
+			<div class="radio-buttons">
+				<label>
+				 <input type="radio" name="group2" value="Yes"/> Yes
+				</label>
+				<label>
+				 <input type="radio" name="group2" value="No"/>No
+				</label>
+			</div>
 			<br>
-			Username: <input type="text" name="twitterUsername"/>
-			<input type="submit" value="Submit">
-		</form>
-	</section>
-	<section class="tumblr-sec">
-		<h3>Tumblr</h3>
-		<form class="tumblr">
+			<img width="36px" class="left-arrow" src="/img/left.svg">
+			Username: <input type="text" name="instaUsername"/>
+			<img width="36px" class="right-arrow" src="/img/right.svg">
+		</section>
+		<section class="tumblr-sec">
+			<h3>Tumblr</h3>
 			Is your account private? 
-			<label>
-			 <input type="radio" name="group1"/> Yes
-			</label>
-			<label>
-			 <input type="radio" name="group1"/>No
-			</label>
+			<div class="radio-buttons">
+				<label>
+				 <input type="radio" name="group3" value="Yes"/> Yes
+				</label>
+				<label>
+				 <input type="radio" name="group3" value="No" />No
+				</label>
+			</div>
 			<br>
-			Username: <input type="text" name="twitterUsername"/>
+			Username: <input type="text" name="tumblrrUsername"/>
+			<img width="36px" class="left-arrow" src="/img/left.svg">
 			<input type="submit" value="Submit">
-		</form>
-	</section>
-	<section class="fbook-sec">
-		<h3>Facebook</h3>
-		<p>Not available atm </p>
-	</section>
+		</section>
+	</form>
 </div>

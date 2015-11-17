@@ -24,9 +24,12 @@ h1, h2 {
 h2 {
   text-transform: uppercase; }
 
-div h1, div h2, div p {
+div h1, div h2, div p, div form, section h1, section h2, section p, section form {
   margin-left: 5%;
   margin-right: 5%; }
+
+section {
+  margin-top: 10%; }
 
 footer {
   height: 50px; }
@@ -41,25 +44,24 @@ footer {
     font-size: 12px;
     font-weight: 300; }
 
-.container, .about-p, .first-p, .settings-p {
+.container, .about-p, .first-p, .settings-p, .start-p {
   width: 100%;
   height: 95vh;
   overflow: hidden; }
 
-.about-p {
+.about-p, .start-p {
   background-color: #f37458; }
-  .about-p section {
-    margin-top: 10%; }
-  .about-p p {
-    max-width: 550px;
-    font-size: 13px;
-    padding-bottom: 25px; }
+
+.about-p p {
+  max-width: 550px;
+  font-size: 13px;
+  padding-bottom: 25px; }
 
 footer, .first-p, .settings-p {
   background-color: #6dc5aa; }
 
 .first-p h1, .first-p a {
-  margin-top: 25%; }
+  margin-top: 10%; }
 .first-p img {
   padding-left: 10px;
   position: absolute; }
@@ -67,17 +69,12 @@ footer, .first-p, .settings-p {
 .settings-p {
   max-height: 100vh; }
   .settings-p section {
-    width: 49%;
-    height: 49%;
-    padding: 1px;
-    border: 2px solid white; }
-  .settings-p .tumblr-sec {
-    float: left; }
-  .settings-p .twitter-sec {
-    float: left; }
-  .settings-p .insta-sec {
-    float: right; }
-  .settings-p .fbook-sec {
-    float: right; }
+    width: 100%;
+    height: 85%; }
+    .settings-p section h3, .settings-p section .radio-buttons {
+      padding-top: 15px;
+      padding-bottom: 15px; }
+  .settings-p .tumblr-sec, .settings-p .insta-sec, .settings-p .fbook-sec {
+    display: none; }
 
 /*# sourceMappingURL=style.css.map */

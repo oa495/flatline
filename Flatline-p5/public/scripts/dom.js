@@ -1,3 +1,35 @@
+var section = "twitter";
+
+$(document).ready(function() {
+	$(".right-arrow" ).click(function() {
+		if (section === "twitter") {
+			$(".twitter-sec").hide();
+			$(".insta-sec").show();
+			section = "insta";
+		}
+		else if (section === "insta") {
+			$(".insta-sec").hide();
+			$(".tumblr-sec").show();
+			section = "tumblr";
+		}
+	});
+	$(".left-arrow" ).click(function() {
+		if (section === "tumblr") {
+			$(".tumblr-sec").hide();
+			$(".insta-sec").show();
+			section = "insta";
+		}
+		else if (section === "insta") {
+			$(".insta-sec").hide();
+			$(".twitter-sec").show();
+			section = "twitter";
+		}
+	});
+});
+
+
+
+/*
 var socket = io();
 var socialMediaSelected = {};
 
@@ -50,3 +82,4 @@ $(document).ready(function() {
 	});
 });
 
+*/

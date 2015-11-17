@@ -1,12 +1,8 @@
-process.setMaxListeners(0); // set max throttle
+
 
 // libraries
 var ig = require('instagram-node-lib');
-var https = require('https');
-var fs = require('fs');
-var mkdirp = require('mkdirp');
-var bn = require('bignumber.js');
-var utf8 = require('utf8');
+
 
 var usertosearch = 'zendaya';
 
