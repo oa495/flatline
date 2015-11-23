@@ -150,8 +150,8 @@ app.get('/visualize', function(req, res, next) {
 app.post('/start', function(req, res, next) {
   console.log(req.body.time);
   console.log('request recieved');
-  getTwitterData();
-  getIG();
+  getTwitterData(req.body.time);
+  getIG(req.body.time);
   res.redirect('/visualize');
 });
 
@@ -214,7 +214,7 @@ app.get('/auth/tumblr/callback',
 server.listen(app.get('port'));
 console.log("THE SERVER IS RUNNING");
 
-function getIG()
+function getIG(tt)
 {
   var match = -1;
   ig.users.search({
@@ -229,12 +229,12 @@ function getIG()
           break;
         }
       }
-      if(match>-1) getIGinfo(match);
+      if(match>-1) getIGinfo(match, tt);
     }
   });
 }
 
-function getIGinfo(_m)
+function getIGinfo(_m, tt)
 {
   instaData.posts = [];
   instaData.followers = [];
@@ -248,7 +248,7 @@ function getIGinfo(_m)
     console.log("followers " + instaData["followers"]);
     console.log("following: " + instaData["following"]);
     console.log("posts: " + instaData["posts"]);
-  }, 60000, instaTimer);
+  }, tt, instaTimer);
 
 
 }
@@ -265,7 +265,7 @@ function pollInstagram() {
   });
 }
 
-function getTwitterData() {
+function getTwitterData(tt) {
   //initialize to 0 
   console.log("START TWITTER CHECKING~!!!!")
   // clear everything
@@ -285,7 +285,7 @@ function getTwitterData() {
     console.log("friends: " + twitterData["noFriends"]);
     console.log("stat: " + twitterData["noStatuses"]);
     console.log("fav: " + twitterData["noFavourites"]);
-  }, 10000, twitTimer);
+  }, tt, twitTimer);
 }
 
 function pollTwitter() {

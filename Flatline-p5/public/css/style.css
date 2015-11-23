@@ -77,4 +77,7 @@ footer, .first-p, .settings-p {
   .settings-p .tumblr-sec, .settings-p .insta-sec, .settings-p .fbook-sec {
     display: none; }
 
+#clockdiv {
+  display: none; }
+
 /*# sourceMappingURL=style.css.map */

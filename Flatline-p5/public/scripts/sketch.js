@@ -27,11 +27,10 @@ socket.on('instaData', function(data){
 });
 
 function setup() {
-
   createCanvas(windowWidth, windowHeight);
-  thegraph = createGraphics(width-400, height/2);
-  controls = createGraphics(width/4, height/4);
-  sidebar = createGraphics(width-thegraph.width, height);
+  //thegraph = createGraphics(width-400, height/2);
+  //controls = createGraphics(width/4, height/4);
+  //sidebar = createGraphics(width-thegraph.width, height);
   cols = width/gridScale;
   rows = height/gridScale;
   for (var i = 0; i < cols; i++) {
