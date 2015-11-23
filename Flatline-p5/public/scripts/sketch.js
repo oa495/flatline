@@ -12,12 +12,18 @@ var twitter = true;
 var instagram, tumblr, all;
 var thegraph, controls, sidebar;
 var point = 0;
+var socket = io.connect();
+
 socket.on('twitterData', function(data){
   twitterData = data;
+  totalTwitterChange = getTotalData(twitterData);
+  console.log('twitterData', twitterData);
 });
 
 socket.on('instaData', function(data){
   instaData = data;
+  totalInstaChange = getTotalData(instaData);
+  console.log('insta', instaData);
 });
 
 function setup() {
@@ -38,8 +44,6 @@ function setup() {
         rect(x, y, gridScale, gridScale);
       }
   }
-  totalInstaChange = getTotalData(instaData);
-  totalTwitterChange = getTotalData(twitterData);
 }
 
 function getTotalData(obj) {

@@ -102,6 +102,7 @@ function(accessToken, refreshToken, profile, done) {
 /** SERVER **/
 
 var path = require('path');
+var utf8 = require('utf8');
 var publicPath = path.resolve(__dirname, "public");
 app.use(express.static(publicPath));
 app.use(passport.initialize());
@@ -142,10 +143,16 @@ app.get('/start', function(req, res, next) {
   res.render('start');
 });
 
+app.get('/visualize', function(req, res, next) {
+  console.log('inVisualize');
+  res.render('visualize');
+});
 app.post('/start', function(req, res, next) {
   console.log(req.body.time);
-  //getTwitterData();
- // getIG();
+  console.log('request recieved');
+  getTwitterData();
+  getIG();
+  res.redirect('/visualize');
 });
 
 app.get('/about', function(req, res, next) {
@@ -158,14 +165,21 @@ app.get('/settings', function(req, res, next) {
 
 app.post('/settings', function(req, res, next) {
   console.log(req.body);
-  twitterUsername = req.body.twitterUsername;
-  instagramUsername = req.body.instagramUsername;
-  res.redirect('/start');
+  if (!req.body.twitterUsername && !req.body.instagramUsername && !req.body.tumblrUsername) {
+      console.log('no values entered');
+  }
+  else {
+    if (req.body.twitterUsername) {
+        twitterUsername = req.body.twitterUsername;
+    }
+    if (req.body.instagramUsername) {
+      instagramUsername = req.body.instagramUsername;
+    }
+    res.redirect('/start');
+  }
 });
 
-app.get('/visualize', function(req, res, next) {
-  res.render('visualize');
-});
+
 
 /*
 app.get('/auth/instagram',
@@ -227,16 +241,16 @@ function getIGinfo(_m)
   instaData.following = [];
 
   var instaTimer = setInterval(pollInstagram, 5000);
+  pollInstagram();
   setTimeout(function(_i) {
     clearInterval(_i);
-    console.log("DONE TWITTER CHECKING~!!!!");
+    console.log("DONE insta CHECKING~!!!!");
     console.log("followers " + instaData["followers"]);
     console.log("following: " + instaData["following"]);
     console.log("posts: " + instaData["posts"]);
-    io.emit('instaData', instaData);
   }, 60000, instaTimer);
 
-  pollTwitter();
+
 }
 
 function pollInstagram() {
@@ -261,7 +275,8 @@ function getTwitterData() {
   twitterData.noFavourites = [];
 
 
-  var twitTimer = setInterval(pollTwitter, 5000);
+  var twitTimer = setInterval(pollTwitter, 3000);
+  pollTwitter();
 
   setTimeout(function(_t) {
     clearInterval(_t);
@@ -270,16 +285,15 @@ function getTwitterData() {
     console.log("friends: " + twitterData["noFriends"]);
     console.log("stat: " + twitterData["noStatuses"]);
     console.log("fav: " + twitterData["noFavourites"]);
-    io.emit('twitterData', twitterData);
-  }, 60000, twitTimer);
-
-  pollTwitter();
+  }, 10000, twitTimer);
 }
 
 function pollTwitter() {
     twitClient.get('users/show', {screen_name: twitterUsername}, 
     function(error, twitterResults){
-      if(error) throw error;
+      if(error) {
+        console.log(error);
+      }
       if (!name) {
           name = twitterResults.name;
       }
@@ -295,31 +309,16 @@ function pollTwitter() {
 
 
 
-/*
+
 io.sockets.on('connection', 
 	function (socket) {
-	
-		console.log("We have a new client: " + socket.id);
+		  console.log("We have a new client: " + socket.id);
+		  socket.emit('hi there');
+      socket.emit('instaData', instaData);
+      socket.emit('twitterData', twitterData);
 
-		var interval = setInterval( function() {
-			checkTwitter();
-			io.emit('tweet', thetweet);
-		}, 10000);
+});
 
-		var interval2 = setInterval( function() {
-			io.emit('stuff', thecount);
-			thecount = (thecount + 1) % 100;
-		}, 50);
-
-
-		socket.on('disconnect', function() {
-			console.log("Client has disconnected " + socket.id);
-			clearInterval(interval);
-			clearInterval(interval2);
-		});
-	}
-);
-*/
 
 
 

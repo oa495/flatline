@@ -1,4 +1,4 @@
-Cimport ddf.minim.*;
+import ddf.minim.*;
 Minim minim;
 AudioPlayer ekg;
 import com.temboo.core.*;
