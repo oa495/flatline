@@ -150,8 +150,8 @@ app.get('/visualize', function(req, res, next) {
 app.post('/start', function(req, res, next) {
   console.log(req.body.time);
   console.log('request recieved');
-  getTwitterData(req.body.time);
-  getIG(req.body.time);
+  if (twitterUsername) getTwitterData(req.body.time);
+  if (instagramUsername) getIG(req.body.time);
   res.redirect('/visualize');
 });
 
