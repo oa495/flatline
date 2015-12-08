@@ -14,6 +14,7 @@ a:hover {
 body {
   font-family: "Merriweather Sans", sans-serif;
   height: 100vh;
+  width: 100vh;
   color: white; }
 
 h1, h2 {
@@ -32,7 +33,10 @@ section {
   margin-top: 10%; }
 
 footer {
-  height: 50px; }
+  height: 50px;
+  width: 100%;
+  position: absolute;
+  bottom: 0; }
   footer .social-media img {
     float: left;
     position: relative;
@@ -45,6 +49,7 @@ footer {
     font-weight: 300; }
 
 .container, .about-p, .first-p, .settings-p, .start-p {
+  position: absolute;
   width: 100%;
   height: 95vh;
   overflow: hidden; }
@@ -78,6 +83,18 @@ footer, .first-p, .settings-p {
     display: none; }
 
 #clockdiv {
+  display: none; }
+
+#controls-container {
+  position: absolute;
+  bottom: 50px;
+  left: 25%; }
+  #controls-container img {
+    padding: 15px; }
+  #controls-container img:hover {
+    background: red; }
+
+.hidden {
   display: none; }
 
 /*# sourceMappingURL=style.css.map */

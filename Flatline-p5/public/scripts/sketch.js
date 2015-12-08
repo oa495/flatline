@@ -5,38 +5,46 @@ var addImg;
 var minusImg;
 var instaData = {};
 var twitterData = {};
+var tumblrData = {};
 var totalInstaChange = [];
 var totalTwitterChange = [];
+var totalTumblrChange = [];
 var allData = [];
 var current = 'twitter';
 var thegraph;
 var twitterBeat;
 var instaBeat;
 var tumblrBeat;
+var name;
+var totalTime;
+var bpm;
 var socket = io.connect();
 
+socket.on('userInfo'), function(data) {
+  totalTime = data.time;
+  name = data.name;
+}
 socket.on('twitterData', function(data){
   twitterData = data;
-  totalTwitterChange = getTotalData(twitterData);
 });
-
+/*
 socket.on('instaData', function(data){
   instaData = data;
   totalInstaChange = getTotalData(instaData);
 });
 
 socket.on('tumblrData', function(data){
-  tumblraData = data;
+  tumblrData = data;
   totalTumblrChange = getTotalData(tumblrData);
 });
-
+*/
 function setup() {
   createCanvas(windowWidth, windowHeight);
   var gridScale = 8;
   sidebar = createGraphics(width/4, height);
   thegraph = createGraphics(width-width/4, height/2);
   thegraph.stroke(255);
-  thegraph.strokeWeight(2);
+  thegraph.strokeWeight(5);
   var cols = width/gridScale;
   var rows = height/gridScale;
   for (var i = 0; i < cols; i++) {
@@ -51,34 +59,43 @@ function setup() {
   }
   restartImg = createImg('img/restart.png');
   restartImg.attribute('role', 'restart');
+  restartImg.addClass('controls');
 
   playImg = createImg('img/play.png');
   playImg.attribute('role', 'play');
   playImg.addClass('hidden');
+  playImg.addClass('controls');
 
   pauseImg = createImg('img/pause.png');
   pauseImg.attribute('role', 'pause');
+  pauseImg.addClass('controls');
 
   addImg = createImg('img/add.png');
   addImg.attribute('role', 'add');
+  addImg.addClass('controls');
 
   minusImg = createImg('img/minus.png');
   minusImg.attribute('role', 'minus');
+  minusImg.addClass('controls');
 
-  var c_imgs = selectAll('img');
+  var c_imgs = selectAll('.controls');
   for (var i = 0; i < c_imgs.length; i++){
     c_imgs[i].parent('controls-container');
     c_imgs[i].size(24, 24);
     c_imgs[i].mouseClicked(controlLine);
   }
-
-  if (totalTwitterChange) {
+  //calculate bpm from total time and total change
+  if (twitterData) {
+   totalTwitterChange = getTotalData(twitterData);
+   totalTwitterChange = [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0];
     twitterBeat = new Beat(totalTwitterChange);
   }
-  if (totalTumblrChange) {
+  if (tumblrData) {
+    totalTumblrChange = getTotalData(tumblrData);
     tumblrBeat = new Beat(totalTumblrChange);
   }
-  if (totalInstaChange) {
+  if (instaData) {
+    totalInstaChange = getTotalData(instaData);
     instaBeat = new Beat(totalInstaChange);
   }
 }
@@ -108,6 +125,7 @@ function getChangeInData(array) {
     for (var i = 1; i < array.length; i++) {
         changes.push(array[i] - array[i-1]);
     }
+    console.log('changes', changes);
     return changes;
 }
 
@@ -196,6 +214,7 @@ function Beat(totalChange) {
 
   this.drawLine = function() {
     if (this.play) {
+       console.log('in play');
        if (this.p > 0 && this.xpos > 0) {
             thegraph.line(this.xpos, height/2 - this.totalChange[this.p], this.xpos-this.linefactor, height/2 - this.totalChange[this.p-1]);
         }

@@ -1,5 +1,7 @@
-
-var name = "";
+var userInfo = {
+  name: '',
+  time: 0 
+}
 var twitterUsername = "";
 var instagramUsername;
 var description = "";
@@ -30,7 +32,9 @@ var instaData = {
 var instaChangesInData;
 var twitterChangesInData;
 var tumblrChangesInData;
-
+var twitter = false;
+var insta = false;
+var tumblr = false;
 var interval = 1000;
 var countDownOver = false;
 var timeUp = false;
@@ -149,6 +153,7 @@ app.get('/visualize', function(req, res, next) {
 });
 app.post('/start', function(req, res, next) {
   console.log(req.body.time);
+  userInfo.time = req.body.time;
   console.log('request recieved');
   if (twitterUsername) getTwitterData(req.body.time);
   if (instagramUsername) getIG(req.body.time);
@@ -171,9 +176,11 @@ app.post('/settings', function(req, res, next) {
   else {
     if (req.body.twitterUsername) {
         twitterUsername = req.body.twitterUsername;
+        twitter = true;
     }
     if (req.body.instagramUsername) {
       instagramUsername = req.body.instagramUsername;
+      insta = true;
     }
     res.redirect('/start');
   }
@@ -294,9 +301,7 @@ function pollTwitter() {
       if(error) {
         console.log(error);
       }
-      if (!name) {
-          name = twitterResults.name;
-      }
+      userInfo.name = twitterResults.name;
       location = twitterResults.location;
       description = twitterResults.description;
       console.log("CHECKING TWITTER~!!!!!");
@@ -314,9 +319,20 @@ io.sockets.on('connection',
 	function (socket) {
 		  console.log("We have a new client: " + socket.id);
 		  socket.emit('hi there');
-      socket.emit('instaData', instaData);
-      socket.emit('twitterData', twitterData);
-
+      //socket.emit('userInfo', userInfo);
+      /*if (insta) {
+        console.log('in insta');
+         socket.emit('instaData', instaData);
+      }*/
+     if (twitter) {
+      console.log('in twitter');
+        socket.emit('twitterData', twitterData);
+     }
+     /*
+     if (tumblr) {
+      console.log('in tumblr')
+      socket.emit('tumblrData', tumblrData);
+     } */
 });
 
 
