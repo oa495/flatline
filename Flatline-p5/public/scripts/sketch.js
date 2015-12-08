@@ -12,6 +12,7 @@ var totalTumblrChange = [];
 var allData = [];
 var current = 'twitter';
 var thegraph;
+var thegrid;
 var twitterBeat;
 var instaBeat;
 var tumblrBeat;
@@ -44,19 +45,20 @@ function setup() {
   sidebar = createGraphics(width/4, height);
   thegraph = createGraphics(width-width/4, height/2);
   thegraph.stroke(255);
-  thegraph.strokeWeight(5);
+  thegrid = createGraphics(width, height);
   var cols = width/gridScale;
   var rows = height/gridScale;
   for (var i = 0; i < cols; i++) {
       for (var j = 0; j < rows; j++) {
         var x = i*gridScale;
         var y = j*gridScale;
-        fill(109, 197, 170);
-        stroke(255);
-        strokeWeight(0.5);
-        rect(x, y, gridScale, gridScale);
+        thegrid.fill(109, 197, 170);
+        thegrid.stroke(255);
+        thegrid.strokeWeight(0.5);
+        thegrid.rect(x, y, gridScale, gridScale);
       }
   }
+  image(thegrid, 0, 0);
   restartImg = createImg('img/restart.png');
   restartImg.attribute('role', 'restart');
   restartImg.addClass('controls');
@@ -87,7 +89,7 @@ function setup() {
   //calculate bpm from total time and total change
   if (twitterData) {
    totalTwitterChange = getTotalData(twitterData);
-   totalTwitterChange = [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0];
+   totalTwitterChange = [0, 1, 12, 2, 4, 5, 0, 0, 0, 0, 1, 0, 1, 12, 2, 4, 5, 0, 0, 0, 0, 1];
     twitterBeat = new Beat(totalTwitterChange);
   }
   if (tumblrData) {
@@ -141,6 +143,9 @@ function draw() {
       instaBeat.drawLine();
   }
 }
+
+
+
 function controlLine() {
   var role = this.elt.attributes.role.value;
   var operation;
@@ -215,8 +220,9 @@ function Beat(totalChange) {
   this.drawLine = function() {
     if (this.play) {
        console.log('in play');
-       if (this.p > 0 && this.xpos > 0) {
-            thegraph.line(this.xpos, height/2 - this.totalChange[this.p], this.xpos-this.linefactor, height/2 - this.totalChange[this.p-1]);
+      thegraph.strokeWeight(1);
+       if (this.p >= 0 && this.xpos >= 0) {
+            thegraph.line(this.xpos, thegraph.height/2 - this.totalChange[this.p]*20, this.xpos+this.linefactor, thegraph.height/2 - this.totalChange[(this.p+1)%this.totalChange.length]*20);
         }
 
         this.p++;
@@ -226,8 +232,10 @@ function Beat(totalChange) {
         this.xpos += this.linefactor;
         if (this.xpos >= thegraph.width) {
             console.log('at the end');
-           // thegraph.background(255);
-            //thegraph.clear();
+            image(thegrid, 0, 0);
+  
+            thegraph.background(255, 0, 0);
+            thegraph.clear();
             this.xpos = 0;
         }
       }
