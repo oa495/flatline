@@ -6,7 +6,7 @@ var minusImg;
 var instaData = {};
 var twitterData = {};
 var tumblrData = {};
-var current = 'twitter';
+var current;
 var thegraph;
 var thegrid;
 var twitterBeat;
@@ -24,6 +24,7 @@ socket.on('userInfo'), function(data) {
 }
 socket.on('twitterData', function(data){
   twitterData = data;
+  current = 'twitter';
 });
 /*
 socket.on('instaData', function(data){
@@ -92,16 +93,16 @@ function setup() {
   }
 
   //calculate bpm from total time and total change
-  if (twitterData) {
+  if (!isEmpty(twitterData)) {
    totalTwitterChange = getTotalData(twitterData);
    totalTwitterChange = [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 10];
     twitterBeat = new Beat(totalTwitterChange);
   }
-  if (tumblrData) {
+  if (!isEmpty(tumblrData)) {
     totalTumblrChange = getTotalData(tumblrData);
     tumblrBeat = new Beat(totalTumblrChange);
   }
-  if (instaData) {
+  if (!isEmpty(instaData)) {
     totalInstaChange = getTotalData(instaData);
     instaBeat = new Beat(totalInstaChange);
   }
@@ -114,6 +115,13 @@ function setup() {
   bpm.parent('heart-data');
 }
 
+function isEmpty(obj) {
+    for(var prop in obj) {
+        if(obj.hasOwnProperty(prop))
+            return false;
+    }
+    return true;
+}
 function getTotalData(obj) {
    var arrayOfTotal = [];
    var length;
@@ -156,25 +164,38 @@ function draw() {
 }
 
 function changeBeat() {
-  var selected = this.elt.className
-  if (selected == 'twitbeat') {
+  var selected = this.elt.className;
+  //add if statement to check if there is even data for the social media platform that was clicked
+  if (selected == 'twitbeat' && typeof twitterBeat !== 'undefined') {
       if (current != 'twitter') {
-        instaBeat.pause = true;
-        tumblrBeat.pause = true;
+        if (typeof instaBeat !== 'undefined') {
+          instaBeat.pause = true;
+        }
+        if (typeof tumblrBeat !== 'undefined') {
+            tumblrBeat.pause = true;
+        }
         current = 'twitter';
       }
   } 
-  else if (selected == 'instabeat') {
+  else if (selected == 'instabeat' && typeof instaBeat !== 'undefined') {
       if (current != 'insta') {
-        twitterBeat.pause = true;
-        tumblrBeat.pause = true;
+        if (typeof twitterBeat !== 'undefined') {
+          twitterBeat.pause = true;
+        }
+        if (typeof tumbrBeat !== 'undefined') {
+          tumblrBeat.pause = true;
+        }
         current = 'insta';
       }
   }
-  else if (selected == 'tumblrbeat') {
+  else if (selected == 'tumblrbeat' && typeof tumblrBeat !== 'undefined') {
    if (current != 'tumblr') {
-        instaBeat.pause = true;
-        twitterBeat.pause = true;
+        if (typeof instaBeat !== 'undefined') { 
+          instaBeat.pause = true;
+        }
+        if (typeof twitterBeat !== 'undefined') {
+          twitterBeat.pause = true;
+        }        
         current = 'tumblr';
     }
   }
