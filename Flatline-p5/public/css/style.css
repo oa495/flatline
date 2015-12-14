@@ -100,8 +100,7 @@ footer, .first-p, .settings-p {
   background-color: #6dc5aa; }
   #sidebar section {
     margin-top: 0;
-    height: 20%;
-    padding: 1.5px;
+    height: 24.7%;
     border-bottom: 2px solid white; }
   #sidebar section:not(#heart-data):hover {
     background-color: #f37458; }
