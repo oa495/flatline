@@ -23,6 +23,7 @@ body {
 	height: 100vh;
 	width: 100vh;
 	color: white;
+	overflow: hidden;
 }
 h1, h2 {
 	font-family: $heading-font;
@@ -118,14 +119,26 @@ footer, .first-p, .settings-p {
 }
 #controls-container {
 	position: absolute;
-	bottom: 50px;
-	left: 25%;
+	left: 32%;
+	bottom: 100px;
 	img {
   		padding: 15px;
   	} 
- 	img:hover {
-  		background: red;
-  	}
+}
+
+#sidebar {
+	position: absolute;
+	top: 0px;
+	right: 0px;
+	background-color: $primary-green;
+	section {
+		height: 20%;
+		padding: 1.5px;
+		border-bottom: 2px solid white;
+	}
+	section:not(#heart-data):hover {
+		background-color: $primary-orange;
+	}
 }
 .hidden {
 	display: none;

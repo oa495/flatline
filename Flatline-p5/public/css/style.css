@@ -15,7 +15,8 @@ body {
   font-family: "Merriweather Sans", sans-serif;
   height: 100vh;
   width: 100vh;
-  color: white; }
+  color: white;
+  overflow: hidden; }
 
 h1, h2 {
   font-family: "Oswald", sans-serif;
@@ -87,12 +88,22 @@ footer, .first-p, .settings-p {
 
 #controls-container {
   position: absolute;
-  bottom: 50px;
-  left: 25%; }
+  left: 32%;
+  bottom: 100px; }
   #controls-container img {
     padding: 15px; }
-  #controls-container img:hover {
-    background: red; }
+
+#sidebar {
+  position: absolute;
+  top: 0px;
+  right: 0px;
+  background-color: #6dc5aa; }
+  #sidebar section {
+    height: 20%;
+    padding: 1.5px;
+    border-bottom: 2px solid white; }
+  #sidebar section:not(#heart-data):hover {
+    background-color: #f37458; }
 
 .hidden {
   display: none; }

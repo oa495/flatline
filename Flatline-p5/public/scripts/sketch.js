@@ -6,10 +6,6 @@ var minusImg;
 var instaData = {};
 var twitterData = {};
 var tumblrData = {};
-var totalInstaChange = [];
-var totalTwitterChange = [];
-var totalTumblrChange = [];
-var allData = [];
 var current = 'twitter';
 var thegraph;
 var thegrid;
@@ -18,7 +14,8 @@ var instaBeat;
 var tumblrBeat;
 var name;
 var totalTime;
-var bpm;
+var totalChange = 0;
+
 var socket = io.connect();
 
 socket.on('userInfo'), function(data) {
@@ -40,10 +37,15 @@ socket.on('tumblrData', function(data){
 });
 */
 function setup() {
+  var totalInstaChange = [];
+  var totalTwitterChange = [];
+  var totalTumblrChange = [];
+  var allData = [];
+  var sidebar;
+  var bpm;
   createCanvas(windowWidth, windowHeight);
   var gridScale = 8;
-  sidebar = createGraphics(width/4, height);
-  thegraph = createGraphics(width-width/4, height/2);
+  thegraph = createGraphics(width-width/5, height/2);
   thegraph.stroke(255);
   thegrid = createGraphics(width, height);
   var cols = width/gridScale;
@@ -59,6 +61,8 @@ function setup() {
       }
   }
   image(thegrid, 0, 0);
+  sidebar = select('#sidebar');
+  sidebar.size(width/5, thegrid.height-50);
   restartImg = createImg('img/restart.png');
   restartImg.attribute('role', 'restart');
   restartImg.addClass('controls');
@@ -86,10 +90,11 @@ function setup() {
     c_imgs[i].size(24, 24);
     c_imgs[i].mouseClicked(controlLine);
   }
+
   //calculate bpm from total time and total change
   if (twitterData) {
    totalTwitterChange = getTotalData(twitterData);
-   totalTwitterChange = [0, 1, 12, 2, 4, 5, 0, 0, 0, 0, 1, 0, 1, 12, 2, 4, 5, 0, 0, 0, 0, 1];
+   totalTwitterChange = [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 10];
     twitterBeat = new Beat(totalTwitterChange);
   }
   if (tumblrData) {
@@ -100,6 +105,13 @@ function setup() {
     totalInstaChange = getTotalData(instaData);
     instaBeat = new Beat(totalInstaChange);
   }
+  var sm_beats = selectAll('section');
+  for (var i = 0; i < sm_beats.length; i++){
+    sm_beats[i].mouseClicked(changeBeat);
+  }
+
+  bpm = createP(totalChange + ' bpm');
+  bpm.parent('heart-data');
 }
 
 function getTotalData(obj) {
@@ -118,7 +130,6 @@ function getTotalData(obj) {
           arrayOfTotal[i] += obj[smData][i];
       }
    }
-   console.log('array of total', arrayOfTotal);
    return getChangeInData(arrayOfTotal);
 }
 
@@ -126,13 +137,13 @@ function getChangeInData(array) {
     var changes = [];
     for (var i = 1; i < array.length; i++) {
         changes.push(array[i] - array[i-1]);
+        totalChange += array[i] - array[i-1];
     }
-    console.log('changes', changes);
+    //console.log(totalChange);
     return changes;
 }
 
 function draw() {
-  sidebar.background(0, 255, 0);
   if (current == 'twitter') {
     twitterBeat.drawLine();
   }
@@ -144,14 +155,36 @@ function draw() {
   }
 }
 
-
-
+function changeBeat() {
+  var selected = this.elt.className
+  if (selected == 'twitbeat') {
+      if (current != 'twitter') {
+        instaBeat.pause = true;
+        tumblrBeat.pause = true;
+        current = 'twitter';
+      }
+  } 
+  else if (selected == 'instabeat') {
+      if (current != 'insta') {
+        twitterBeat.pause = true;
+        tumblrBeat.pause = true;
+        current = 'insta';
+      }
+  }
+  else if (selected == 'tumblrbeat') {
+   if (current != 'tumblr') {
+        instaBeat.pause = true;
+        twitterBeat.pause = true;
+        current = 'tumblr';
+    }
+  }
+}
 function controlLine() {
   var role = this.elt.attributes.role.value;
   var operation;
   if (role == 'restart') {
      operation = function(beat)  {
-        beat.xpos = 0;
+        beat.refresh();
         beat.p = 0;
      }
     //thegraph.clear();
@@ -172,7 +205,6 @@ function controlLine() {
       }
      }
      performOperation(operation);
-     console.log(role);
   }
   else if (role == 'pause') {
     pauseImg.addClass('hidden');
@@ -219,10 +251,9 @@ function Beat(totalChange) {
 
   this.drawLine = function() {
     if (this.play) {
-       console.log('in play');
       thegraph.strokeWeight(1);
        if (this.p >= 0 && this.xpos >= 0) {
-            thegraph.line(this.xpos, thegraph.height/2 - this.totalChange[this.p]*20, this.xpos+this.linefactor, thegraph.height/2 - this.totalChange[(this.p+1)%this.totalChange.length]*20);
+            thegraph.line(this.xpos, thegraph.height/2 - this.totalChange[this.p], this.xpos+this.linefactor, thegraph.height/2 - this.totalChange[(this.p+1)%this.totalChange.length]);
         }
 
         this.p++;
@@ -231,12 +262,7 @@ function Beat(totalChange) {
         }
         this.xpos += this.linefactor;
         if (this.xpos >= thegraph.width) {
-            console.log('at the end');
-            image(thegrid, 0, 0);
-  
-            thegraph.background(255, 0, 0);
-            thegraph.clear();
-            this.xpos = 0;
+            this.refresh();
         }
       }
       else if (this.pause) {
@@ -244,7 +270,12 @@ function Beat(totalChange) {
             thegraph.line(this.xpos, height/2 - this.totalChange[this.p], this.xpos-this.linefactor, height/2 - this.totalChange[this.p-1]);
         }
       }
-      image(thegraph, 0, height/4);
+      image(thegraph, 0, height/3);
   };
+  this.refresh = function() {
+     image(thegrid, 0, 0);
+     thegraph.clear();
+     this.xpos = 0;
+  }
 };
 
