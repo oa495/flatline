@@ -50,7 +50,7 @@ function setup() {
   var bpm;
   createCanvas(windowWidth, windowHeight);
   var gridScale = 8;
-  thegraph = createGraphics(width-width/5, height/2);
+  thegraph = createGraphics(width-width/10, height/2);
   thegraph.stroke(255);
   thegrid = createGraphics(width, height);
   var cols = width/gridScale;
@@ -67,7 +67,7 @@ function setup() {
   }
   image(thegrid, 0, 0);
   sidebar = select('#sidebar');
-  sidebar.size(width/5, thegrid.height-50);
+  sidebar.size(width/10, thegrid.height-50);
   restartImg = createImg('img/restart.png');
   restartImg.attribute('role', 'restart');
   restartImg.addClass('controls');
