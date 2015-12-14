@@ -145,7 +145,7 @@ footer, .first-p, .settings-p {
 			display: inline-block;
 		}
 	}
-	section:not(#heart-data):hover {
+	section:not(.user-data):hover {
 		background-color: $primary-orange;
 	}
 	.selected {

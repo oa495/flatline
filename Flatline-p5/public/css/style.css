@@ -108,7 +108,7 @@ footer, .first-p, .settings-p {
       padding-top: 30%; }
     #sidebar section p {
       display: inline-block; }
-  #sidebar section:not(#heart-data):hover {
+  #sidebar section:not(.user-data):hover {
     background-color: #f37458; }
   #sidebar .selected {
     background-color: #f37458; }
