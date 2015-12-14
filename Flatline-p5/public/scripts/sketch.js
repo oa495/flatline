@@ -26,17 +26,21 @@ socket.on('twitterData', function(data){
   twitterData = data;
   current = 'twitter';
 });
-/*
+
 socket.on('instaData', function(data){
   instaData = data;
-  totalInstaChange = getTotalData(instaData);
+  if (current != 'twitter') {
+    current = insta;
+  }
 });
 
 socket.on('tumblrData', function(data){
+   if (current != 'twitter' && current != 'insta') {
+    current = tumblr;
+   }
   tumblrData = data;
-  totalTumblrChange = getTotalData(tumblrData);
 });
-*/
+
 function setup() {
   var totalInstaChange = [];
   var totalTwitterChange = [];
@@ -165,6 +169,10 @@ function draw() {
 
 function changeBeat() {
   var selected = this.elt.className;
+  var sm_beats = selectAll('section');
+  for (var i = 0; i < sm_beats.length; i++){
+    sm_beats.removeClass('selected');
+  }
   //add if statement to check if there is even data for the social media platform that was clicked
   if (selected == 'twitbeat' && typeof twitterBeat !== 'undefined') {
       if (current != 'twitter') {
@@ -176,6 +184,7 @@ function changeBeat() {
         }
         current = 'twitter';
       }
+      this.addClass('selected');
   } 
   else if (selected == 'instabeat' && typeof instaBeat !== 'undefined') {
       if (current != 'insta') {
@@ -187,6 +196,7 @@ function changeBeat() {
         }
         current = 'insta';
       }
+      this.addClass('selected');
   }
   else if (selected == 'tumblrbeat' && typeof tumblrBeat !== 'undefined') {
    if (current != 'tumblr') {
@@ -198,6 +208,7 @@ function changeBeat() {
         }        
         current = 'tumblr';
     }
+    this.addClass('selected');
   }
 }
 function controlLine() {
