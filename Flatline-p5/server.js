@@ -3,7 +3,7 @@ var userInfo = {
   time: 0 
 }
 var twitterUsername = "";
-var instagramUsername;
+var instagramUsername = "";
 var description = "";
 var location = "";
 
@@ -29,9 +29,6 @@ var instaData = {
 	following: []
 };
 
-var instaChangesInData;
-var twitterChangesInData;
-var tumblrChangesInData;
 var twitter = false;
 var insta = false;
 var tumblr = false;
@@ -144,17 +141,21 @@ app.get('/index', function(req, res, next) {
 });
 
 app.get('/start', function(req, res, next) {
-  res.render('start');
+    if (twitter || insta || tumblr) {
+      res.render('start');
+  }
+  else res.redirect('settings');
 });
 
 app.get('/visualize', function(req, res, next) {
-  console.log('inVisualize');
-  res.render('visualize');
+  if (twitter || insta || tumblr) {
+    res.render('visualize');
+  }
+  else res.redirect('/settings');
 });
+
 app.post('/start', function(req, res, next) {
-  console.log(req.body.time);
   userInfo.time = req.body.time;
-  console.log('request recieved');
   if (twitterUsername) getTwitterData(req.body.time);
   if (instagramUsername) getIG(req.body.time);
   res.redirect('/visualize');
@@ -169,8 +170,7 @@ app.get('/settings', function(req, res, next) {
 });
 
 app.post('/settings', function(req, res, next) {
-  console.log(req.body);
-  if (!req.body.twitterUsername && !req.body.instagramUsername && !req.body.tumblrUsername) {
+  if (!req.body.twitterUsername && !req.body.instaUsername && !req.body.tumblrUsername) {
       console.log('no values entered');
   }
   else {
@@ -178,8 +178,8 @@ app.post('/settings', function(req, res, next) {
         twitterUsername = req.body.twitterUsername;
         twitter = true;
     }
-    if (req.body.instagramUsername) {
-      instagramUsername = req.body.instagramUsername;
+    if (req.body.instaUsername) {
+      instagramUsername = req.body.instaUsername;
       insta = true;
     }
     res.redirect('/start');
@@ -219,19 +219,14 @@ app.get('/auth/tumblr/callback',
 */
 
 server.listen(app.get('port'));
-console.log("THE SERVER IS RUNNING");
 
-function getIG(tt)
-{
+function getIG(tt) {
   var match = -1;
   ig.users.search({
     q: utf8.encode(instagramUsername), // term to search
-    complete: function(data, pagination){
-      for(var i =  0;i<data.length;i++)
-      {
-        if(usertosearch==data[i].username)
-        {
-          console.log('MATCHED!!!: ' + data[i].id)
+    complete: function (data, pagination) {
+      for(var i = 0; i< data.length; i++) {
+        if(instagramUsername==data[i].username) {
           match = data[i].id;
           break;
         }
@@ -241,14 +236,13 @@ function getIG(tt)
   });
 }
 
-function getIGinfo(_m, tt)
-{
+function getIGinfo(_m, tt) {
   instaData.posts = [];
   instaData.followers = [];
   instaData.following = [];
 
-  var instaTimer = setInterval(pollInstagram, 5000);
-  pollInstagram();
+  var instaTimer = setInterval(pollInstagram, 3000);
+  pollInstagram(_m);
   setTimeout(function(_i) {
     clearInterval(_i);
     console.log("DONE insta CHECKING~!!!!");
@@ -257,24 +251,22 @@ function getIGinfo(_m, tt)
     console.log("posts: " + instaData["posts"]);
   }, tt, instaTimer);
 
-
 }
 
-function pollInstagram() {
+function pollInstagram(_m) {
   ig.users.info({
     user_id: _m, // term to search
-    complete: function(instaData, pagination){
+    complete: function(instaResults, pagination){
       console.log("CHECKING INSTA~!!!!!");
-      instaData["noFollowers"].push(instaData.count["followed_by"]);
-      instaData["noFriends"].push(instaData.count["follows"]);
-      instaData["noStatuses"].push(instaData.count["media"]);
+      instaData["followers"].push(instaResults.count["followed_by"]);
+      instaData["following"].push(instaResults.count["follows"]);
+      instaData["posts"].push(instaResults.count["media"]);
      }
   });
 }
 
 function getTwitterData(tt) {
   //initialize to 0 
-  console.log("START TWITTER CHECKING~!!!!")
   // clear everything
   twitterData.noFollowers = [];
   twitterData.noFriends = [];
@@ -287,11 +279,6 @@ function getTwitterData(tt) {
 
   setTimeout(function(_t) {
     clearInterval(_t);
-    console.log("DONE TWITTER CHECKING~!!!!");
-    console.log("followers " + twitterData["noFollowers"]);
-    console.log("friends: " + twitterData["noFriends"]);
-    console.log("stat: " + twitterData["noStatuses"]);
-    console.log("fav: " + twitterData["noFavourites"]);
   }, tt, twitTimer);
 }
 
@@ -304,7 +291,6 @@ function pollTwitter() {
       userInfo.name = twitterResults.name;
       location = twitterResults.location;
       description = twitterResults.description;
-      console.log("CHECKING TWITTER~!!!!!");
       twitterData["noFollowers"].push(twitterResults.followers_count);
       twitterData["noFriends"].push(twitterResults.friends_count);
       twitterData["noStatuses"].push(twitterResults.statuses_count);
@@ -319,14 +305,16 @@ io.sockets.on('connection',
 	function (socket) {
 		  console.log("We have a new client: " + socket.id);
 		  socket.emit('hi there');
-      //socket.emit('userInfo', userInfo);
-      /*if (insta) {
+      socket.emit('userInfo', userInfo);
+      if (insta) {
         console.log('in insta');
-         socket.emit('instaData', instaData);
-      }*/
+        socket.emit('instaData', instaData);
+        insta = false;
+      }
      if (twitter) {
       console.log('in twitter');
         socket.emit('twitterData', twitterData);
+        twitter = false;
      }
      /*
      if (tumblr) {

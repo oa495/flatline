@@ -98,8 +98,9 @@ function setup() {
 
   //calculate bpm from total time and total change
   if (!isEmpty(twitterData)) {
-   totalTwitterChange = getTotalData(twitterData);
-   totalTwitterChange = [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 10];
+    console.log('is not empty!');
+    totalTwitterChange = getTotalData(twitterData);
+    totalTwitterChange = [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 10];
     twitterBeat = new Beat(totalTwitterChange);
   }
   if (!isEmpty(tumblrData)) {
