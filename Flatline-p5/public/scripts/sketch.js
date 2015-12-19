@@ -18,28 +18,42 @@ var totalChange = 0;
 
 var socket = io.connect();
 
-socket.on('userInfo'), function(data) {
+socket.on('testing', function(data) {
+  console.log('TESTING: ' + data);
+});
+
+socket.on('userInfo', function(data) {
   totalTime = data.time;
+  console.log('user connection');
   name = data.name;
-}
+});
+
 socket.on('twitterData', function(data){
+  console.log('twit connection');
   twitterData = data;
+  totalTwitterChange = getTotalData(twitterData);
+  twitterBeat = new Beat(totalTwitterChange);
   current = 'twitter';
 });
 
 socket.on('instaData', function(data){
+  console.log('insta connection');
   instaData = data;
+  totalInstaChange = getTotalData(instaData);
+  instaBeat = new Beat(totalInstaChange);
   if (current != 'twitter') {
-    current = insta;
+    current = 'insta';
   }
 });
 
-socket.on('tumblrData', function(data){
+/*socket.on('tumblrData', function(data){
    if (current != 'twitter' && current != 'insta') {
     current = tumblr;
    }
+  totalTumblrChange = getTotalData(tumblrData);
+  tumblrBeat = new Beat(totalTumblrChange);
   tumblrData = data;
-});
+});*/
 
 function setup() {
   var totalInstaChange = [];
@@ -97,20 +111,6 @@ function setup() {
   }
 
   //calculate bpm from total time and total change
-  if (!isEmpty(twitterData)) {
-    console.log('is not empty!');
-    totalTwitterChange = getTotalData(twitterData);
-    totalTwitterChange = [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 10];
-    twitterBeat = new Beat(totalTwitterChange);
-  }
-  if (!isEmpty(tumblrData)) {
-    totalTumblrChange = getTotalData(tumblrData);
-    tumblrBeat = new Beat(totalTumblrChange);
-  }
-  if (!isEmpty(instaData)) {
-    totalInstaChange = getTotalData(instaData);
-    instaBeat = new Beat(totalInstaChange);
-  }
   var sm_beats = selectAll('section');
   for (var i = 0; i < sm_beats.length; i++){
     sm_beats[i].mouseClicked(changeBeat);
@@ -172,7 +172,7 @@ function changeBeat() {
   var selected = this.elt.className;
   var sm_beats = selectAll('section');
   for (var i = 0; i < sm_beats.length; i++){
-    sm_beats.removeClass('selected');
+    sm_beats[i].removeClass('selected');
   }
   //add if statement to check if there is even data for the social media platform that was clicked
   if (selected == 'twitbeat' && typeof twitterBeat !== 'undefined') {
@@ -284,7 +284,7 @@ function Beat(totalChange) {
 
   this.drawLine = function() {
     if (this.play) {
-      thegraph.strokeWeight(1);
+      thegraph.strokeWeight(2);
        if (this.p >= 0 && this.xpos >= 0) {
             thegraph.line(this.xpos, thegraph.height/2 - this.totalChange[this.p], this.xpos+this.linefactor, thegraph.height/2 - this.totalChange[(this.p+1)%this.totalChange.length]);
         }

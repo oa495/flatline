@@ -241,14 +241,12 @@ function getIGinfo(_m, tt) {
   instaData.followers = [];
   instaData.following = [];
 
-  var instaTimer = setInterval(pollInstagram, 3000);
+  var instaTimer = setInterval(function() {
+    pollInstagram(_m);
+  }, 3000);
   pollInstagram(_m);
   setTimeout(function(_i) {
     clearInterval(_i);
-    console.log("DONE insta CHECKING~!!!!");
-    console.log("followers " + instaData["followers"]);
-    console.log("following: " + instaData["following"]);
-    console.log("posts: " + instaData["posts"]);
   }, tt, instaTimer);
 
 }
@@ -256,11 +254,11 @@ function getIGinfo(_m, tt) {
 function pollInstagram(_m) {
   ig.users.info({
     user_id: _m, // term to search
-    complete: function(instaResults, pagination){
-      console.log("CHECKING INSTA~!!!!!");
-      instaData["followers"].push(instaResults.count["followed_by"]);
-      instaData["following"].push(instaResults.count["follows"]);
-      instaData["posts"].push(instaResults.count["media"]);
+    complete: function(instaResults){
+      //instaResults.full_name;
+      instaData["followers"].push(instaResults.counts["followed_by"]);
+      instaData["following"].push(instaResults.counts["follows"]);
+      instaData["posts"].push(instaResults.counts["media"]);
      }
   });
 }
@@ -304,17 +302,13 @@ function pollTwitter() {
 io.sockets.on('connection', 
 	function (socket) {
 		  console.log("We have a new client: " + socket.id);
-		  socket.emit('hi there');
+		  socket.emit('testing', 12345);
       socket.emit('userInfo', userInfo);
       if (insta) {
-        console.log('in insta');
         socket.emit('instaData', instaData);
-        insta = false;
       }
      if (twitter) {
-      console.log('in twitter');
         socket.emit('twitterData', twitterData);
-        twitter = false;
      }
      /*
      if (tumblr) {
