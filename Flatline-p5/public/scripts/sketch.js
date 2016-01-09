@@ -12,20 +12,21 @@ var thegrid;
 var twitterBeat;
 var instaBeat;
 var tumblrBeat;
-var name;
 var totalTime;
 var totalChange = 0;
 
 var socket = io.connect();
+/****
+  HAVE SIDEBAR BE GENERATED ACCORDING TO THE PLATFORMS CHOSEN. SO IF THE USER DOESN'T CHOOSE TUMBLR, DON'T DISPLAY TUMBLR IN THE SIDEBAR
+*/
 
-socket.on('testing', function(data) {
-  console.log('TESTING: ' + data);
-});
+
 
 socket.on('userInfo', function(data) {
   totalTime = data.time;
   console.log('user connection');
-  name = data.name;
+  console.log(data.name);
+  setInfo(data.name);
 });
 
 socket.on('twitterData', function(data){
@@ -62,6 +63,7 @@ function setup() {
   var allData = [];
   var sidebar;
   var bpm;
+  var userName;
   createCanvas(windowWidth, windowHeight);
   var gridScale = 8;
   thegraph = createGraphics(width-width/10, height/2);
@@ -115,9 +117,15 @@ function setup() {
   for (var i = 0; i < sm_beats.length; i++){
     sm_beats[i].mouseClicked(changeBeat);
   }
+  
+  /*bpm = createP(totalChange + ' bpm');
+  bpm.parent('heart-data');*/
+}
 
-  bpm = createP(totalChange + ' bpm');
-  bpm.parent('heart-data');
+function setInfo(name) {
+  console.log('the name', name);
+  var userName = createP(name);
+  userName.parent('user-info');
 }
 
 function isEmpty(obj) {

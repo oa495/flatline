@@ -107,7 +107,14 @@ footer, .first-p, .settings-p {
       margin: auto;
       padding-top: 30%; }
     #sidebar section p {
-      display: inline-block; }
+      display: inline-block;
+      text-align: center;
+      font-size: 18px; }
+  #sidebar #heart-data p {
+    width: 35%; }
+  #sidebar #heart-data img {
+    padding-left: 15%;
+    display: inline-block; }
   #sidebar section:not(.user-data):hover {
     background-color: #f37458; }
   #sidebar .selected {

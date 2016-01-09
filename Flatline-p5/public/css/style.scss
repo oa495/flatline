@@ -143,6 +143,17 @@ footer, .first-p, .settings-p {
 		}
 		p {
 			display: inline-block;
+			text-align: center;
+			font-size: 18px;
+		}
+	}
+	#heart-data {
+		p {
+			width: 35%;
+		}
+		img {
+			padding-left: 15%;
+			display: inline-block;
 		}
 	}
 	section:not(.user-data):hover {
