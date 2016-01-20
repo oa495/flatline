@@ -9,7 +9,7 @@ a {
   color: white; }
 
 a:hover {
-  opacity: 0.5; }
+  border-bottom: 1px solid white; }
 
 body {
   font-family: "Merriweather Sans", sans-serif;
@@ -43,7 +43,9 @@ footer {
     position: relative;
     padding: 10px; }
   footer nav a {
-    padding: 15px;
+    margin-left: 15px;
+    margin-right: 15px;
+    padding-top: 15px;
     float: right;
     text-transform: uppercase;
     font-size: 12px;
@@ -80,8 +82,6 @@ footer, .first-p, .settings-p {
     .settings-p section h3, .settings-p section .radio-buttons {
       padding-top: 15px;
       padding-bottom: 15px; }
-  .settings-p .tumblr-sec, .settings-p .insta-sec, .settings-p .fbook-sec {
-    display: none; }
 
 #clockdiv {
   display: none; }
