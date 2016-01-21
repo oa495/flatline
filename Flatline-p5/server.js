@@ -175,6 +175,7 @@ app.post('/verify', function(req, res, next) {
   var usernameVerification = {};
 
   function verifyTwitter(match) {
+    usernameVerification.platform = 'twitter';
     if (match != null) {
       if (match == 'taken') {
         console.log('twitter username is taken')
@@ -183,13 +184,12 @@ app.post('/verify', function(req, res, next) {
       else {
         usernameVerification["twitter"] = false;
       }
-      if (!req.body.instaUsername) {
-        res.json(usernameVerification);
-      }
+      res.json(usernameVerification);
     }
 
   }
   function verifyIG(instaID) {
+      usernameVerification.platform = 'insta';
       console.log('insta', instaID);
       if (instaID > -1) {
         usernameVerification.insta = true;
@@ -199,15 +199,14 @@ app.post('/verify', function(req, res, next) {
          usernameVerification.insta = false;
          console.log("not matched");
       }
-      console.log(usernameVerification);
       res.json(usernameVerification);
   }
 
-  if (req.body.twitterUsername) {
-      download('http://twitter.com/users/username_available?username='+ req.body.twitterUsername, verifyTwitter);
+  if (req.body.platform == 'twitter') {
+      download('http://twitter.com/users/username_available?username='+ req.body.username, verifyTwitter);
   }
-  if (req.body.instaUsername) {
-    findIG(req.body.instaUsername, verifyIG);
+  else if (req.body.platform == 'insta') {
+    findIG(req.body.username, verifyIG);
   }
 
 });
