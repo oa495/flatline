@@ -47,7 +47,7 @@ var bodyParser = require('body-parser');
 var request = require("request");
 var logger = require('morgan');
 var InstagramStrategy = require('passport-instagram').Strategy;
-var TumblrStrategy = require('passport-tumblr').Strategy;
+
 var Twitter = require('twitter');
 var ig = require('instagram-node-lib');
 
@@ -65,7 +65,7 @@ var twitClient = new Twitter({
 });
 
 /** TUMBLR STUFF **/
-
+/*
 passport.use(new TumblrStrategy({
     consumerKey: '711YLRai4CmlGhtUZIa2vLmGbAYVdnxOKkaT0Cp4MbgfeG5lqX',
     consumerSecret: 'xb9nqFCIJyJpL3OnkEP2M3B4QI4rOy41Cx9pHGC0MU3G5wJVGi',
@@ -81,10 +81,10 @@ passport.use(new TumblrStrategy({
       return done(null, profile);
     });
   }
-)); 
+)); */
 
 /** INSTAGRAM STUFF **/
-
+/*
 passport.use(new InstagramStrategy({
     clientID: 'b8ea3dcb540743fc9d1b92110261002e',
     clientSecret: '6696c3641a554af88bcf0a61657094f5',
@@ -101,7 +101,7 @@ function(accessToken, refreshToken, profile, done) {
       return done(null, profile);
     });
   }
-));
+));*/
 
 /** FACEBOOK STUFF **/
 
