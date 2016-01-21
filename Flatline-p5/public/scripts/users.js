@@ -1,15 +1,15 @@
 function checkVerification(data) {
 	if (data.twitter){
-
+		$(".twitter-sec > .verified").show();
 	}
 	else {
-		$("#twittererror").show();
+		$(".twitter-sec > .error").show();
 	}
 	if (data.insta) {
-
+		$(".insta-sec > .verified").show();
 	}
 	else {
-		$("#instaerror").show();
+		$(".insta-sec > .error").show();
 	}
 }
 
