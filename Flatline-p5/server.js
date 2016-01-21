@@ -173,8 +173,6 @@ app.get('/about', function(req, res, next) {
 
 app.post('/verify', function(req, res, next) {
   var usernameVerification = {};
-  var instaDone = false;
-  var twitterDone = false;
 
   function verifyTwitter(match) {
     if (match != null) {
@@ -185,12 +183,14 @@ app.post('/verify', function(req, res, next) {
       else {
         usernameVerification["twitter"] = false;
       }
-       res.json(usernameVerification);
+      if (!req.body.instaUsername) {
+        res.json(usernameVerification);
+      }
     }
 
   }
   function verifyIG(instaID) {
-      console.log('insta', match);
+      console.log('insta', instaID);
       if (instaID > -1) {
         usernameVerification.insta = true;
         console.log("matched");
@@ -199,6 +199,8 @@ app.post('/verify', function(req, res, next) {
          usernameVerification.insta = false;
          console.log("not matched");
       }
+      console.log(usernameVerification);
+      res.json(usernameVerification);
   }
 
   if (req.body.twitterUsername) {
@@ -277,13 +279,13 @@ function download(url, callback) {
 
 function findIG(username, callback) {
   var match = -1;
-  console.log(username);
   ig.users.search({
     q: utf8.encode(username), // term to search
     complete: function (data, pagination) {
       for(var i = 0; i< data.length; i++) {
         if(username==data[i].username) {
           match = data[i].id;
+          console.log('there is a match', match)
           callback(match);
         }
       }
