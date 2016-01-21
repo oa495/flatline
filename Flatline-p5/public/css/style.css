@@ -120,7 +120,7 @@ footer, .first-p, .settings-p {
   #sidebar .selected {
     background-color: #f37458; }
 
-.hidden, .error {
+.hidden, .error .verified {
   display: none; }
 
 /*# sourceMappingURL=style.css.map */
