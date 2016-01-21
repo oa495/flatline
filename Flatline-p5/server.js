@@ -122,8 +122,8 @@ app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: false }));
 app.use(logger('dev'));
 var handlebars = require('express-handlebars').create({'defaultLayout':'main'});
-
-var server = require('http').Server(app);
+var http = require('http');
+var server = http.Server(app);
 var io = require('socket.io')(server);
 // register express.engine as a function...
 
@@ -170,11 +170,30 @@ app.get('/setup', function(req, res, next) {
   res.render('settings');
 });
 
-app.post('/setup', function(req, res, next) {
-  if (!req.body.twitterUsername && !req.body.instaUsername && !req.body.tumblrUsername) {
-      console.log('no values entered');
+app.post('/verify', function(req, res, next) {
+  var usernameVerification = {};
+  if (req.body.twitterUsername) {
+      var match = download('https://twitter.com/users/username_available?username='+ req.body.twitterUsername);
+      if (match != null) {
+        if (match.reason == 'taken') {
+          usernameVerification.twitter = true;
+        }
+        else usernameVerification.twitter = false;
+      }
   }
-  else {
+  if (req.body.instaUsername) {
+    var match = verifyIG(req.body.instaUsername);
+    if (match >= 1) {
+      usernameVerification.insta = true;
+    }
+    else {
+       usernameVerification.insta = false;
+    }
+  }
+  res.json(usernameVerification);
+});
+
+/*app.post('/setup', function(req, res, next) {
     if (req.body.twitterUsername) {
         twitterUsername = req.body.twitterUsername;
         twitter = true;
@@ -184,9 +203,7 @@ app.post('/setup', function(req, res, next) {
       insta = true;
     }
     res.redirect('/start');
-  }
-});
-
+});*/
 
 
 
@@ -221,18 +238,32 @@ app.get('/auth/tumblr/callback',
 
 server.listen(app.get('port'));
 
-function getIG(tt) {
+function download(url) {
+  http.get(url, function(res) {
+    var data = "";
+    res.on('data', function (chunk) {
+      data += chunk;
+    });
+    res.on("end", function() {
+      return data;
+    });
+  }).on("error", function() {
+    return null;
+  });
+}
+
+function verifyIG(username) {
   var match = -1;
   ig.users.search({
-    q: utf8.encode(instagramUsername), // term to search
+    q: utf8.encode(username), // term to search
     complete: function (data, pagination) {
       for(var i = 0; i< data.length; i++) {
-        if(instagramUsername==data[i].username) {
+        if(username==data[i].username) {
           match = data[i].id;
           break;
         }
       }
-      if(match>-1) getIGinfo(match, tt);
+      return match;
     }
   });
 }

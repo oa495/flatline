@@ -1,36 +1,21 @@
-<script type="text/javascript" src="/scripts/dom.js"></script>
+<script type="text/javascript" src="/scripts/users.js"></script>
 <div class="settings-p">
-	<form method="POST" action="settings">
+	<form id="sm-form" method="POST" action="/settings">
 		<section class="twitter-sec">
 			<h3>Twitter</h3>
-			Is your account private? 
-			<div class="radio-buttons">
-				<label>
-				 <input type="radio" name="group1" value="Yes"/> Yes
-				</label>
-				<label>
-				 <input type="radio" name="group1" value="No"/>No
-				</label>
-			</div>
-			<br> 
 			Username: <input type="text" name="twitterUsername"/>
+			<div class="error" id="twittererror"><p>This username is not valid or is private</p></div>
 		</section>
 		<section class="insta-sec">
 			<h3>Instagram</h3>
-			Is your account private? 
-			<div class="radio-buttons">
-				<label>
-				 <input type="radio" name="group2" value="Yes"/> Yes
-				</label>
-				<label>
-				 <input type="radio" name="group2" value="No"/>No
-				</label>
-			</div> 
-			<br>
-			<img width="36px" class="left-arrow" src="/img/left.svg">
 			Username: <input type="text" name="instaUsername"/>
-			<input type="submit" value="Submit">
+			<div class="error" id="instaerror"><p>This username is not valid or is private.</p></div>
 		</section>
+		<div class="error" id="mainerror">
+			<p>You need to fill in at least one of these</p>
+		</div>
+		<button id="verify">Verify</button>
+		<input type="submit" value="Submit">
 		<!--<section class="tumblr-sec">
 			<h3>Tumblr</h3>
 			Is your account private? 
