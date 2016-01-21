@@ -7,6 +7,7 @@ var userInfo = {
 }
 var twitterUsername = "";
 var instagramUsername = "";
+var instaId;
 var description = "";
 var location = "";
 
@@ -46,8 +47,6 @@ var passport = require('passport');
 var bodyParser = require('body-parser');
 var request = require("request");
 var logger = require('morgan');
-var InstagramStrategy = require('passport-instagram').Strategy;
-
 var Twitter = require('twitter');
 var ig = require('instagram-node-lib');
 
@@ -64,7 +63,7 @@ var twitClient = new Twitter({
   access_token_secret: '4dsvgLCQXQ6LNTlWzpOfJppxCraKzUXe4iEaKjwGRgCiV'
 });
 
-
+var session = require('express-session');
 var path = require('path');
 var utf8 = require('utf8');
 var publicPath = path.resolve(__dirname, "public");
@@ -72,13 +71,13 @@ app.use(express.static(publicPath));
 app.use(passport.initialize());
 app.use(passport.session());
 
-passport.serializeUser(function(user, done) {
-  done(null, user.id);
-});
+var sessionOptions = {
+  secret: 'secret cookie thang',
+  resave: true,
+  saveUninitialized: true
+};
+app.use(session(sessionOptions));
 
-passport.deserializeUser(function(user, done) {
-  done(null, user);
-});
 
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: false }));
@@ -105,14 +104,14 @@ app.get('/index', function(req, res, next) {
 });
 
 app.get('/start', function(req, res, next) {
-    if (twitter || insta) {
+    if (req.session.twitter || req.session.insta) {
       res.render('start');
   }
   else res.redirect('setup');
 });
 
 app.get('/visualize', function(req, res, next) {
-  if (twitter || insta || tumblr) {
+  if (req.session.twitter || req.session.insta) {
     res.render('visualize');
   }
   else res.redirect('/setup');
@@ -120,8 +119,8 @@ app.get('/visualize', function(req, res, next) {
 
 app.post('/start', function(req, res, next) {
   userInfo.time = req.body.time;
-  if (twitterUsername) getTwitterData(req.body.time);
-  if (instagramUsername) getIG(req.body.time);
+  if (req.session.twitterUsername) getTwitterData(req.body.time);
+  if (req.session.instagramUsername) getIGinfo(instaId, req.body.time);
   res.redirect('/visualize');
 });
 
@@ -176,12 +175,12 @@ app.get('/setup', function(req, res, next) {
 
 app.post('/setup', function(req, res, next) {
     if (req.body.twitterUsername) {
-        twitterUsername = req.body.twitterUsername;
-        twitter = true;
+        req.session.twitterUsername = req.body.twitterUsername;
+        req.session.twitter = true;
     }
     if (req.body.instaUsername) {
-      instagramUsername = req.body.instaUsername;
-      insta = true;
+      req.session.instagramUsername = req.body.instaUsername;
+      req.session.insta = true;
     }
     res.sendStatus(200);
 });
@@ -211,7 +210,7 @@ function findIG(username, callback) {
       for(var i = 0; i< data.length; i++) {
         if(username==data[i].username) {
           match = data[i].id;
-          console.log('there is a match', match)
+          instaId = data[i].id;
           callback(match);
         }
       }
@@ -263,7 +262,7 @@ function getTwitterData(tt) {
 }
 
 function pollTwitter() {
-    twitClient.get('users/show', {screen_name: twitterUsername}, 
+    twitClient.get('users/show', {screen_name: req.session.twitterUsername}, 
     function(error, twitterResults){
       if(error) {
         console.log(error);
@@ -286,10 +285,10 @@ io.sockets.on('connection',
 		  console.log("We have a new client: " + socket.id);
 		  socket.emit('testing', 12345);
       socket.emit('userInfo', userInfo);
-      if (insta) {
+      if (req.session.insta) {
         socket.emit('instaData', instaData);
       }
-     if (twitter) {
+     if (req.session.twitter) {
         socket.emit('twitterData', twitterData);
      }
 });
