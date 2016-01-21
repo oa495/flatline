@@ -1,6 +1,6 @@
 <script type="text/javascript" src="/scripts/users.js"></script>
 <div class="settings-p">
-	<form id="sm-form" method="POST" action="/settings">
+	<form id="sm-form" method="POST" action="">
 		<section class="twitter-sec">
 			<h3>Twitter</h3>
 			Username: <input type="text" name="twitterUsername"/>
@@ -16,12 +16,11 @@
 			<div class="error"><p>This username is not valid or is private.</p></div>
 			<div class="verified"><img src="/img/check.png"></div>
 		</section>
-
 		<div class="error" id="mainerror">
-			<p>You need to fill in at least one of these</p>
+			<p>You need to fill in at least one of these.</p>
 		</div>
-		<button id="verify">Verify</button>
-		<input type="submit" value="Submit">
+		<input type="button" value="Verify">
+		<!--<input type="submit" value="Submit">-->
 		<!--<section class="tumblr-sec">
 			<h3>Tumblr</h3>
 			Is your account private? 

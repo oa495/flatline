@@ -1,3 +1,6 @@
+function User() {
+
+}
 var userInfo = {
   name: '',
   time: 0 
@@ -41,6 +44,7 @@ var timeUp = false;
 var express = require('express');
 var passport = require('passport');
 var bodyParser = require('body-parser');
+var request = require("request");
 var logger = require('morgan');
 var InstagramStrategy = require('passport-instagram').Strategy;
 var TumblrStrategy = require('passport-tumblr').Strategy;
@@ -133,6 +137,7 @@ app.engine('handlebars', handlebars.engine);
 app.set('view engine', 'handlebars');
 app.set('port', process.env.PORT || 5000);
 
+
 app.get('/', function(req, res, next) {
   res.render('index');
 });
@@ -142,7 +147,7 @@ app.get('/index', function(req, res, next) {
 });
 
 app.get('/start', function(req, res, next) {
-    if (twitter || insta || tumblr) {
+    if (twitter || insta) {
       res.render('start');
   }
   else res.redirect('setup');
@@ -166,34 +171,51 @@ app.get('/about', function(req, res, next) {
   res.render('about');
 });
 
+app.post('/verify', function(req, res, next) {
+  var usernameVerification = {};
+  var instaDone = false;
+  var twitterDone = false;
+
+  function verifyTwitter(match) {
+    if (match != null) {
+      if (match == 'taken') {
+        console.log('twitter username is taken')
+        usernameVerification["twitter"] = true;
+      }
+      else {
+        usernameVerification["twitter"] = false;
+      }
+       res.json(usernameVerification);
+    }
+
+  }
+  function verifyIG(instaID) {
+      console.log('insta', match);
+      if (instaID > -1) {
+        usernameVerification.insta = true;
+        console.log("matched");
+      }
+      else {
+         usernameVerification.insta = false;
+         console.log("not matched");
+      }
+  }
+
+  if (req.body.twitterUsername) {
+      download('http://twitter.com/users/username_available?username='+ req.body.twitterUsername, verifyTwitter);
+  }
+  if (req.body.instaUsername) {
+    findIG(req.body.instaUsername, verifyIG);
+  }
+
+});
+
+
 app.get('/setup', function(req, res, next) {
   res.render('settings');
 });
 
-app.post('/verify', function(req, res, next) {
-  var usernameVerification = {};
-  if (req.body.twitterUsername) {
-      var match = download('https://twitter.com/users/username_available?username='+ req.body.twitterUsername);
-      if (match != null) {
-        if (match.reason == 'taken') {
-          usernameVerification.twitter = true;
-        }
-        else usernameVerification.twitter = false;
-      }
-  }
-  if (req.body.instaUsername) {
-    var match = verifyIG(req.body.instaUsername);
-    if (match >= 1) {
-      usernameVerification.insta = true;
-    }
-    else {
-       usernameVerification.insta = false;
-    }
-  }
-  res.json(usernameVerification);
-});
-
-/*app.post('/setup', function(req, res, next) {
+app.post('/setup', function(req, res, next) {
     if (req.body.twitterUsername) {
         twitterUsername = req.body.twitterUsername;
         twitter = true;
@@ -203,10 +225,11 @@ app.post('/verify', function(req, res, next) {
       insta = true;
     }
     res.redirect('/start');
-});*/
+});
 
 
 
+/*
 app.get('/auth/instagram',
 	passport.authenticate('instagram'),
 	function(req, res){
@@ -234,36 +257,36 @@ app.get('/auth/tumblr/callback',
     // Successful authentication, redirect home.
     res.redirect('/setup');
   });
-
+*/
 
 server.listen(app.get('port'));
 
-function download(url) {
-  http.get(url, function(res) {
-    var data = "";
-    res.on('data', function (chunk) {
-      data += chunk;
-    });
-    res.on("end", function() {
-      return data;
-    });
-  }).on("error", function() {
-    return null;
+function download(url, callback) {
+  var data = "";
+  request({
+    url: url,
+    json: true
+  }, function (error, response, body) {
+      if (!error && response.statusCode === 200) {
+          data = body.reason;
+          callback(data)
+      }
   });
 }
 
-function verifyIG(username) {
+
+function findIG(username, callback) {
   var match = -1;
+  console.log(username);
   ig.users.search({
     q: utf8.encode(username), // term to search
     complete: function (data, pagination) {
       for(var i = 0; i< data.length; i++) {
         if(username==data[i].username) {
           match = data[i].id;
-          break;
+          callback(match);
         }
       }
-      return match;
     }
   });
 }
