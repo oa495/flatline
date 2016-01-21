@@ -1,21 +1,27 @@
 $(function(){
+	var twitterVerified = false;
+	var instaVerified = false;
 	function checkVerification(data) {
 		console.log('in verification', data)
 		switch (data.platform){
 			case "twitter":
 				if (data.twitter){
 					$(".twitter-sec > .verified").show();
+					twitterVerified = true;
 				}
 				else {
 					$(".twitter-sec > .error").show();
+					twitterVerified = false;
 				}
 				break;
 			case "insta":
 				if (data.insta) {
 					$(".insta-sec > .verified").show();
+					instaVerified = true;
 				}
 				else {
 					$(".insta-sec > .error").show();
+					instaVerified = false;
 				}
 				break;
 		}
@@ -27,14 +33,27 @@ $(function(){
 		if (!twitterUsername && !instaUsername){
 			$("#mainerror").show();
 		}
+		else {
+			if (twitterVerified || instaVerified) {
+				var userData = {};
+				$("#mainerror").hide();
+				if (twitterVerified) {
+					userData.twitterUsername = twitterUsername;
+				}
+				if (instaVerified) {
+					userData.instaUsername = twitterUsername;
+				}
+				makeRequest("/setup", userData, function(data) {
+					console.log('success');
+					 document.location.href="/start";
+				});
+			}
+		}
 	}
 	$("#sm-form").submit(function(event) {
-		validation();
 		event.preventDefault();
-	});
-
-	$("input[type='button']").click(function(event) {
 		validation();
+		
 	});
 
 	$(".twitter-sec > input[type='button']").click(function(event) {
@@ -61,13 +80,16 @@ $(function(){
 			"platform": platform,
 			"username":username
 		};
+		makeRequest("/verify", userData, checkVerification);
+	}
+
+	function makeRequest(url, data, callback) {
 		$.ajax({
 		  type: "POST",
-		  url: "/verify",
-		  data: userData,
+		  url: url,
+		  data: data,
 		  success: function(data) {
-		  	console.log(data);
-		  	checkVerification(data);
+		  	callback(data);
 		  },
 		  error: function(err) {
 		  	console.log(err);
