@@ -9,7 +9,7 @@ a {
   color: white; }
 
 a:hover {
-  opacity: 0.5; }
+  border-bottom: 1px solid white; }
 
 body {
   font-family: "Merriweather Sans", sans-serif;
@@ -30,6 +30,36 @@ div h1, div h2, div p, div form, section h1, section h2, section p, section form
   margin-left: 5%;
   margin-right: 5%; }
 
+input:-webkit-autofill {
+  -webkit-box-shadow: 0 0 0 1000px white inset; }
+
+input:focus, select:focus {
+  outline: none; }
+
+input[type="submit"], input[type="button"] {
+  text-transform: uppercase;
+  font-family: "Merriweather Sans", sans-serif;
+  color: white;
+  cursor: pointer;
+  border: none;
+  border-bottom: 2px solid white; }
+
+input[type="button"] {
+  font-size: 10px;
+  margin-left: 8px;
+  width: 75px;
+  height: 25px; }
+
+input[type="submit"] {
+  margin-top: 60px;
+  clear: both;
+  width: 100px;
+  height: 35px;
+  font-size: 12px; }
+
+input[type="submit"]:hover, input[type="button"]:hover {
+  border-bottom: 3px solid white; }
+
 section {
   margin-top: 10%; }
 
@@ -43,7 +73,9 @@ footer {
     position: relative;
     padding: 10px; }
   footer nav a {
-    padding: 15px;
+    margin-left: 15px;
+    margin-right: 15px;
+    padding-top: 15px;
     float: right;
     text-transform: uppercase;
     font-size: 12px;
@@ -58,10 +90,26 @@ footer {
 .about-p, .start-p {
   background-color: #f37458; }
 
+.start-p input[type="submit"] {
+  background-color: #e46e54; }
+.start-p form select {
+  width: 100px;
+  background-color: #e46e54;
+  border-radius: 0;
+  color: white;
+  padding: 5px;
+  font-size: 13px;
+  line-height: 1;
+  border: 0;
+  height: 34px;
+  -webkit-appearance: none; }
+
 .about-p p {
   max-width: 550px;
-  font-size: 13px;
+  font-size: 14px;
   padding-bottom: 25px; }
+.about-p a {
+  border-bottom: 1px solid white; }
 
 footer, .first-p, .settings-p {
   background-color: #6dc5aa; }
@@ -75,13 +123,12 @@ footer, .first-p, .settings-p {
 .settings-p {
   max-height: 100vh; }
   .settings-p section {
-    width: 100%;
-    height: 85%; }
+    width: 100%; }
     .settings-p section h3, .settings-p section .radio-buttons {
-      padding-top: 15px;
-      padding-bottom: 15px; }
-  .settings-p .tumblr-sec, .settings-p .insta-sec, .settings-p .fbook-sec {
-    display: none; }
+      padding-top: 20px;
+      padding-bottom: 5px; }
+  .settings-p input[type="submit"], .settings-p input[type="button"] {
+    background-color: #69bca2; }
 
 #clockdiv {
   display: none; }
@@ -120,7 +167,11 @@ footer, .first-p, .settings-p {
   #sidebar .selected {
     background-color: #f37458; }
 
-.hidden {
+.hidden, .error, .verified {
   display: none; }
+
+.error small {
+  font-size: 9px;
+  padding: 5px; }
 
 /*# sourceMappingURL=style.css.map */

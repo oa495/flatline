@@ -1,53 +1,27 @@
-<script type="text/javascript" src="/scripts/dom.js"></script>
+<script type="text/javascript" src="/scripts/users.js"></script>
 <div class="settings-p">
-	<form method="POST" action="settings">
+	<form id="sm-form" method="POST" action="">
 		<section class="twitter-sec">
 			<h3>Twitter</h3>
-			<!--Is your account private? 
-			<div class="radio-buttons">
-				<label>
-				 <input type="radio" name="group1" value="Yes"/> Yes
-				</label>
-				<label>
-				 <input type="radio" name="group1" value="No"/>No
-				</label>
-			</div>
-			<br> -->
 			Username: <input type="text" name="twitterUsername"/>
-			<img width="36px" class="right-arrow" src="/img/right.svg">
+			<div class="error">
+				<small>This username is not valid.</small>
+			</div>
+			<input type="button" value="Verify">
+			<img class="verified" src="/img/check.png">
 		</section>
 		<section class="insta-sec">
 			<h3>Instagram</h3>
-			<!--Is your account private? 
-			<div class="radio-buttons">
-				<label>
-				 <input type="radio" name="group2" value="Yes"/> Yes
-				</label>
-				<label>
-				 <input type="radio" name="group2" value="No"/>No
-				</label>
-			</div> 
-			<br>-->
-			<img width="36px" class="left-arrow" src="/img/left.svg">
 			Username: <input type="text" name="instaUsername"/>
-			<input type="submit" value="Submit">
-			<!--<img width="36px" class="right-arrow" src="/img/right.svg"> -->
-		</section>
-		<!--<section class="tumblr-sec">
-			<h3>Tumblr</h3>
-			Is your account private? 
-			<div class="radio-buttons">
-				<label>
-				 <input type="radio" name="group3" value="Yes"/> Yes
-				</label>
-				<label>
-				 <input type="radio" name="group3" value="No" />No
-				</label>
+			<div class="error">
+				<small>This username is not valid.</small>
 			</div>
-			<br>
-			Username: <input type="text" name="tumblrrUsername"/>
-			<img width="36px" class="left-arrow" src="/img/left.svg">
-			
-		</section> -->
+			<input type="button" value="Verify">
+			<img class="verified" src="/img/check.png">
+		</section>
+		<div class="error" id="mainerror">
+			<small>You need to fill in at least one of these.</small>	
+		</div>
+		<input type="submit" value="Submit">
 	</form>
 </div>

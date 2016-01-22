@@ -32,6 +32,7 @@ socket.on('userInfo', function(data) {
 socket.on('twitterData', function(data){
   console.log('twit connection');
   twitterData = data;
+  console.log('twitter', twitterData);
   totalTwitterChange = getTotalData(twitterData);
   twitterBeat = new Beat(totalTwitterChange);
   current = 'twitter';
@@ -88,7 +89,7 @@ function setup() {
   restartImg.attribute('role', 'restart');
   restartImg.addClass('controls');
 
-  playImg = createImg('img/play.png');
+  playImg = createImg('/img/play.png');
   playImg.attribute('role', 'play');
   playImg.addClass('hidden');
   playImg.addClass('controls');
