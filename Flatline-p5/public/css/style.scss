@@ -108,6 +108,16 @@ footer {
 	height: 95vh;
 	overflow: hidden;
 }
+.hidden, .error, .verified{
+	display: none;
+}
+.error {
+	small {
+		font-size: 9px;
+		padding: 5px;
+	}
+}
+
 .about-p, .first-p, .settings-p, .start-p {
 	@extend .container;
 }
@@ -115,21 +125,49 @@ footer {
 	background-color: $primary-orange;
 }
 .start-p {
+	font-size: 14px;
 	input[type="submit"] {
 		background-color: $darker-orange;
 	}
-	form {
-		select {
-			width: 100px;
+	select{
+		width: 100px;
+		background-color: $darker-orange;
+		border-radius: 0;
+		color: white;
+		padding: 5px;
+	    font-size: 13px;
+	    line-height: 1;
+	    border: 0;
+	    height: 34px;
+	    text-align: center;
+	    -webkit-appearance: none;
+	}
+	#clockdiv {
+		p {
+			max-width: 550px;
+		}
+		div {
+			margin-left: 2%;
+			margin-top: 2%;
+			display: inline-block;
+
+		}
+		div > span {
+			display: inline-block;
+			padding-top: 20px;
+			padding-bottom: 0;
+			height: 20px;
+			font-size: 15px;
+			@extend select;
+		}
+		div > small {
+			display: block;
+			text-align: center;
+			clear: both;
+			padding-top: 2px;
+			padding-bottom: 20px;
 			background-color: $darker-orange;
-			border-radius: 0;
-			color: white;
-			padding: 5px;
-		    font-size: 13px;
-		    line-height: 1;
-		    border: 0;
-		    height: 34px;
-		    -webkit-appearance: none;
+			opacity: 0.8;
 		}
 	}
 }
@@ -151,6 +189,7 @@ footer, .first-p, .settings-p {
 		margin-top: 10%;
 	}
 	img {
+		padding-top: 5px;
 		padding-left: 10px;
 		position: absolute;
 	}
@@ -163,10 +202,15 @@ footer, .first-p, .settings-p {
 			padding-top: 20px;
 			padding-bottom: 5px;
 		}
+		.verified {
+			padding-top: 6px;
+			margin-left: 5px;
+		}
 	}
 	input[type="submit"], input[type="button"] {
 		background-color: $darker-green;
 	}
+
 }
 
 #clockdiv {
@@ -199,7 +243,7 @@ footer, .first-p, .settings-p {
 		p {
 			display: inline-block;
 			text-align: center;
-			font-size: 18px;
+			font-size: 16px;
 		}
 	}
 	#heart-data {
@@ -218,12 +262,19 @@ footer, .first-p, .settings-p {
 		background-color: $primary-orange;
 	}
 }
-.hidden, .error, .verified{
-	display: none;
+.icon-left {
+    transition: all 2s ease-in-out;
+    -webkit-transition: all 2s ease-in-out; 
+    -moz-transition: all 2s ease-in-out; 
+    -o-transition: all 2s ease-in-out; 
+    transition: transform 0.8s ease-in-out;
+    -webkit-transition: transform 0.8s ease-in-out; 
+    -moz-transition: transform 0.8s ease-in-out; 
+    -o-transition: transform 0.8s ease-in-out; 
 }
-.error {
-	small {
-		font-size: 9px;
-		padding: 5px;
-	}
+.icon-left:hover {
+    transform: translate(15px, 0);
+    -webkit-transform: translate(15px,0);
+    -o-transform: translate(15px,0); 
+    -moz-transform: translate(15px,0); 
 }

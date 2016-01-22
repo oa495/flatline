@@ -25,8 +25,9 @@ var socket = io.connect();
 socket.on('userInfo', function(data) {
   totalTime = data.time;
   console.log('user connection');
-  console.log(data.name);
-  setInfo(data.name);
+  console.log(data.twitname);
+  console.log(data.instaname);
+  setInfo(data.twitname, data.instaname);
 });
 
 socket.on('twitterData', function(data){
@@ -119,13 +120,13 @@ function setup() {
     sm_beats[i].mouseClicked(changeBeat);
   }
   
-  /*bpm = createP(totalChange + ' bpm');
-  bpm.parent('heart-data');*/
+  bpm = createP(totalChange + ' bpm');
+  bpm.parent('heart-data');
 }
 
-function setInfo(name) {
+function setInfo(twitname, instaname) {
   console.log('the name', name);
-  var userName = createP(name);
+  var userName = createP(twitname);
   userName.parent('user-info');
 }
 
@@ -186,40 +187,59 @@ function changeBeat() {
   //add if statement to check if there is even data for the social media platform that was clicked
   if (selected == 'twitbeat' && typeof twitterBeat !== 'undefined') {
       if (current != 'twitter') {
+        image(thegrid, 0, 0);
+        thegraph.clear();
         if (typeof instaBeat !== 'undefined') {
           instaBeat.pause = true;
+          instaBeat.play = false;
         }
         if (typeof tumblrBeat !== 'undefined') {
             tumblrBeat.pause = true;
+            tumblrBeat.play = false;
         }
         current = 'twitter';
+        twitterBeat.refresh();
+        twitterBeat.play = true;
+        twitterBeat.pause = false;
       }
       this.addClass('selected');
   } 
   else if (selected == 'instabeat' && typeof instaBeat !== 'undefined') {
       if (current != 'insta') {
+        image(thegrid, 0, 0);
+        thegraph.clear();
         if (typeof twitterBeat !== 'undefined') {
           twitterBeat.pause = true;
+          twitterBeat.play = false;
         }
         if (typeof tumbrBeat !== 'undefined') {
           tumblrBeat.pause = true;
+          tumblrBeat.play = false;
         }
         current = 'insta';
+        instaBeat.refresh();
+        instaBeat.play = true;
+        instaBeat.pause = false;
       }
       this.addClass('selected');
   }
-  else if (selected == 'tumblrbeat' && typeof tumblrBeat !== 'undefined') {
+  /*else if (selected == 'tumblrbeat' && typeof tumblrBeat !== 'undefined') {
    if (current != 'tumblr') {
         if (typeof instaBeat !== 'undefined') { 
           instaBeat.pause = true;
+          instaBeat.play = false;
         }
         if (typeof twitterBeat !== 'undefined') {
           twitterBeat.pause = true;
+          twitterBeat.play = false;
         }        
         current = 'tumblr';
+        tumblrBeat.refresh();
+        tumblrBeat.play = true;
+        tumblrBeat.pause = false;
     }
     this.addClass('selected');
-  }
+  }*/
 }
 function controlLine() {
   var role = this.elt.attributes.role.value;

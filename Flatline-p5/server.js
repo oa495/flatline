@@ -2,7 +2,8 @@ function User() {
 
 }
 var userInfo = {
-  name: '',
+  twitname: '',
+  instaname: '',
   time: 0 
 }
 var instaId;
@@ -219,6 +220,7 @@ function findIG(username, callback) {
           callback(match);
         }
       }
+      callback(match);
     }
   });
 }
@@ -242,6 +244,7 @@ function pollInstagram(_m) {
   ig.users.info({
     user_id: _m, // term to search
     complete: function(instaResults){
+      userInfo.instaname = instaResults["full_name"];
       instaData["followers"].push(instaResults.counts["followed_by"]);
       instaData["following"].push(instaResults.counts["follows"]);
       instaData["posts"].push(instaResults.counts["media"]);
@@ -274,7 +277,7 @@ function pollTwitter(twitterUsername) {
       if(error) {
         console.log(error);
       }
-      userInfo.name = twitterResults.name;
+      userInfo.twitname = twitterResults.name;
       location = twitterResults.location;
       description = twitterResults.description;
       twitterData["noFollowers"].push(twitterResults.followers_count);
