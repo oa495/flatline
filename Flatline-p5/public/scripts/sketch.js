@@ -198,9 +198,9 @@ function changeBeat() {
         twitterBeat.refresh();
         twitterBeat.play = true;
         twitterBeat.pause = false;
+        select('.twitbeat').addClass('selected');
+        select('.instabeat').removeClass('selected');
       }
-      select('.twitbeat').addClass('selected');
-      select('.instabeat').removeClass('selected');
   } 
   else if (selected == 'instabeat' && typeof instaBeat !== 'undefined') {
       if (current != 'insta') {
@@ -219,9 +219,9 @@ function changeBeat() {
         instaBeat.refresh();
         instaBeat.play = true;
         instaBeat.pause = false;
+        select('.instabeat').addClass('selected');
+       select('.twitbeat').removeClass('selected');
       }
-      select('.instabeat').addClass('selected');
-      select('.twitbeat').removeClass('selected');
   }
   /*else if (selected == 'tumblrbeat' && typeof tumblrBeat !== 'undefined') {
    if (current != 'tumblr') {
