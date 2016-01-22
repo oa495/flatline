@@ -14,7 +14,6 @@ var instaBeat;
 var tumblrBeat;
 var totalTime;
 var totalChange = 0;
-var theuser;
 var socket = io.connect();
 /****
   HAVE SIDEBAR BE GENERATED ACCORDING TO THE PLATFORMS CHOSEN. SO IF THE USER DOESN'T CHOOSE TUMBLR, DON'T DISPLAY TUMBLR IN THE SIDEBAR
@@ -31,11 +30,11 @@ socket.on('twitterData', function(data){
   delete twitterData["twitname"];
   totalTwitterChange = getTotalData(twitterData);
   twitterBeat = new Beat(totalTwitterChange, data.twitname);
-  if (current != 'insta') {
-    current = 'twitter';
-    select('.twitbeat').addClass('selected');
-    select('#name').innerHTML = twitterBeat.user;
-  }
+  current = 'twitter';
+  select('.instabeat').removeClass('selected');
+  select('.twitbeat').addClass('selected');
+  var name = select('#name');
+  name.innerHTML = twitterBeat.user;
 });
 
 socket.on('instaData', function(data){
@@ -45,8 +44,10 @@ socket.on('instaData', function(data){
   instaBeat = new Beat(totalInstaChange, data.instaname);
   if (current != 'twitter') {
     current = 'insta';
+    select('.twitbeat').removeClass('selected');
     select('.instabeat').addClass('selected');
-    select('#name').innerHTML = instaBeat.user;
+    var name = select('#name');
+    name.innerHTML = instaBeat.user;
   }
 });
 /*socket.on('tumblrData', function(data){
@@ -193,13 +194,13 @@ function changeBeat() {
             tumblrBeat.play = false;
         }
         current = 'twitter';
-        name.innerHTML = "";
         name.innerHTML = twitterBeat.user;
         twitterBeat.refresh();
         twitterBeat.play = true;
         twitterBeat.pause = false;
       }
       select('.twitbeat').addClass('selected');
+      select('.instabeat').removeClass('selected');
   } 
   else if (selected == 'instabeat' && typeof instaBeat !== 'undefined') {
       if (current != 'insta') {
@@ -213,7 +214,6 @@ function changeBeat() {
           tumblrBeat.pause = true;
           tumblrBeat.play = false;
         }
-        name.innerHTML = "";
         name.innerHTML = instaBeat.user;
         current = 'insta';
         instaBeat.refresh();
@@ -221,7 +221,7 @@ function changeBeat() {
         instaBeat.pause = false;
       }
       select('.instabeat').addClass('selected');
-      //this.addClass('selected');
+      select('.twitbeat').removeClass('selected');
   }
   /*else if (selected == 'tumblrbeat' && typeof tumblrBeat !== 'undefined') {
    if (current != 'tumblr') {
