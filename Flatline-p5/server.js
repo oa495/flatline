@@ -5,8 +5,6 @@ var userInfo = {
   name: '',
   time: 0 
 }
-var twitterUsername = "";
-var instagramUsername = "";
 var instaId;
 var description = "";
 var location = "";
@@ -35,7 +33,6 @@ var instaData = {
 
 var twitter = false;
 var insta = false;
-var tumblr = false;
 var interval = 1000;
 var countDownOver = false;
 var timeUp = false;
@@ -77,7 +74,13 @@ var sessionOptions = {
   saveUninitialized: true
 };
 app.use(session(sessionOptions));
-
+app.use(function(req, res, next){
+    res.locals.twitterUsername = req.session.twitterUsername;
+    res.locals.instagramUsername = req.session.instagramUsername;
+    res.locals.insta = req.session.insta;
+    res.locals.twitter = req.session.twitter;
+    next();
+});
 
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: false }));
@@ -119,8 +122,8 @@ app.get('/visualize', function(req, res, next) {
 
 app.post('/start', function(req, res, next) {
   userInfo.time = req.body.time;
-  if (req.session.twitterUsername) getTwitterData(req.body.time);
-  if (req.session.instagramUsername) getIGinfo(instaId, req.body.time);
+  if (req.session.twitterUsername) getTwitterData(req.body.time, req.session.twitterUsername);
+  if (req.session.instagramUsername) getIGinfo(req.session.instaId, req.body.time);
   res.redirect('/visualize');
 });
 
@@ -147,6 +150,7 @@ app.post('/verify', function(req, res, next) {
   }
   function verifyIG(instaID) {
       usernameVerification.platform = 'insta';
+      req.session.instaId = instaID;
       console.log('insta', instaID);
       if (instaID > -1) {
         usernameVerification.insta = true;
@@ -177,10 +181,12 @@ app.post('/setup', function(req, res, next) {
     if (req.body.twitterUsername) {
         req.session.twitterUsername = req.body.twitterUsername;
         req.session.twitter = true;
+        twitter = true;
     }
     if (req.body.instaUsername) {
       req.session.instagramUsername = req.body.instaUsername;
       req.session.insta = true;
+      insta = true;
     }
     res.sendStatus(200);
 });
@@ -210,7 +216,6 @@ function findIG(username, callback) {
       for(var i = 0; i< data.length; i++) {
         if(username==data[i].username) {
           match = data[i].id;
-          instaId = data[i].id;
           callback(match);
         }
       }
@@ -244,7 +249,7 @@ function pollInstagram(_m) {
   });
 }
 
-function getTwitterData(tt) {
+function getTwitterData(tt, twitterUsername) {
   //initialize to 0 
   // clear everything
   twitterData.noFollowers = [];
@@ -253,16 +258,18 @@ function getTwitterData(tt) {
   twitterData.noFavourites = [];
 
 
-  var twitTimer = setInterval(pollTwitter, 3000);
-  pollTwitter();
+  var twitTimer = setInterval(function(){
+    pollTwitter(twitterUsername);
+  }, 3000);
+  pollTwitter(twitterUsername);
 
   setTimeout(function(_t) {
     clearInterval(_t);
   }, tt, twitTimer);
 }
 
-function pollTwitter() {
-    twitClient.get('users/show', {screen_name: req.session.twitterUsername}, 
+function pollTwitter(twitterUsername) {
+    twitClient.get('users/show', {screen_name: twitterUsername}, 
     function(error, twitterResults){
       if(error) {
         console.log(error);
@@ -285,10 +292,10 @@ io.sockets.on('connection',
 		  console.log("We have a new client: " + socket.id);
 		  socket.emit('testing', 12345);
       socket.emit('userInfo', userInfo);
-      if (req.session.insta) {
+      if (insta) {
         socket.emit('instaData', instaData);
       }
-     if (req.session.twitter) {
+     if (twitter) {
         socket.emit('twitterData', twitterData);
      }
 });
