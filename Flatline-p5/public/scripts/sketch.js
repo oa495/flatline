@@ -14,7 +14,7 @@ var instaBeat;
 var tumblrBeat;
 var totalTime;
 var totalChange = 0;
-
+var theuser;
 var socket = io.connect();
 /****
   HAVE SIDEBAR BE GENERATED ACCORDING TO THE PLATFORMS CHOSEN. SO IF THE USER DOESN'T CHOOSE TUMBLR, DON'T DISPLAY TUMBLR IN THE SIDEBAR
@@ -30,19 +30,24 @@ socket.on('twitterData', function(data){
   twitterData = data;
   totalTwitterChange = getTotalData(twitterData);
   twitterBeat = new Beat(totalTwitterChange, data.twitname);
-  current = 'twitter';
-  var userName = createP(twitterBeat.user);
-  userName.parent('user-info');
+  if (current != 'insta') {
+    current = 'twitter';
+    select('.twitbeat').addClass('selected');
+    theuser = createP(twitterBeat.user);
+    theuser.parent('user-info');
+  }
 });
 
 socket.on('instaData', function(data){
   instaData = data;
+  console.log('instadata', data);
   totalInstaChange = getTotalData(instaData);
   instaBeat = new Beat(totalInstaChange, data.instaname);
   if (current != 'twitter') {
     current = 'insta';
-    var userName = createP(instaBeat.user);
-    userName.parent('user-info');
+    select('.instabeat').addClass('selected');
+    theuser = createP(instaBeat.user);
+    theuser.parent('user-info');
   }
 });
 /*socket.on('tumblrData', function(data){
@@ -182,12 +187,13 @@ function changeBeat() {
             tumblrBeat.play = false;
         }
         current = 'twitter';
+        name.innerHTML = "";
         name.innerHTML = twitterBeat.user;
         twitterBeat.refresh();
         twitterBeat.play = true;
         twitterBeat.pause = false;
       }
-      this.addClass('selected');
+      select('.twitbeat').addClass('selected');
   } 
   else if (selected == 'instabeat' && typeof instaBeat !== 'undefined') {
       if (current != 'insta') {
@@ -201,13 +207,15 @@ function changeBeat() {
           tumblrBeat.pause = true;
           tumblrBeat.play = false;
         }
+        name.innerHTML = "";
         name.innerHTML = instaBeat.user;
         current = 'insta';
         instaBeat.refresh();
         instaBeat.play = true;
         instaBeat.pause = false;
       }
-      this.addClass('selected');
+      select('.instabeat').addClass('selected');
+      //this.addClass('selected');
   }
   /*else if (selected == 'tumblrbeat' && typeof tumblrBeat !== 'undefined') {
    if (current != 'tumblr') {

@@ -241,8 +241,6 @@ function pollInstagram(_m) {
     user_id: _m, // term to search
     complete: function(instaResults){
       instaData["instaname"] = instaResults["full_name"];
-      console.log(instaResults["full_name"]);
-      console.log(instaResults);
       instaData["followers"].push(instaResults.counts["followed_by"]);
       instaData["following"].push(instaResults.counts["follows"]);
       instaData["posts"].push(instaResults.counts["media"]);
@@ -288,7 +286,6 @@ function pollTwitter(twitterUsername) {
 
 io.sockets.on('connection', 
 	function (socket) {
-		  console.log("We have a new client: " + socket.id);
       socket.emit('userInfo', userInfo);
       if (insta) {
         socket.emit('instaData', instaData);

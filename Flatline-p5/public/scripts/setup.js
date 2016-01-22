@@ -2,7 +2,6 @@ $(function(){
 	var twitterVerified = false;
 	var instaVerified = false;
 	function checkVerification(data) {
-		console.log('in verification', data)
 		switch (data.platform){
 			case "twitter":
 				if (data.twitter){
@@ -18,13 +17,11 @@ $(function(){
 				break;
 			case "insta":
 				if (data.insta) {
-					console.log('verified');
 					$(".insta-sec > .error").hide();
 					$(".insta-sec > .verified").show();
 					instaVerified = true;
 				}
 				else {
-					console.log('not verified');
 					$(".insta-sec > .verified").hide();
 					$(".insta-sec > .error").show();
 					instaVerified = false;
@@ -47,10 +44,9 @@ $(function(){
 					userData.twitterUsername = twitterUsername;
 				}
 				if (instaVerified) {
-					userData.instaUsername = twitterUsername;
+					userData.instaUsername = instaUsername;
 				}
 				makeRequest("/setup", userData, function(data) {
-					console.log('success');
 					 document.location.href="/start";
 				});
 			}
@@ -74,7 +70,6 @@ $(function(){
 	$(".insta-sec > input[type='button']").click(function(event) {
 		var data = $("input[name='instaUsername']").val();
 		if (data) {
-			console.log('1');
 			verifyInformation(data, 'insta');
 		}
 		else {

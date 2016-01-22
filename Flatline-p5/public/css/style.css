@@ -116,7 +116,7 @@ footer {
   .start-p #clockdiv p {
     max-width: 550px; }
   .start-p #clockdiv div {
-    margin-left: 2%;
+    margin-left: 5%;
     margin-top: 2%;
     display: inline-block; }
   .start-p #clockdiv div > span {
