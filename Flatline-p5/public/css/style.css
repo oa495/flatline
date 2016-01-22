@@ -33,7 +33,7 @@ div h1, div h2, div p, div form, section h1, section h2, section p, section form
 input:-webkit-autofill {
   -webkit-box-shadow: 0 0 0 1000px white inset; }
 
-input:focus, select:focus {
+input:focus, select:focus, .start-p #clockdiv div > span:focus {
   outline: none; }
 
 input[type="submit"], input[type="button"] {
@@ -97,19 +97,42 @@ footer {
 .about-p, .start-p {
   background-color: #f37458; }
 
-.start-p input[type="submit"] {
-  background-color: #e46e54; }
-.start-p form select {
-  width: 100px;
-  background-color: #e46e54;
-  border-radius: 0;
-  color: white;
-  padding: 5px;
-  font-size: 13px;
-  line-height: 1;
-  border: 0;
-  height: 34px;
-  -webkit-appearance: none; }
+.start-p {
+  font-size: 14px; }
+  .start-p input[type="submit"] {
+    background-color: #e46e54; }
+  .start-p select, .start-p #clockdiv div > span {
+    width: 100px;
+    background-color: #e46e54;
+    border-radius: 0;
+    color: white;
+    padding: 5px;
+    font-size: 13px;
+    line-height: 1;
+    border: 0;
+    height: 34px;
+    text-align: center;
+    -webkit-appearance: none; }
+  .start-p #clockdiv p {
+    max-width: 550px; }
+  .start-p #clockdiv div {
+    margin-left: 2%;
+    margin-top: 2%;
+    display: inline-block; }
+  .start-p #clockdiv div > span {
+    display: inline-block;
+    padding-top: 20px;
+    padding-bottom: 0;
+    height: 20px;
+    font-size: 15px; }
+  .start-p #clockdiv div > small {
+    display: block;
+    text-align: center;
+    clear: both;
+    padding-top: 2px;
+    padding-bottom: 20px;
+    background-color: #e46e54;
+    opacity: 0.8; }
 
 .about-p p {
   max-width: 550px;

@@ -25,8 +25,9 @@ var socket = io.connect();
 socket.on('userInfo', function(data) {
   totalTime = data.time;
   console.log('user connection');
-  console.log(data.name);
-  setInfo(data.name);
+  console.log(data.twitname);
+  console.log(data.instaname);
+  setInfo(data.twitname, data.instaname);
 });
 
 socket.on('twitterData', function(data){
@@ -123,9 +124,9 @@ function setup() {
   bpm.parent('heart-data');
 }
 
-function setInfo(name) {
+function setInfo(twitname, instaname) {
   console.log('the name', name);
-  var userName = createP(name);
+  var userName = createP(twitname);
   userName.parent('user-info');
 }
 
