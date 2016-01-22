@@ -124,6 +124,7 @@ footer, .first-p, .settings-p {
 .first-p h1, .first-p a {
   margin-top: 10%; }
 .first-p img {
+  padding-top: 5px;
   padding-left: 10px;
   position: absolute; }
 
@@ -176,5 +177,21 @@ footer, .first-p, .settings-p {
     background-color: #f37458; }
   #sidebar .selected {
     background-color: #f37458; }
+
+.icon-left {
+  transition: all 2s ease-in-out;
+  -webkit-transition: all 2s ease-in-out;
+  -moz-transition: all 2s ease-in-out;
+  -o-transition: all 2s ease-in-out;
+  transition: transform 0.8s ease-in-out;
+  -webkit-transition: transform 0.8s ease-in-out;
+  -moz-transition: transform 0.8s ease-in-out;
+  -o-transition: transform 0.8s ease-in-out; }
+
+.icon-left:hover {
+  transform: translate(15px, 0);
+  -webkit-transform: translate(15px, 0);
+  -o-transform: translate(15px, 0);
+  -moz-transform: translate(15px, 0); }
 
 /*# sourceMappingURL=style.css.map */
