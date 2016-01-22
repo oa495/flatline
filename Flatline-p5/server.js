@@ -139,7 +139,6 @@ app.post('/verify', function(req, res, next) {
     usernameVerification.platform = 'twitter';
     if (match != null) {
       if (match == 'taken') {
-        console.log('twitter username is taken')
         usernameVerification["twitter"] = true;
       }
       else {
@@ -152,14 +151,11 @@ app.post('/verify', function(req, res, next) {
   function verifyIG(instaID) {
       usernameVerification.platform = 'insta';
       req.session.instaId = instaID;
-      console.log('insta', instaID);
       if (instaID > -1) {
         usernameVerification.insta = true;
-        console.log("matched");
       }
       else {
          usernameVerification.insta = false;
-         console.log("not matched");
       }
       res.json(usernameVerification);
   }
@@ -244,7 +240,9 @@ function pollInstagram(_m) {
   ig.users.info({
     user_id: _m, // term to search
     complete: function(instaResults){
-      userInfo.instaname = instaResults["full_name"];
+      instaData["instaname"] = instaResults["full_name"];
+      console.log(instaResults["full_name"]);
+      console.log(instaResults);
       instaData["followers"].push(instaResults.counts["followed_by"]);
       instaData["following"].push(instaResults.counts["follows"]);
       instaData["posts"].push(instaResults.counts["media"]);
@@ -277,9 +275,7 @@ function pollTwitter(twitterUsername) {
       if(error) {
         console.log(error);
       }
-      userInfo.twitname = twitterResults.name;
-      location = twitterResults.location;
-      description = twitterResults.description;
+      twitterData["twitname"] = twitterResults.name;
       twitterData["noFollowers"].push(twitterResults.followers_count);
       twitterData["noFriends"].push(twitterResults.friends_count);
       twitterData["noStatuses"].push(twitterResults.statuses_count);
@@ -293,7 +289,6 @@ function pollTwitter(twitterUsername) {
 io.sockets.on('connection', 
 	function (socket) {
 		  console.log("We have a new client: " + socket.id);
-		  socket.emit('testing', 12345);
       socket.emit('userInfo', userInfo);
       if (insta) {
         socket.emit('instaData', instaData);

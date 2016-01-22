@@ -24,31 +24,27 @@ var socket = io.connect();
 
 socket.on('userInfo', function(data) {
   totalTime = data.time;
-  console.log('user connection');
-  console.log(data.twitname);
-  console.log(data.instaname);
-  setInfo(data.twitname, data.instaname);
 });
 
 socket.on('twitterData', function(data){
-  console.log('twit connection');
   twitterData = data;
-  console.log('twitter', twitterData);
   totalTwitterChange = getTotalData(twitterData);
-  twitterBeat = new Beat(totalTwitterChange);
+  twitterBeat = new Beat(totalTwitterChange, data.twitname);
   current = 'twitter';
+  var userName = createP(twitterBeat.user);
+  userName.parent('user-info');
 });
 
 socket.on('instaData', function(data){
-  console.log('insta connection');
   instaData = data;
   totalInstaChange = getTotalData(instaData);
-  instaBeat = new Beat(totalInstaChange);
+  instaBeat = new Beat(totalInstaChange, data.instaname);
   if (current != 'twitter') {
     current = 'insta';
+    var userName = createP(instaBeat.user);
+    userName.parent('user-info');
   }
 });
-
 /*socket.on('tumblrData', function(data){
    if (current != 'twitter' && current != 'insta') {
     current = tumblr;
@@ -124,19 +120,6 @@ function setup() {
   bpm.parent('heart-data');
 }
 
-function setInfo(twitname, instaname) {
-  console.log('the name', name);
-  var userName = createP(twitname);
-  userName.parent('user-info');
-}
-
-function isEmpty(obj) {
-    for(var prop in obj) {
-        if(obj.hasOwnProperty(prop))
-            return false;
-    }
-    return true;
-}
 function getTotalData(obj) {
    var arrayOfTotal = [];
    var length;
@@ -179,6 +162,7 @@ function draw() {
 }
 
 function changeBeat() {
+  var name = document.getElementById("name");
   var selected = this.elt.className;
   var sm_beats = selectAll('section');
   for (var i = 0; i < sm_beats.length; i++){
@@ -198,6 +182,7 @@ function changeBeat() {
             tumblrBeat.play = false;
         }
         current = 'twitter';
+        name.innerHTML = twitterBeat.user;
         twitterBeat.refresh();
         twitterBeat.play = true;
         twitterBeat.pause = false;
@@ -216,6 +201,7 @@ function changeBeat() {
           tumblrBeat.pause = true;
           tumblrBeat.play = false;
         }
+        name.innerHTML = instaBeat.user;
         current = 'insta';
         instaBeat.refresh();
         instaBeat.play = true;
@@ -303,13 +289,14 @@ function performOperation(operation) {
   }
 }
 
-function Beat(totalChange) {
+function Beat(totalChange, user) {
   this.totalChange = totalChange;
   this.xpos = 0
   this.p = 0;
   this.linefactor = 8;
   this.pause = false;
   this.play = true;
+  this.user = user;
 
   this.drawLine = function() {
     if (this.play) {
