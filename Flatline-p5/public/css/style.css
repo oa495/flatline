@@ -87,6 +87,13 @@ footer {
   height: 95vh;
   overflow: hidden; }
 
+.hidden, .error, .verified {
+  display: none; }
+
+.error small {
+  font-size: 9px;
+  padding: 5px; }
+
 .about-p, .start-p {
   background-color: #f37458; }
 
@@ -127,6 +134,9 @@ footer, .first-p, .settings-p {
     .settings-p section h3, .settings-p section .radio-buttons {
       padding-top: 20px;
       padding-bottom: 5px; }
+    .settings-p section .verified {
+      padding-top: 6px;
+      margin-left: 5px; }
   .settings-p input[type="submit"], .settings-p input[type="button"] {
     background-color: #69bca2; }
 
@@ -166,12 +176,5 @@ footer, .first-p, .settings-p {
     background-color: #f37458; }
   #sidebar .selected {
     background-color: #f37458; }
-
-.hidden, .error, .verified {
-  display: none; }
-
-.error small {
-  font-size: 9px;
-  padding: 5px; }
 
 /*# sourceMappingURL=style.css.map */

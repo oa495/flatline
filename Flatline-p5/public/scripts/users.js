@@ -6,20 +6,26 @@ $(function(){
 		switch (data.platform){
 			case "twitter":
 				if (data.twitter){
+					$(".twitter-sec > .error").hide();
 					$(".twitter-sec > .verified").show();
 					twitterVerified = true;
 				}
 				else {
+					$(".twitter-sec > .verified").hide();
 					$(".twitter-sec > .error").show();
 					twitterVerified = false;
 				}
 				break;
 			case "insta":
 				if (data.insta) {
+					console.log('verified');
+					$(".insta-sec > .error").hide();
 					$(".insta-sec > .verified").show();
 					instaVerified = true;
 				}
 				else {
+					console.log('not verified');
+					$(".insta-sec > .verified").hide();
 					$(".insta-sec > .error").show();
 					instaVerified = false;
 				}
@@ -68,6 +74,7 @@ $(function(){
 	$(".insta-sec > input[type='button']").click(function(event) {
 		var data = $("input[name='instaUsername']").val();
 		if (data) {
+			console.log('1');
 			verifyInformation(data, 'insta');
 		}
 		else {

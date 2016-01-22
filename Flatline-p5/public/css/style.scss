@@ -108,6 +108,16 @@ footer {
 	height: 95vh;
 	overflow: hidden;
 }
+.hidden, .error, .verified{
+	display: none;
+}
+.error {
+	small {
+		font-size: 9px;
+		padding: 5px;
+	}
+}
+
 .about-p, .first-p, .settings-p, .start-p {
 	@extend .container;
 }
@@ -163,10 +173,15 @@ footer, .first-p, .settings-p {
 			padding-top: 20px;
 			padding-bottom: 5px;
 		}
+		.verified {
+			padding-top: 6px;
+			margin-left: 5px;
+		}
 	}
 	input[type="submit"], input[type="button"] {
 		background-color: $darker-green;
 	}
+
 }
 
 #clockdiv {
@@ -216,14 +231,5 @@ footer, .first-p, .settings-p {
 	}
 	.selected {
 		background-color: $primary-orange;
-	}
-}
-.hidden, .error, .verified{
-	display: none;
-}
-.error {
-	small {
-		font-size: 9px;
-		padding: 5px;
 	}
 }

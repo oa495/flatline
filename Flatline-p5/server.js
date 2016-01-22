@@ -219,6 +219,7 @@ function findIG(username, callback) {
           callback(match);
         }
       }
+      callback(match);
     }
   });
 }
