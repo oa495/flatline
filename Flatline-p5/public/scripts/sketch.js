@@ -119,8 +119,8 @@ function setup() {
     sm_beats[i].mouseClicked(changeBeat);
   }
   
-  /*bpm = createP(totalChange + ' bpm');
-  bpm.parent('heart-data');*/
+  bpm = createP(totalChange + ' bpm');
+  bpm.parent('heart-data');
 }
 
 function setInfo(name) {
@@ -222,7 +222,7 @@ function changeBeat() {
       }
       this.addClass('selected');
   }
-  else if (selected == 'tumblrbeat' && typeof tumblrBeat !== 'undefined') {
+  /*else if (selected == 'tumblrbeat' && typeof tumblrBeat !== 'undefined') {
    if (current != 'tumblr') {
         if (typeof instaBeat !== 'undefined') { 
           instaBeat.pause = true;
@@ -238,7 +238,7 @@ function changeBeat() {
         tumblrBeat.pause = false;
     }
     this.addClass('selected');
-  }
+  }*/
 }
 function controlLine() {
   var role = this.elt.attributes.role.value;
