@@ -27,27 +27,26 @@ socket.on('userInfo', function(data) {
 });
 
 socket.on('twitterData', function(data){
-  twitterData = data;
+  copyObject(data, twitterData);
+  delete twitterData["twitname"];
   totalTwitterChange = getTotalData(twitterData);
   twitterBeat = new Beat(totalTwitterChange, data.twitname);
   if (current != 'insta') {
     current = 'twitter';
     select('.twitbeat').addClass('selected');
-    theuser = createP(twitterBeat.user);
-    theuser.parent('user-info');
+    select('#name').innerHTML = twitterBeat.user;
   }
 });
 
 socket.on('instaData', function(data){
-  instaData = data;
-  console.log('instadata', data);
+  copyObject(data, instaData);
+  delete instaData["instaname"];
   totalInstaChange = getTotalData(instaData);
   instaBeat = new Beat(totalInstaChange, data.instaname);
   if (current != 'twitter') {
     current = 'insta';
     select('.instabeat').addClass('selected');
-    theuser = createP(instaBeat.user);
-    theuser.parent('user-info');
+    select('#name').innerHTML = instaBeat.user;
   }
 });
 /*socket.on('tumblrData', function(data){
@@ -59,6 +58,13 @@ socket.on('instaData', function(data){
   tumblrData = data;
 });*/
 
+function copyObject(obj1, obj2) {
+  for (var item in obj1) {
+    if (obj1.hasOwnProperty(item)) {
+      obj2[item] = obj1[item];
+    }
+  }
+}
 function setup() {
   var totalInstaChange = [];
   var totalTwitterChange = [];
