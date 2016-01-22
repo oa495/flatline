@@ -186,25 +186,39 @@ function changeBeat() {
   //add if statement to check if there is even data for the social media platform that was clicked
   if (selected == 'twitbeat' && typeof twitterBeat !== 'undefined') {
       if (current != 'twitter') {
+        image(thegrid, 0, 0);
+        thegraph.clear();
         if (typeof instaBeat !== 'undefined') {
           instaBeat.pause = true;
+          instaBeat.play = false;
         }
         if (typeof tumblrBeat !== 'undefined') {
             tumblrBeat.pause = true;
+            tumblrBeat.play = false;
         }
         current = 'twitter';
+        twitterBeat.refresh();
+        twitterBeat.play = true;
+        twitterBeat.pause = false;
       }
       this.addClass('selected');
   } 
   else if (selected == 'instabeat' && typeof instaBeat !== 'undefined') {
       if (current != 'insta') {
+        image(thegrid, 0, 0);
+        thegraph.clear();
         if (typeof twitterBeat !== 'undefined') {
           twitterBeat.pause = true;
+          twitterBeat.play = false;
         }
         if (typeof tumbrBeat !== 'undefined') {
           tumblrBeat.pause = true;
+          tumblrBeat.play = false;
         }
         current = 'insta';
+        instaBeat.refresh();
+        instaBeat.play = true;
+        instaBeat.pause = false;
       }
       this.addClass('selected');
   }
@@ -212,11 +226,16 @@ function changeBeat() {
    if (current != 'tumblr') {
         if (typeof instaBeat !== 'undefined') { 
           instaBeat.pause = true;
+          instaBeat.play = false;
         }
         if (typeof twitterBeat !== 'undefined') {
           twitterBeat.pause = true;
+          twitterBeat.play = false;
         }        
         current = 'tumblr';
+        tumblrBeat.refresh();
+        tumblrBeat.play = true;
+        tumblrBeat.pause = false;
     }
     this.addClass('selected');
   }
