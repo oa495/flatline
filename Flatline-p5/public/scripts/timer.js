@@ -56,7 +56,6 @@ $(function(){
 	}
 
 	function getTimeInMS(hours, minutes, seconds) {
-		console.log(hours + " hours. " + minutes + " minutes. " + seconds + " seconds.");
 		var totalTime = (hours*60*60 + minutes*60 + seconds)*1000;
 		return totalTime;
 	}

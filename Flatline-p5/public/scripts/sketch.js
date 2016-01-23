@@ -14,7 +14,6 @@ var instaBeat;
 var tumblrBeat;
 var totalTime;
 var totalChange = 0;
-
 var socket = io.connect();
 /****
   HAVE SIDEBAR BE GENERATED ACCORDING TO THE PLATFORMS CHOSEN. SO IF THE USER DOESN'T CHOOSE TUMBLR, DON'T DISPLAY TUMBLR IN THE SIDEBAR
@@ -24,31 +23,39 @@ var socket = io.connect();
 
 socket.on('userInfo', function(data) {
   totalTime = data.time;
-  console.log('user connection');
-  console.log(data.twitname);
-  console.log(data.instaname);
-  setInfo(data.twitname, data.instaname);
 });
 
 socket.on('twitterData', function(data){
-  console.log('twit connection');
-  twitterData = data;
-  console.log('twitter', twitterData);
+  copyObject(data, twitterData);
+  delete twitterData["twitname"];
   totalTwitterChange = getTotalData(twitterData);
-  twitterBeat = new Beat(totalTwitterChange);
-  current = 'twitter';
-});
-
-socket.on('instaData', function(data){
-  console.log('insta connection');
-  instaData = data;
-  totalInstaChange = getTotalData(instaData);
-  instaBeat = new Beat(totalInstaChange);
-  if (current != 'twitter') {
-    current = 'insta';
+  twitterBeat = new Beat(totalTwitterChange, data.twitname);
+  if (current != 'insta') {
+    current = 'twitter';
+    select('.instabeat').removeClass('selected');
+    select('.twitbeat').addClass('selected');
+    var theuser = createP(twitterBeat.user);
+    theuser.parent('user-info');
+    theuser.addClass('name');
   }
 });
 
+socket.on('instaData', function(data){
+  copyObject(data, instaData);
+  delete instaData["instaname"];
+  totalInstaChange = getTotalData(instaData);
+  instaBeat = new Beat(totalInstaChange, data.instaname);
+  if (current != 'twitter') {
+    current = 'insta';
+    select('.twitbeat').removeClass('selected');
+    select('.instabeat').addClass('selected');
+    var user = document.getElementById("user-info");
+    user.innerHTML = "";
+    var theuser = createP(instaBeat.user);
+    theuser.parent('user-info');
+    theuser.addClass('name');
+  }
+});
 /*socket.on('tumblrData', function(data){
    if (current != 'twitter' && current != 'insta') {
     current = tumblr;
@@ -58,6 +65,13 @@ socket.on('instaData', function(data){
   tumblrData = data;
 });*/
 
+function copyObject(obj1, obj2) {
+  for (var item in obj1) {
+    if (obj1.hasOwnProperty(item)) {
+      obj2[item] = obj1[item];
+    }
+  }
+}
 function setup() {
   var totalInstaChange = [];
   var totalTwitterChange = [];
@@ -124,19 +138,6 @@ function setup() {
   bpm.parent('heart-data');
 }
 
-function setInfo(twitname, instaname) {
-  console.log('the name', name);
-  var userName = createP(twitname);
-  userName.parent('user-info');
-}
-
-function isEmpty(obj) {
-    for(var prop in obj) {
-        if(obj.hasOwnProperty(prop))
-            return false;
-    }
-    return true;
-}
 function getTotalData(obj) {
    var arrayOfTotal = [];
    var length;
@@ -179,6 +180,7 @@ function draw() {
 }
 
 function changeBeat() {
+  var user = document.getElementById("user-info");
   var selected = this.elt.className;
   var sm_beats = selectAll('section');
   for (var i = 0; i < sm_beats.length; i++){
@@ -198,11 +200,13 @@ function changeBeat() {
             tumblrBeat.play = false;
         }
         current = 'twitter';
+        user.innerHTML = '<p>' + twitterBeat.user + '</p>';
         twitterBeat.refresh();
         twitterBeat.play = true;
         twitterBeat.pause = false;
+        select('.twitbeat').addClass('selected');
+        select('.instabeat').removeClass('selected');
       }
-      this.addClass('selected');
   } 
   else if (selected == 'instabeat' && typeof instaBeat !== 'undefined') {
       if (current != 'insta') {
@@ -216,12 +220,14 @@ function changeBeat() {
           tumblrBeat.pause = true;
           tumblrBeat.play = false;
         }
+        user.innerHTML = '<p>' + instaBeat.user + '</p>';
         current = 'insta';
         instaBeat.refresh();
         instaBeat.play = true;
         instaBeat.pause = false;
+        select('.instabeat').addClass('selected');
+       select('.twitbeat').removeClass('selected');
       }
-      this.addClass('selected');
   }
   /*else if (selected == 'tumblrbeat' && typeof tumblrBeat !== 'undefined') {
    if (current != 'tumblr') {
@@ -303,13 +309,14 @@ function performOperation(operation) {
   }
 }
 
-function Beat(totalChange) {
+function Beat(totalChange, user) {
   this.totalChange = totalChange;
   this.xpos = 0
   this.p = 0;
   this.linefactor = 8;
   this.pause = false;
   this.play = true;
+  this.user = user;
 
   this.drawLine = function() {
     if (this.play) {
