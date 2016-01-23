@@ -30,11 +30,14 @@ socket.on('twitterData', function(data){
   delete twitterData["twitname"];
   totalTwitterChange = getTotalData(twitterData);
   twitterBeat = new Beat(totalTwitterChange, data.twitname);
-  current = 'twitter';
-  select('.instabeat').removeClass('selected');
-  select('.twitbeat').addClass('selected');
-  var name = select('#name');
-  name.innerHTML = twitterBeat.user;
+  if (current != 'insta') {
+    current = 'twitter';
+    select('.instabeat').removeClass('selected');
+    select('.twitbeat').addClass('selected');
+    var theuser = createP(twitterBeat.user);
+    theuser.parent('user-info');
+    theuser.addClass('name');
+  }
 });
 
 socket.on('instaData', function(data){
@@ -46,8 +49,11 @@ socket.on('instaData', function(data){
     current = 'insta';
     select('.twitbeat').removeClass('selected');
     select('.instabeat').addClass('selected');
-    var name = select('#name');
-    name.innerHTML = instaBeat.user;
+    var user = document.getElementById("user-info");
+    user.innerHTML = "";
+    var theuser = createP(instaBeat.user);
+    theuser.parent('user-info');
+    theuser.addClass('name');
   }
 });
 /*socket.on('tumblrData', function(data){
@@ -174,7 +180,7 @@ function draw() {
 }
 
 function changeBeat() {
-  var name = document.getElementById("name");
+  var user = document.getElementById("user-info");
   var selected = this.elt.className;
   var sm_beats = selectAll('section');
   for (var i = 0; i < sm_beats.length; i++){
@@ -194,7 +200,7 @@ function changeBeat() {
             tumblrBeat.play = false;
         }
         current = 'twitter';
-        name.innerHTML = twitterBeat.user;
+        user.innerHTML = '<p>' + twitterBeat.user + '</p>';
         twitterBeat.refresh();
         twitterBeat.play = true;
         twitterBeat.pause = false;
@@ -214,7 +220,7 @@ function changeBeat() {
           tumblrBeat.pause = true;
           tumblrBeat.play = false;
         }
-        name.innerHTML = instaBeat.user;
+        user.innerHTML = '<p>' + instaBeat.user + '</p>';
         current = 'insta';
         instaBeat.refresh();
         instaBeat.play = true;
