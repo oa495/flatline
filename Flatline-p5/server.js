@@ -1,6 +1,3 @@
-function User() {
-
-}
 var userInfo = {
   twitname: '',
   instaname: '',
@@ -41,7 +38,6 @@ var timeUp = false;
 // TWITTER STUFF
 */
 var express = require('express');
-var passport = require('passport');
 var bodyParser = require('body-parser');
 var request = require("request");
 var logger = require('morgan');
@@ -66,8 +62,6 @@ var path = require('path');
 var utf8 = require('utf8');
 var publicPath = path.resolve(__dirname, "public");
 app.use(express.static(publicPath));
-app.use(passport.initialize());
-app.use(passport.session());
 
 var sessionOptions = {
   secret: 'secret cookie thang',
@@ -137,13 +131,17 @@ app.post('/verify', function(req, res, next) {
 
   function verifyTwitter(match) {
     usernameVerification.platform = 'twitter';
-    if (match != null) {
+    if (match) {
       if (match == 'taken') {
         usernameVerification["twitter"] = true;
       }
       else {
         usernameVerification["twitter"] = false;
       }
+      res.json(usernameVerification);
+    }
+    else {
+      usernameVerification["twitter"] = true;
       res.json(usernameVerification);
     }
 
@@ -201,6 +199,7 @@ function download(url, callback) {
           data = body.reason;
           callback(data)
       }
+      else callback(data);
   });
 }
 
