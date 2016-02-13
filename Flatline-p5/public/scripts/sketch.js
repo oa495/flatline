@@ -19,8 +19,9 @@ socket.on('twitterData', function(data){
   copyObject(data, twitterData);
   delete twitterData["twitname"];
   delete twitterData["time"];
+  var min = convertToMin(data["time"]);
   totalTwitterChange = getTotalData(twitterData);
-  twitterBeat = new Beat(totalTwitterChange["array"], data.twitname, (totalTwitterChange["number"]/data["time"] ? totalTwitterChange["number"]/data["time"]: totalTwitterChange["number"]));
+  twitterBeat = new Beat(totalTwitterChange["array"], data.twitname, (totalTwitterChange["number"]/min ? totalTwitterChange["number"]/data["time"]: totalTwitterChange["number"]));
   if (current != 'insta') {
     current = 'twitter';
     select('.instabeat').removeClass('selected');
@@ -38,8 +39,9 @@ socket.on('instaData', function(data){
   copyObject(data, instaData);
   delete instaData["instaname"];
   delete instaData["time"];
+  var min = convertToMin(data["time"]);
   totalInstaChange = getTotalData(instaData);
-  instaBeat = new Beat(totalInstaChange["array"], data.instaname, (totalInstaChange["number"]/data["time"] ? totalInstaChange["number"]/data["time"]: totalInstaChange["number"]));
+  instaBeat = new Beat(totalInstaChange["array"], data.instaname, (totalInstaChange["number"]/min ? totalInstaChange["number"]/data["time"]: totalInstaChange["number"]));
   if (current != 'twitter') {
     current = 'insta';
     select('.twitbeat').removeClass('selected');
@@ -54,7 +56,9 @@ socket.on('instaData', function(data){
   }
 });
 
-
+function convertToMin(ms) {
+  return Math.floor((ms/1000/60) % 60 );
+}
 function copyObject(obj1, obj2) {
   for (var item in obj1) {
     if (obj1.hasOwnProperty(item)) {
