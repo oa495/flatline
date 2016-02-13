@@ -224,7 +224,7 @@ function getIGinfo(_m, tt) {
   instaData.posts = [];
   instaData.followers = [];
   instaData.following = [];
-
+  instaData["time"] = tt;
   var instaTimer = setInterval(function() {
     pollInstagram(_m);
   }, 3000);
@@ -254,7 +254,7 @@ function getTwitterData(tt, twitterUsername) {
   twitterData.noFriends = [];
   twitterData.noStatuses = [];
   twitterData.noFavourites = [];
-
+  twitterData["time"] = tt;
 
   var twitTimer = setInterval(function(){
     pollTwitter(twitterUsername);
@@ -285,7 +285,6 @@ function pollTwitter(twitterUsername) {
 
 io.sockets.on('connection', 
 	function (socket) {
-      socket.emit('userInfo', userInfo);
       if (insta) {
         socket.emit('instaData', instaData);
       }

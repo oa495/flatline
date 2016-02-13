@@ -3,33 +3,24 @@ var playImg;
 var restartImg;
 var addImg;
 var minusImg;
-var instaData = {};
-var twitterData = {};
-var tumblrData = {};
 var current;
 var thegraph;
 var thegrid;
 var twitterBeat;
 var instaBeat;
 var tumblrBeat;
-var totalTime;
-var totalChange = 0;
 var socket = io.connect();
 /****
   HAVE SIDEBAR BE GENERATED ACCORDING TO THE PLATFORMS CHOSEN. SO IF THE USER DOESN'T CHOOSE TUMBLR, DON'T DISPLAY TUMBLR IN THE SIDEBAR
 */
 
-
-
-socket.on('userInfo', function(data) {
-  totalTime = data.time;
-});
-
 socket.on('twitterData', function(data){
+  var twitterData = {};
   copyObject(data, twitterData);
   delete twitterData["twitname"];
+  delete twitterData["time"];
   totalTwitterChange = getTotalData(twitterData);
-  twitterBeat = new Beat(totalTwitterChange, data.twitname);
+  twitterBeat = new Beat(totalTwitterChange["array"], data.twitname, (totalTwitterChange["number"]/data["time"] ? totalTwitterChange["number"]/data["time"]: totalTwitterChange["number"]));
   if (current != 'insta') {
     current = 'twitter';
     select('.instabeat').removeClass('selected');
@@ -37,14 +28,18 @@ socket.on('twitterData', function(data){
     var theuser = createP(twitterBeat.user);
     theuser.parent('user-info');
     theuser.addClass('name');
+    var bpm = createP(twitterBeat.bpm);
+    bpm.parent('heart-data');
   }
 });
 
 socket.on('instaData', function(data){
+  var instaData = {};
   copyObject(data, instaData);
   delete instaData["instaname"];
+  delete instaData["time"];
   totalInstaChange = getTotalData(instaData);
-  instaBeat = new Beat(totalInstaChange, data.instaname);
+  instaBeat = new Beat(totalInstaChange["array"], data.instaname, (totalInstaChange["number"]/data["time"] ? totalInstaChange["number"]/data["time"]: totalInstaChange["number"]));
   if (current != 'twitter') {
     current = 'insta';
     select('.twitbeat').removeClass('selected');
@@ -54,16 +49,11 @@ socket.on('instaData', function(data){
     var theuser = createP(instaBeat.user);
     theuser.parent('user-info');
     theuser.addClass('name');
+    var bpm = createP(instaBeat.bpm);
+    bpm.parent('heart-data');
   }
 });
-/*socket.on('tumblrData', function(data){
-   if (current != 'twitter' && current != 'insta') {
-    current = tumblr;
-   }
-  totalTumblrChange = getTotalData(tumblrData);
-  tumblrBeat = new Beat(totalTumblrChange);
-  tumblrData = data;
-});*/
+
 
 function copyObject(obj1, obj2) {
   for (var item in obj1) {
@@ -134,8 +124,6 @@ function setup() {
     sm_beats[i].mouseClicked(changeBeat);
   }
   
-  bpm = createP(totalChange + ' bpm');
-  bpm.parent('heart-data');
 }
 
 function getTotalData(obj) {
@@ -158,13 +146,15 @@ function getTotalData(obj) {
 }
 
 function getChangeInData(array) {
-    var changes = [];
+    var totalChange = {
+      "array": [],
+      "number": 0
+    };
     for (var i = 1; i < array.length; i++) {
-        changes.push(array[i] - array[i-1]);
-        totalChange += array[i] - array[i-1];
+        totalChange["array"].push(array[i] - array[i-1]);
+        totalChange["number"] += array[i] - array[i-1];
     }
-    //console.log(totalChange);
-    return changes;
+    return totalChange;
 }
 
 function draw() {
@@ -229,23 +219,6 @@ function changeBeat() {
        select('.twitbeat').removeClass('selected');
       }
   }
-  /*else if (selected == 'tumblrbeat' && typeof tumblrBeat !== 'undefined') {
-   if (current != 'tumblr') {
-        if (typeof instaBeat !== 'undefined') { 
-          instaBeat.pause = true;
-          instaBeat.play = false;
-        }
-        if (typeof twitterBeat !== 'undefined') {
-          twitterBeat.pause = true;
-          twitterBeat.play = false;
-        }        
-        current = 'tumblr';
-        tumblrBeat.refresh();
-        tumblrBeat.play = true;
-        tumblrBeat.pause = false;
-    }
-    this.addClass('selected');
-  }*/
 }
 function controlLine() {
   var role = this.elt.attributes.role.value;
@@ -309,15 +282,16 @@ function performOperation(operation) {
   }
 }
 
-function Beat(totalChange, user) {
+function Beat(totalChange, user, bpm) {
   this.totalChange = totalChange;
-  this.xpos = 0
+  this.xpos = 0;
+  this.bpm = bpm;
   this.p = 0;
   this.linefactor = 8;
   this.pause = false;
   this.play = true;
   this.user = user;
-
+  console.log(this.bpm);
   this.drawLine = function() {
     if (this.play) {
       thegraph.strokeWeight(2);
